@@ -1,3 +1,9 @@
+# Polygon Art
+
+This project has been years in the making, and I'm finally bringing everything together to the final application I have always wanted to make.
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
