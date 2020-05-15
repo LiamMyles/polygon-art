@@ -1,31 +1,39 @@
 import React from "react"
 import { useTransition, animated } from "react-spring"
+import styled from "styled-components"
 
 interface ScreensProps {
   currentScreen: number
 }
 
+const Screen = styled(animated.div)`
+  grid-row: 1;
+  grid-column: 1;
+`
+
 const Screens: React.FC<ScreensProps> = ({ children, currentScreen }) => {
   const transitions = useTransition(currentScreen, (item: number) => item, {
     from: {
-      position: "absolute",
       opacity: 0,
-      transform: "translate3d(100%,0,0)",
+      transform: "translate(100%,0)",
     },
-    enter: { opacity: 1, transform: "translate3d(0%,0,0)" },
-    leave: { opacity: 0, transform: "translate3d(-50%,0,0)" },
+    enter: { opacity: 1, transform: "translate(0%,0)" },
+    leave: {
+      opacity: 0,
+      transform: "translate(-50%,0)",
+    },
   })
   return (
     <>
       {transitions.map(({ item, key, props }) => {
         return (
-          <animated.div key={key} style={props}>
+          <Screen key={key} style={props}>
             {React.Children.map(children, (child, index) => {
               if (index === item - 1) {
                 return child
               }
             })}
-          </animated.div>
+          </Screen>
         )
       })}
     </>
