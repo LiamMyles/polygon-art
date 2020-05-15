@@ -3,12 +3,15 @@ import ReactDOM from "react-dom"
 import * as serviceWorker from "./serviceWorker"
 
 import App from "components/App"
+import { NavigationContextWrapper } from "reducer-contexts/navigation"
 
 import "./reset.css"
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <NavigationContextWrapper>
+      <App />
+    </NavigationContextWrapper>
   </React.StrictMode>,
   document.getElementById("root")
 )
