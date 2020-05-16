@@ -72,6 +72,12 @@ interface ActionUpdatePolygonAll {
   }
 }
 
+interface ActionUpdatePolygonGroupPosition {
+  type: "UPDATE_POLYGON_GROUP_POSITION"
+  group: number
+  position: Cords
+}
+
 interface ActionUpdatePolygonPosition {
   type: "UPDATE_POLYGON_POSITION"
   group: number
@@ -107,6 +113,7 @@ export type PolygonGroupsActions =
   | ActionCreateGroup
   | ActionCreatePolygon
   | ActionUpdatePolygonAll
+  | ActionUpdatePolygonGroupPosition
   | ActionUpdatePolygonPosition
   | ActionUpdatePolygonRotation
   | ActionUpdatePolygonScale
@@ -142,13 +149,18 @@ export const polygonGroupsReducer = produce(
         })
         break
       }
+      case "UPDATE_POLYGON_GROUP_POSITION": {
+        draft[action.group].position = action.position
+        break
+      }
+      case "UPDATE_POLYGON_POSITION": {
+        draft[action.group].rings[action.polygon].position = action.position
+        break
+      }
       case "UPDATE_POLYGON_ALL": {
         break
       }
       case "UPDATE_POLYGON_DOTS": {
-        break
-      }
-      case "UPDATE_POLYGON_POSITION": {
         break
       }
       case "UPDATE_POLYGON_ROTATION": {
