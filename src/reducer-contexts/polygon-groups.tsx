@@ -11,6 +11,12 @@ interface PolygonStateRotation {
   clockwise: boolean
   speed: number
 }
+
+interface PolygonStateRotationOptional {
+  enabled?: boolean
+  clockwise?: boolean
+  speed?: number
+}
 interface PolygonStateScale {
   enabled: boolean
   speed: number
@@ -88,7 +94,7 @@ interface ActionUpdatePolygonRotation {
   type: "UPDATE_POLYGON_ROTATION"
   group: number
   polygon: number
-  rotation: PolygonStateRotation
+  rotation: PolygonStateRotationOptional
 }
 interface ActionUpdatePolygonScale {
   type: "UPDATE_POLYGON_SCALE"
