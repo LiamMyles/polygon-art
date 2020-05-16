@@ -45,8 +45,10 @@ interface PolygonState {
 interface PolygonGroupsState {
   active: boolean
   position: Cords
-  rings: [PolygonState]
+  rings: Array<PolygonState>
 }
+
+export type PolygonInitialState = Array<PolygonGroupsState>
 
 interface ActionCreateGroup {
   type: "CREATE_POLYGON_GROUP"
@@ -101,7 +103,7 @@ interface ActionUpdatePolygonSides {
   sides: PolygonStateSides
 }
 
-type PolygonGroupsActions =
+export type PolygonGroupsActions =
   | ActionCreateGroup
   | ActionCreatePolygon
   | ActionUpdatePolygonAll
@@ -112,12 +114,32 @@ type PolygonGroupsActions =
   | ActionUpdatePolygonSides
 
 export const polygonGroupsReducer = produce(
-  (draft: Draft<PolygonGroupsState>, action: PolygonGroupsActions) => {
+  (draft: Draft<PolygonInitialState>, action: PolygonGroupsActions) => {
     switch (action.type) {
-      case "CREATE_POLYGON": {
+      case "CREATE_POLYGON_GROUP": {
+        draft.push({ active: true, position: { x: 0, y: 0 }, rings: [] })
         break
       }
-      case "CREATE_POLYGON_GROUP": {
+      case "CREATE_POLYGON": {
+        draft[action.group].rings.push({
+          active: true,
+          position: { x: 0, y: 0 },
+          dots: {
+            enabled: true,
+            fillColours: ["black"],
+            size: 1,
+            strokeColours: ["black"],
+            strokeWidth: 1,
+          },
+          rotation: { clockwise: true, enabled: true, speed: 1 },
+          scale: { enabled: true, speed: 1, range: { max: 10, min: 0 } },
+          sides: {
+            enabled: true,
+            strokeWidth: 1,
+            colours: ["black"],
+            amount: 6,
+          },
+        })
         break
       }
       case "UPDATE_POLYGON_ALL": {
