@@ -1,5 +1,5 @@
 import React, { useReducer, createContext } from "react"
-import produce, { Draft } from "immer"
+import produce, { Draft, original } from "immer"
 
 interface Cords {
   x: number
@@ -151,6 +151,29 @@ export type PolygonGroupsActions =
   | ActionUpdatePolygonDots
   | ActionUpdatePolygonSides
 
+/**
+ * Takes in the current draft for the matching options
+ * and returns a updated draft with the new options so
+ * it can be set to the new state
+ *
+ * @template T
+ * @param {T} draft
+ * @param {{ [key: string]: any }} options
+ * @returns {T}
+ */
+function getDraftUpdatedByOptions<T>(
+  draft: T,
+  options: { [key: string]: any }
+): T {
+  const newState = { ...original(draft) } as any
+
+  Object.keys(options).forEach((option) => {
+    newState[option] = options[option]
+  })
+
+  return newState as T
+}
+
 export const polygonGroupsReducer = produce(
   (draft: Draft<PolygonInitialState>, action: PolygonGroupsActions) => {
     switch (action.type) {
@@ -192,67 +215,35 @@ export const polygonGroupsReducer = produce(
         break
       }
       case "UPDATE_POLYGON_DOTS": {
-        const draftDots = draft[action.group].rings[action.polygon].dots
-        if (action.dots.enabled !== undefined) {
-          draftDots.enabled = action.dots.enabled
-        }
-        if (action.dots.fillColours !== undefined) {
-          draftDots.fillColours = action.dots.fillColours
-        }
-        if (action.dots.size !== undefined) {
-          draftDots.size = action.dots.size
-        }
-        if (action.dots.strokeColours !== undefined) {
-          draftDots.strokeColours = action.dots.strokeColours
-        }
-        if (action.dots.strokeWidth !== undefined) {
-          draftDots.strokeWidth = action.dots.strokeWidth
-        }
+        const draftPolygon = draft[action.group].rings[action.polygon]
+        draftPolygon.dots = getDraftUpdatedByOptions<PolygonStateDots>(
+          draftPolygon.dots,
+          action.dots
+        )
         break
       }
       case "UPDATE_POLYGON_ROTATION": {
-        const draftRotation = draft[action.group].rings[action.polygon].rotation
-
-        if (action.rotation.clockwise !== undefined) {
-          draftRotation.clockwise = action.rotation.clockwise
-        }
-        if (action.rotation.enabled !== undefined) {
-          draftRotation.enabled = action.rotation.enabled
-        }
-        if (action.rotation.speed !== undefined) {
-          draftRotation.speed = action.rotation.speed
-        }
+        const draftPolygon = draft[action.group].rings[action.polygon]
+        draftPolygon.rotation = getDraftUpdatedByOptions<PolygonStateRotation>(
+          draftPolygon.rotation,
+          action.rotation
+        )
         break
       }
       case "UPDATE_POLYGON_SIDES": {
-        const draftSides = draft[action.group].rings[action.polygon].sides
-        const actionSides = action.sides
-        if (actionSides.enabled !== undefined) {
-          draftSides.enabled = actionSides.enabled
-        }
-        if (actionSides.amount !== undefined) {
-          draftSides.amount = actionSides.amount
-        }
-        if (actionSides.colours !== undefined) {
-          draftSides.colours = actionSides.colours
-        }
-        if (actionSides.strokeWidth !== undefined) {
-          draftSides.strokeWidth = actionSides.strokeWidth
-        }
+        const draftPolygon = draft[action.group].rings[action.polygon]
+        draftPolygon.sides = getDraftUpdatedByOptions<PolygonStateSides>(
+          draftPolygon.sides,
+          action.sides
+        )
         break
       }
       case "UPDATE_POLYGON_SCALE": {
-        const draftScale = draft[action.group].rings[action.polygon].scale
-        const actionScale = action.scale
-        if (actionScale.enabled !== undefined) {
-          draftScale.enabled = actionScale.enabled
-        }
-        if (actionScale.range !== undefined) {
-          draftScale.range = actionScale.range
-        }
-        if (actionScale.speed !== undefined) {
-          draftScale.speed = actionScale.speed
-        }
+        const draftPolygon = draft[action.group].rings[action.polygon]
+        draftPolygon.scale = getDraftUpdatedByOptions<PolygonStateScale>(
+          draftPolygon.scale,
+          action.scale
+        )
         break
       }
     }
