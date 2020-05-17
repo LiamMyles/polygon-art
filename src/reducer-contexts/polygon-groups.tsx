@@ -25,6 +25,16 @@ interface PolygonStateScale {
     max: number
   }
 }
+
+interface PolygonStateScaleOptional {
+  enabled?: boolean
+  speed?: number
+  range?: {
+    min: number
+    max: number
+  }
+}
+
 interface PolygonStateDots {
   enabled: boolean
   size: number
@@ -32,11 +42,26 @@ interface PolygonStateDots {
   strokeWidth: number
   strokeColours: [string]
 }
+interface PolygonStateDotsOptional {
+  enabled?: boolean
+  size?: number
+  fillColours?: [string]
+  strokeWidth?: number
+  strokeColours?: [string]
+}
+
 interface PolygonStateSides {
   enabled: boolean
   amount: number
   strokeWidth: number
   colours: [string]
+}
+
+interface PolygonStateSidesOptional {
+  enabled?: boolean
+  amount?: number
+  strokeWidth?: number
+  colours?: [string]
 }
 
 interface PolygonState {
@@ -100,19 +125,19 @@ interface ActionUpdatePolygonScale {
   type: "UPDATE_POLYGON_SCALE"
   group: number
   polygon: number
-  scale: PolygonStateScale
+  scale: PolygonStateScaleOptional
 }
 interface ActionUpdatePolygonDots {
   type: "UPDATE_POLYGON_DOTS"
   group: number
   polygon: number
-  dots: PolygonStateDots
+  dots: PolygonStateDotsOptional
 }
 interface ActionUpdatePolygonSides {
   type: "UPDATE_POLYGON_SIDES"
   group: number
   polygon: number
-  sides: PolygonStateSides
+  sides: PolygonStateSidesOptional
 }
 
 export type PolygonGroupsActions =
@@ -167,10 +192,27 @@ export const polygonGroupsReducer = produce(
         break
       }
       case "UPDATE_POLYGON_DOTS": {
+        const draftDots = draft[action.group].rings[action.polygon].dots
+        if (action.dots.enabled !== undefined) {
+          draftDots.enabled = action.dots.enabled
+        }
+        if (action.dots.fillColours !== undefined) {
+          draftDots.fillColours = action.dots.fillColours
+        }
+        if (action.dots.size !== undefined) {
+          draftDots.size = action.dots.size
+        }
+        if (action.dots.strokeColours !== undefined) {
+          draftDots.strokeColours = action.dots.strokeColours
+        }
+        if (action.dots.strokeWidth !== undefined) {
+          draftDots.strokeWidth = action.dots.strokeWidth
+        }
         break
       }
       case "UPDATE_POLYGON_ROTATION": {
         const draftRotation = draft[action.group].rings[action.polygon].rotation
+
         if (action.rotation.clockwise !== undefined) {
           draftRotation.clockwise = action.rotation.clockwise
         }
@@ -183,6 +225,34 @@ export const polygonGroupsReducer = produce(
         break
       }
       case "UPDATE_POLYGON_SIDES": {
+        const draftSides = draft[action.group].rings[action.polygon].sides
+        const actionSides = action.sides
+        if (actionSides.enabled !== undefined) {
+          draftSides.enabled = actionSides.enabled
+        }
+        if (actionSides.amount !== undefined) {
+          draftSides.amount = actionSides.amount
+        }
+        if (actionSides.colours !== undefined) {
+          draftSides.colours = actionSides.colours
+        }
+        if (actionSides.strokeWidth !== undefined) {
+          draftSides.strokeWidth = actionSides.strokeWidth
+        }
+        break
+      }
+      case "UPDATE_POLYGON_SCALE": {
+        const draftScale = draft[action.group].rings[action.polygon].scale
+        const actionScale = action.scale
+        if (actionScale.enabled !== undefined) {
+          draftScale.enabled = actionScale.enabled
+        }
+        if (actionScale.range !== undefined) {
+          draftScale.range = actionScale.range
+        }
+        if (actionScale.speed !== undefined) {
+          draftScale.speed = actionScale.speed
+        }
         break
       }
     }
