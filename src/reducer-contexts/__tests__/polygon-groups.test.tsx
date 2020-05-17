@@ -560,16 +560,29 @@ describe("Polygon Reducer", () => {
     })
   })
   describe("UPDATE_POLYGON_SCALE", () => {
-    it.todo("should update polygon scale")
+    it.todo("should update all polygon scale options")
+    it.todo("should update polygon enabled options")
+    it.todo("should update polygon speed options")
+    it.todo("should update polygon range options")
   })
   describe("UPDATE_POLYGON_DOTS", () => {
-    it.todo("should update polygon dots")
+    it.todo("should update all polygon dots options")
+    it.todo("should update polygon enabled options")
+    it.todo("should update polygon size options")
+    it.todo("should update polygon fillColours options")
+    it.todo("should update polygon strokeWidth options")
+    it.todo("should update polygon strokeColours options")
   })
   describe("UPDATE_POLYGON_SIDES", () => {
-    it.todo("should update polygon sides")
+    it.todo("should update all polygon sides options")
+    it.todo("should update polygon sides enabled options")
+    it.todo("should update polygon sides amount options")
+    it.todo("should update polygon sides strokeWidth options")
+    it.todo("should update polygon sides colours options")
   })
   describe("UPDATE_POLYGON_ALL", () => {
-    it.todo("should update polygon all")
+    it.todo("should update all polygon all options")
+    it.todo("should update some polygon all options")
   })
 })
 
