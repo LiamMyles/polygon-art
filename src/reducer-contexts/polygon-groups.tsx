@@ -170,6 +170,16 @@ export const polygonGroupsReducer = produce(
         break
       }
       case "UPDATE_POLYGON_ROTATION": {
+        const draftRotation = draft[action.group].rings[action.polygon].rotation
+        if (action.rotation.clockwise !== undefined) {
+          draftRotation.clockwise = action.rotation.clockwise
+        }
+        if (action.rotation.enabled !== undefined) {
+          draftRotation.enabled = action.rotation.enabled
+        }
+        if (action.rotation.speed !== undefined) {
+          draftRotation.speed = action.rotation.speed
+        }
         break
       }
       case "UPDATE_POLYGON_SIDES": {

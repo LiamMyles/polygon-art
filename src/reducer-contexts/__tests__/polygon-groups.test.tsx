@@ -491,7 +491,7 @@ describe("Polygon Reducer", () => {
 
       expect(actualState).toEqual(expectedState)
     })
-    it("should update polygon rotation", () => {
+    it("should update polygon rotation speed option", () => {
       const action: PolygonGroupsActions = {
         type: "UPDATE_POLYGON_ROTATION",
         group: 0,
