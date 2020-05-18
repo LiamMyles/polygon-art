@@ -110,6 +110,18 @@ interface ActionUpdatePolygonGroupPosition {
   position: Cords
 }
 
+interface ActionUpdatePolygonActive {
+  type: "UPDATE_POLYGON_ACTIVE"
+  group: number
+  polygon: number
+  active: boolean
+}
+interface ActionUpdatePolygonGroupActive {
+  type: "UPDATE_POLYGON_GROUP_ACTIVE"
+  group: number
+  active: boolean
+}
+
 interface ActionUpdatePolygonPosition {
   type: "UPDATE_POLYGON_POSITION"
   group: number
@@ -151,6 +163,8 @@ export type PolygonGroupsActions =
   | ActionUpdatePolygonScale
   | ActionUpdatePolygonDots
   | ActionUpdatePolygonSides
+  | ActionUpdatePolygonActive
+  | ActionUpdatePolygonGroupActive
 
 /**
  * Takes in the current draft for the matching options
@@ -208,8 +222,8 @@ export const polygonGroupsReducer = produce(
         draft[action.group].position = action.position
         break
       }
-      case "UPDATE_POLYGON_POSITION": {
-        draft[action.group].rings[action.polygon].position = action.position
+      case "UPDATE_POLYGON_GROUP_ACTIVE": {
+        draft[action.group].active = action.active
         break
       }
       case "UPDATE_POLYGON_ALL": {
@@ -243,6 +257,14 @@ export const polygonGroupsReducer = produce(
             action.polygonState.scale
           )
         }
+        break
+      }
+      case "UPDATE_POLYGON_POSITION": {
+        draft[action.group].rings[action.polygon].position = action.position
+        break
+      }
+      case "UPDATE_POLYGON_ACTIVE": {
+        draft[action.group].rings[action.polygon].active = action.active
         break
       }
       case "UPDATE_POLYGON_DOTS": {
