@@ -38,9 +38,9 @@ interface PolygonStateScaleOptional {
 interface PolygonStateDots {
   enabled: boolean
   size: number
-  fillColours: [string]
+  fillColours: ReadonlyArray<string>
   strokeWidth: number
-  strokeColours: [string]
+  strokeColours: ReadonlyArray<string>
 }
 interface PolygonStateDotsOptional {
   enabled?: boolean
@@ -54,7 +54,7 @@ interface PolygonStateSides {
   enabled: boolean
   amount: number
   strokeWidth: number
-  colours: [string]
+  colours: ReadonlyArray<string>
 }
 
 interface PolygonStateSidesOptional {
@@ -76,10 +76,10 @@ interface PolygonState {
 interface PolygonGroupsState {
   active: boolean
   position: Cords
-  rings: Array<PolygonState>
+  rings: ReadonlyArray<PolygonState>
 }
 
-export type PolygonInitialState = Array<PolygonGroupsState>
+export type PolygonInitialState = ReadonlyArray<PolygonGroupsState>
 
 interface ActionCreateGroup {
   type: "CREATE_POLYGON_GROUP"
@@ -166,6 +166,10 @@ export type PolygonGroupsActions =
   | ActionUpdatePolygonActive
   | ActionUpdatePolygonGroupActive
 
+type NotReadonly<T> = {
+  -readonly [P in keyof T]: T[P]
+}
+
 /**
  * Takes in the current draft for the matching options
  * and returns a updated draft with the new options so
@@ -173,16 +177,13 @@ export type PolygonGroupsActions =
  *
  * @template T
  * @param {T} draft
- * @param {{ [key: string]: any }} options
+ * @param {Partial<T>} options
  * @returns {T}
  */
-function getDraftUpdatedByOptions<T>(
-  draft: T,
-  options: { [key: string]: any }
-): T {
-  const newState = { ...original(draft) } as any
-
-  Object.keys(options).forEach((option) => {
+function getDraftUpdatedByOptions<T>(draft: T, options: Partial<T>): T {
+  const newState = { ...original(draft) } as Partial<T>
+  const optionKeys = Object.keys(options) as [keyof T]
+  optionKeys.forEach((option) => {
     newState[option] = options[option]
   })
 
@@ -227,7 +228,9 @@ export const polygonGroupsReducer = produce(
         break
       }
       case "UPDATE_POLYGON_ALL": {
-        const draftPolygon = draft[action.group].rings[action.polygon]
+        const draftPolygon = draft[action.group].rings[
+          action.polygon
+        ] as NotReadonly<PolygonState>
         if (action.polygonState.active !== undefined) {
           draftPolygon.active = action.polygonState.active
         }
@@ -268,7 +271,9 @@ export const polygonGroupsReducer = produce(
         break
       }
       case "UPDATE_POLYGON_DOTS": {
-        const draftPolygon = draft[action.group].rings[action.polygon]
+        const draftPolygon = draft[action.group].rings[
+          action.polygon
+        ] as NotReadonly<PolygonState>
         draftPolygon.dots = getDraftUpdatedByOptions<PolygonStateDots>(
           draftPolygon.dots,
           action.dots
@@ -284,7 +289,9 @@ export const polygonGroupsReducer = produce(
         break
       }
       case "UPDATE_POLYGON_SIDES": {
-        const draftPolygon = draft[action.group].rings[action.polygon]
+        const draftPolygon = draft[action.group].rings[
+          action.polygon
+        ] as NotReadonly<PolygonState>
         draftPolygon.sides = getDraftUpdatedByOptions<PolygonStateSides>(
           draftPolygon.sides,
           action.sides
@@ -302,3 +309,51 @@ export const polygonGroupsReducer = produce(
     }
   }
 )
+
+const polygonGroupsInitialState: PolygonInitialState = [
+  {
+    active: true,
+    position: { x: 0, y: 0 },
+    rings: [
+      {
+        active: true,
+        position: { x: 0, y: 0 },
+        dots: {
+          enabled: true,
+          fillColours: ["black"],
+          size: 1,
+          strokeColours: ["black"],
+          strokeWidth: 1,
+        },
+        rotation: { clockwise: true, enabled: true, speed: 1 },
+        scale: { enabled: true, speed: 1, range: { max: 10, min: 0 } },
+        sides: {
+          enabled: true,
+          strokeWidth: 1,
+          colours: ["black"],
+          amount: 6,
+        },
+      },
+    ],
+  },
+]
+
+export const NavigationContextWrapper: React.FC = ({ children }) => {
+  const [state, dispatch] = useReducer(
+    polygonGroupsReducer,
+    polygonGroupsInitialState
+  )
+
+  return (
+    <polygonGroupsDispatch.Provider value={dispatch}>
+      <polygonGroupsState.Provider value={state}>
+        {children}
+      </polygonGroupsState.Provider>
+    </polygonGroupsDispatch.Provider>
+  )
+}
+
+export const polygonGroupsDispatch = createContext(
+  {} as React.Dispatch<PolygonGroupsActions>
+)
+export const polygonGroupsState = createContext([] as PolygonInitialState)
