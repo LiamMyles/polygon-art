@@ -287,6 +287,9 @@ describe("Polygon Reducer", () => {
       expect(actualState).toEqual(expectedState)
     })
   })
+  describe("UPDATE_POLYGON_ACTIVE", () => {
+    it.todo("should update polygon active state")
+  })
   describe("UPDATE_POLYGON_ROTATION", () => {
     let initialState: PolygonInitialState
     beforeAll(() => {
@@ -1211,8 +1214,123 @@ describe("Polygon Reducer", () => {
         },
       ]
     })
-    it.todo("should update all polygon all options")
-    it.todo("should update some polygon all options")
+    it("should update all polygon all options", () => {
+      const action: PolygonGroupsActions = {
+        type: "UPDATE_POLYGON_ALL",
+        group: 0,
+        polygon: 0,
+        polygonState: {
+          active: false,
+          position: { x: 10, y: 10 },
+          dots: {
+            enabled: false,
+            fillColours: ["white"],
+            size: 10,
+            strokeColours: ["white"],
+            strokeWidth: 10,
+          },
+          rotation: { clockwise: false, enabled: false, speed: 10 },
+          scale: { enabled: false, speed: 10, range: { max: 100, min: 10 } },
+          sides: {
+            enabled: false,
+            strokeWidth: 10,
+            colours: ["white"],
+            amount: 3,
+          },
+        },
+      }
+      const expectedState: PolygonInitialState = [
+        {
+          active: true,
+          position: { x: 0, y: 0 },
+          rings: [
+            {
+              active: false,
+              position: { x: 10, y: 10 },
+              dots: {
+                enabled: false,
+                fillColours: ["white"],
+                size: 10,
+                strokeColours: ["white"],
+                strokeWidth: 10,
+              },
+              rotation: { clockwise: false, enabled: false, speed: 10 },
+              scale: {
+                enabled: false,
+                speed: 10,
+                range: { max: 100, min: 10 },
+              },
+              sides: {
+                enabled: false,
+                strokeWidth: 10,
+                colours: ["white"],
+                amount: 3,
+              },
+            },
+          ],
+        },
+      ]
+      const actualState = polygonGroupsReducer(initialState, action)
+
+      expect(actualState).toEqual(expectedState)
+    })
+    it("should update some polygon all options", () => {
+      const action: PolygonGroupsActions = {
+        type: "UPDATE_POLYGON_ALL",
+        group: 0,
+        polygon: 0,
+        polygonState: {
+          position: { x: 10, y: 10 },
+          dots: {
+            fillColours: ["white"],
+            size: 10,
+            strokeColours: ["white"],
+            strokeWidth: 10,
+          },
+          rotation: { clockwise: false, speed: 10 },
+          scale: { speed: 10, range: { max: 100, min: 10 } },
+          sides: {
+            strokeWidth: 10,
+            colours: ["white"],
+            amount: 3,
+          },
+        },
+      }
+      const expectedState: PolygonInitialState = [
+        {
+          active: true,
+          position: { x: 0, y: 0 },
+          rings: [
+            {
+              active: true,
+              position: { x: 10, y: 10 },
+              dots: {
+                enabled: true,
+                fillColours: ["white"],
+                size: 10,
+                strokeColours: ["white"],
+                strokeWidth: 10,
+              },
+              rotation: { clockwise: false, enabled: true, speed: 10 },
+              scale: {
+                enabled: true,
+                speed: 10,
+                range: { max: 100, min: 10 },
+              },
+              sides: {
+                enabled: true,
+                strokeWidth: 10,
+                colours: ["white"],
+                amount: 3,
+              },
+            },
+          ],
+        },
+      ]
+      const actualState = polygonGroupsReducer(initialState, action)
+
+      expect(actualState).toEqual(expectedState)
+    })
   })
 })
 

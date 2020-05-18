@@ -95,11 +95,12 @@ interface ActionUpdatePolygonAll {
   group: number
   polygon: number
   polygonState: {
+    active?: boolean
     position?: Cords
-    rotation?: PolygonStateRotation
-    scale?: PolygonStateScale
-    dots?: PolygonStateDots
-    sides?: PolygonStateSides
+    rotation?: PolygonStateRotationOptional
+    scale?: PolygonStateScaleOptional
+    dots?: PolygonStateDotsOptional
+    sides?: PolygonStateSidesOptional
   }
 }
 
@@ -212,6 +213,36 @@ export const polygonGroupsReducer = produce(
         break
       }
       case "UPDATE_POLYGON_ALL": {
+        const draftPolygon = draft[action.group].rings[action.polygon]
+        if (action.polygonState.active !== undefined) {
+          draftPolygon.active = action.polygonState.active
+        }
+        if (action.polygonState.position !== undefined) {
+          draftPolygon.position = action.polygonState.position
+        }
+        if (action.polygonState.dots !== undefined) {
+          draftPolygon.dots = getDraftUpdatedByOptions<PolygonStateDots>(
+            draftPolygon.dots,
+            action.polygonState.dots
+          )
+        }
+        if (action.polygonState.rotation !== undefined) {
+          draftPolygon.rotation = getDraftUpdatedByOptions<
+            PolygonStateRotation
+          >(draftPolygon.rotation, action.polygonState.rotation)
+        }
+        if (action.polygonState.sides !== undefined) {
+          draftPolygon.sides = getDraftUpdatedByOptions<PolygonStateSides>(
+            draftPolygon.sides,
+            action.polygonState.sides
+          )
+        }
+        if (action.polygonState.scale !== undefined) {
+          draftPolygon.scale = getDraftUpdatedByOptions<PolygonStateScale>(
+            draftPolygon.scale,
+            action.polygonState.scale
+          )
+        }
         break
       }
       case "UPDATE_POLYGON_DOTS": {
