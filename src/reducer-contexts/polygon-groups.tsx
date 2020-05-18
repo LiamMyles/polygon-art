@@ -12,24 +12,10 @@ interface PolygonStateRotation {
   speed: number
 }
 
-interface PolygonStateRotationOptional {
-  enabled?: boolean
-  clockwise?: boolean
-  speed?: number
-}
 interface PolygonStateScale {
   enabled: boolean
   speed: number
   range: {
-    min: number
-    max: number
-  }
-}
-
-interface PolygonStateScaleOptional {
-  enabled?: boolean
-  speed?: number
-  range?: {
     min: number
     max: number
   }
@@ -42,26 +28,11 @@ interface PolygonStateDots {
   strokeWidth: number
   strokeColours: ReadonlyArray<string>
 }
-interface PolygonStateDotsOptional {
-  enabled?: boolean
-  size?: number
-  fillColours?: [string]
-  strokeWidth?: number
-  strokeColours?: [string]
-}
-
 interface PolygonStateSides {
   enabled: boolean
   amount: number
   strokeWidth: number
   colours: ReadonlyArray<string>
-}
-
-interface PolygonStateSidesOptional {
-  enabled?: boolean
-  amount?: number
-  strokeWidth?: number
-  colours?: [string]
 }
 
 interface PolygonState {
@@ -90,6 +61,12 @@ interface ActionCreatePolygon {
   group: number
 }
 
+interface ActionUpdatePolygonGroupPosition {
+  type: "UPDATE_POLYGON_GROUP_POSITION"
+  group: number
+  position: Cords
+}
+
 interface ActionUpdatePolygonAll {
   type: "UPDATE_POLYGON_ALL"
   group: number
@@ -97,17 +74,11 @@ interface ActionUpdatePolygonAll {
   polygonState: {
     active?: boolean
     position?: Cords
-    rotation?: PolygonStateRotationOptional
-    scale?: PolygonStateScaleOptional
-    dots?: PolygonStateDotsOptional
-    sides?: PolygonStateSidesOptional
+    rotation?: Partial<PolygonStateRotation>
+    scale?: Partial<PolygonStateScale>
+    dots?: Partial<PolygonStateDots>
+    sides?: Partial<PolygonStateSides>
   }
-}
-
-interface ActionUpdatePolygonGroupPosition {
-  type: "UPDATE_POLYGON_GROUP_POSITION"
-  group: number
-  position: Cords
 }
 
 interface ActionUpdatePolygonActive {
@@ -132,25 +103,25 @@ interface ActionUpdatePolygonRotation {
   type: "UPDATE_POLYGON_ROTATION"
   group: number
   polygon: number
-  rotation: PolygonStateRotationOptional
+  rotation: Partial<PolygonStateRotation>
 }
 interface ActionUpdatePolygonScale {
   type: "UPDATE_POLYGON_SCALE"
   group: number
   polygon: number
-  scale: PolygonStateScaleOptional
+  scale: Partial<PolygonStateScale>
 }
 interface ActionUpdatePolygonDots {
   type: "UPDATE_POLYGON_DOTS"
   group: number
   polygon: number
-  dots: PolygonStateDotsOptional
+  dots: Partial<PolygonStateDots>
 }
 interface ActionUpdatePolygonSides {
   type: "UPDATE_POLYGON_SIDES"
   group: number
   polygon: number
-  sides: PolygonStateSidesOptional
+  sides: Partial<PolygonStateSides>
 }
 
 export type PolygonGroupsActions =
