@@ -8,39 +8,40 @@ import {
   NavigationContextWrapper,
   polygonGroupsDispatch,
   polygonGroupsState,
+  PolygonRingRotation,
+  PolygonRingScale,
+  PolygonRingDots,
+  PolygonRingSides,
 } from "reducer-contexts/polygon-groups"
 
 describe("Polygon Reducer", () => {
-  let initialState: PolygonInitialState
-  beforeAll(() => {
-    initialState = [
-      {
-        active: true,
-        position: { x: 0, y: 0 },
-        rings: [
-          {
-            active: true,
-            position: { x: 0, y: 0 },
-            dots: {
-              enabled: true,
-              fillColours: ["black"],
-              size: 1,
-              strokeColours: ["black"],
-              strokeWidth: 1,
-            },
-            rotation: { clockwise: true, enabled: true, speed: 1 },
-            scale: { enabled: true, speed: 1, range: { max: 10, min: 0 } },
-            sides: {
-              enabled: true,
-              strokeWidth: 1,
-              colours: ["black"],
-              amount: 6,
-            },
+  let initialState: PolygonInitialState = [
+    {
+      active: true,
+      position: { x: 0, y: 0 },
+      rings: [
+        {
+          active: true,
+          position: { x: 0, y: 0 },
+          dots: {
+            enabled: true,
+            fillColours: ["black"],
+            size: 1,
+            strokeColours: ["black"],
+            strokeWidth: 1,
           },
-        ],
-      },
-    ]
-  })
+          rotation: { clockwise: true, enabled: true, speed: 1 },
+          scale: { enabled: true, speed: 1, range: { max: 10, min: 0 } },
+          sides: {
+            enabled: true,
+            strokeWidth: 1,
+            colours: ["black"],
+            amount: 6,
+          },
+        },
+      ],
+    },
+  ]
   describe("CREATE_POLYGON_GROUP", () => {
     it("should create polygon group", () => {
       const action: PolygonGroupsActions = { type: "CREATE_POLYGON_GROUP" }
@@ -1244,6 +1245,207 @@ describe("Polygon Reducer", () => {
       const actualState = polygonGroupsReducer(initialState, action)
 
       expect(actualState).toEqual(expectedState)
+    })
+  })
+  describe("RANDOMIZE_POLYGON_DOTS", () => {
+    it("should randomize a polygons dots", () => {
+      const action: PolygonGroupsActions = {
+        type: "RANDOMIZE_POLYGON_DOTS",
+        group: 0,
+        polygon: 0,
+      }
+      const actualState = polygonGroupsReducer(initialState, action)
+      expect(actualState[0].rings[0].dots).not.toEqual(
+        initialState[0].rings[0].dots
+      )
+      expect(actualState[0].rings[0].dots).toEqual(
+        expect.objectContaining<PolygonRingDots>({
+          enabled: expect.any(Boolean),
+          size: expect.any(Number),
+          fillColours: expect.any(Array),
+          strokeColours: expect.any(Array),
+          strokeWidth: expect.any(Number),
+        })
+      )
+    })
+  })
+  describe("RANDOMIZE_POLYGON_SIDES", () => {
+    it("should randomize a polygons sides", () => {
+      const action: PolygonGroupsActions = {
+        type: "RANDOMIZE_POLYGON_SIDES",
+        group: 0,
+        polygon: 0,
+      }
+      const actualState = polygonGroupsReducer(initialState, action)
+      expect(actualState[0].rings[0].sides).not.toEqual(
+        initialState[0].rings[0].sides
+      )
+      expect(actualState[0].rings[0].sides).toEqual(
+        expect.objectContaining<PolygonRingSides>({
+          enabled: expect.any(Boolean),
+          amount: expect.any(Number),
+          strokeWidth: expect.any(Number),
+          colours: expect.any(Array),
+        })
+      )
+    })
+  })
+  describe("RANDOMIZE_POLYGON_SCALE", () => {
+    it("should randomize a polygons scale", () => {
+      const action: PolygonGroupsActions = {
+        type: "RANDOMIZE_POLYGON_SCALE",
+        group: 0,
+        polygon: 0,
+      }
+      const actualState = polygonGroupsReducer(initialState, action)
+      expect(actualState[0].rings[0].scale).not.toEqual(
+        initialState[0].rings[0].scale
+      )
+      expect(actualState[0].rings[0].scale).toEqual(
+        expect.objectContaining<PolygonRingScale>({
+          enabled: expect.any(Boolean),
+          speed: expect.any(Number),
+          range: expect.objectContaining({
+            min: expect.any(Number),
+            max: expect.any(Number),
+          }),
+        })
+      )
+    })
+  })
+  describe("RANDOMIZE_POLYGON_ROTATION", () => {
+    it("should randomize a polygons Rotation", () => {
+      const action: PolygonGroupsActions = {
+        type: "RANDOMIZE_POLYGON_ROTATION",
+        group: 0,
+        polygon: 0,
+      }
+      const actualState = polygonGroupsReducer(initialState, action)
+      expect(actualState[0].rings[0].rotation).not.toEqual(
+        initialState[0].rings[0].rotation
+      )
+      expect(actualState[0].rings[0].rotation).toEqual(
+        expect.objectContaining<PolygonRingRotation>({
+          enabled: expect.any(Boolean),
+          clockwise: expect.any(Boolean),
+          speed: expect.any(Number),
+        })
+      )
+    })
+  })
+  describe("RANDOMIZE_POLYGON", () => {
+    it("should return a randomized polygon", () => {
+      const action: PolygonGroupsActions = {
+        type: "RANDOMIZE_POLYGON",
+        group: 0,
+        polygon: 0,
+      }
+      const actualState = polygonGroupsReducer(initialState, action)
+
+      expect(actualState[0].rings[0].dots).not.toEqual(
+        initialState[0].rings[0].dots
+      )
+      expect(actualState[0].rings[0].dots).toEqual(
+        expect.objectContaining<PolygonRingDots>({
+          enabled: expect.any(Boolean),
+          size: expect.any(Number),
+          fillColours: expect.any(Array),
+          strokeColours: expect.any(Array),
+          strokeWidth: expect.any(Number),
+        })
+      )
+      expect(actualState[0].rings[0].sides).not.toEqual(
+        initialState[0].rings[0].sides
+      )
+      expect(actualState[0].rings[0].sides).toEqual(
+        expect.objectContaining<PolygonRingSides>({
+          enabled: expect.any(Boolean),
+          amount: expect.any(Number),
+          strokeWidth: expect.any(Number),
+          colours: expect.any(Array),
+        })
+      )
+      expect(actualState[0].rings[0].scale).not.toEqual(
+        initialState[0].rings[0].scale
+      )
+      expect(actualState[0].rings[0].scale).toEqual(
+        expect.objectContaining<PolygonRingScale>({
+          enabled: expect.any(Boolean),
+          speed: expect.any(Number),
+          range: expect.objectContaining({
+            min: expect.any(Number),
+            max: expect.any(Number),
+          }),
+        })
+      )
+
+      expect(actualState[0].rings[0].rotation).not.toEqual(
+        initialState[0].rings[0].rotation
+      )
+      expect(actualState[0].rings[0].rotation).toEqual(
+        expect.objectContaining<PolygonRingRotation>({
+          enabled: expect.any(Boolean),
+          clockwise: expect.any(Boolean),
+          speed: expect.any(Number),
+        })
+      )
+    })
+  })
+  describe("RANDOMIZED_POLYGON_RINGS", () => {
+    it("should return an array of randomized polygon", () => {
+      const action: PolygonGroupsActions = {
+        type: "RANDOMIZE_POLYGON_RINGS",
+        group: 0,
+      }
+      const actualState = polygonGroupsReducer(initialState, action)
+      expect(actualState[0].rings.length).toBeGreaterThan(2)
+      expect(actualState[0].rings[0].dots).not.toEqual(
+        initialState[0].rings[0].dots
+      )
+      expect(actualState[0].rings[0].dots).toEqual(
+        expect.objectContaining<PolygonRingDots>({
+          enabled: expect.any(Boolean),
+          size: expect.any(Number),
+          fillColours: expect.any(Array),
+          strokeColours: expect.any(Array),
+          strokeWidth: expect.any(Number),
+        })
+      )
+      expect(actualState[0].rings[0].sides).not.toEqual(
+        initialState[0].rings[0].sides
+      )
+      expect(actualState[0].rings[0].sides).toEqual(
+        expect.objectContaining<PolygonRingSides>({
+          enabled: expect.any(Boolean),
+          amount: expect.any(Number),
+          strokeWidth: expect.any(Number),
+          colours: expect.any(Array),
+        })
+      )
+      expect(actualState[0].rings[0].scale).not.toEqual(
+        initialState[0].rings[0].scale
+      )
+      expect(actualState[0].rings[0].scale).toEqual(
+        expect.objectContaining<PolygonRingScale>({
+          enabled: expect.any(Boolean),
+          speed: expect.any(Number),
+          range: expect.objectContaining({
+            min: expect.any(Number),
+            max: expect.any(Number),
+          }),
+        })
+      )
+
+      expect(actualState[0].rings[0].rotation).not.toEqual(
+        initialState[0].rings[0].rotation
+      )
+      expect(actualState[0].rings[0].rotation).toEqual(
+        expect.objectContaining<PolygonRingRotation>({
+          enabled: expect.any(Boolean),
+          clockwise: expect.any(Boolean),
+          speed: expect.any(Number),
+        })
+      )
     })
   })
 })

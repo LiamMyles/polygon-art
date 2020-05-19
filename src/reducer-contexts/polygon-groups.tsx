@@ -6,13 +6,13 @@ interface Cords {
   y: number
 }
 
-interface PolygonStateRotation {
+export interface PolygonRingRotation {
   enabled: boolean
   clockwise: boolean
   speed: number
 }
 
-interface PolygonStateScale {
+export interface PolygonRingScale {
   enabled: boolean
   speed: number
   range: {
@@ -21,36 +21,36 @@ interface PolygonStateScale {
   }
 }
 
-interface PolygonStateDots {
+export interface PolygonRingDots {
   enabled: boolean
   size: number
   fillColours: ReadonlyArray<string>
-  strokeWidth: number
   strokeColours: ReadonlyArray<string>
+  strokeWidth: number
 }
-interface PolygonStateSides {
+export interface PolygonRingSides {
   enabled: boolean
   amount: number
   strokeWidth: number
   colours: ReadonlyArray<string>
 }
 
-interface PolygonState {
+interface PolygonRing {
   active: boolean
   position: Cords
-  rotation: PolygonStateRotation
-  scale: PolygonStateScale
-  dots: PolygonStateDots
-  sides: PolygonStateSides
+  rotation: PolygonRingRotation
+  scale: PolygonRingScale
+  dots: PolygonRingDots
+  sides: PolygonRingSides
 }
 
-interface PolygonGroupsState {
+interface PolygonGroup {
   active: boolean
   position: Cords
-  rings: ReadonlyArray<PolygonState>
+  rings: ReadonlyArray<PolygonRing>
 }
 
-export type PolygonInitialState = ReadonlyArray<PolygonGroupsState>
+export type PolygonInitialState = ReadonlyArray<PolygonGroup>
 
 interface ActionCreateGroup {
   type: "CREATE_POLYGON_GROUP"
@@ -74,10 +74,10 @@ interface ActionUpdatePolygonAll {
   polygonState: {
     active?: boolean
     position?: Cords
-    rotation?: Partial<PolygonStateRotation>
-    scale?: Partial<PolygonStateScale>
-    dots?: Partial<PolygonStateDots>
-    sides?: Partial<PolygonStateSides>
+    rotation?: Partial<PolygonRingRotation>
+    scale?: Partial<PolygonRingScale>
+    dots?: Partial<PolygonRingDots>
+    sides?: Partial<PolygonRingSides>
   }
 }
 
@@ -103,25 +103,55 @@ interface ActionUpdatePolygonRotation {
   type: "UPDATE_POLYGON_ROTATION"
   group: number
   polygon: number
-  rotation: Partial<PolygonStateRotation>
+  rotation: Partial<PolygonRingRotation>
 }
 interface ActionUpdatePolygonScale {
   type: "UPDATE_POLYGON_SCALE"
   group: number
   polygon: number
-  scale: Partial<PolygonStateScale>
+  scale: Partial<PolygonRingScale>
 }
 interface ActionUpdatePolygonDots {
   type: "UPDATE_POLYGON_DOTS"
   group: number
   polygon: number
-  dots: Partial<PolygonStateDots>
+  dots: Partial<PolygonRingDots>
 }
 interface ActionUpdatePolygonSides {
   type: "UPDATE_POLYGON_SIDES"
   group: number
   polygon: number
-  sides: Partial<PolygonStateSides>
+  sides: Partial<PolygonRingSides>
+}
+
+interface ActionRandomizePolygonRings {
+  type: "RANDOMIZE_POLYGON_RINGS"
+  group: number
+}
+interface ActionRandomizePolygon {
+  type: "RANDOMIZE_POLYGON"
+  group: number
+  polygon: number
+}
+interface ActionRandomizePolygonSides {
+  type: "RANDOMIZE_POLYGON_SIDES"
+  group: number
+  polygon: number
+}
+interface ActionRandomizePolygonRotation {
+  type: "RANDOMIZE_POLYGON_ROTATION"
+  group: number
+  polygon: number
+}
+interface ActionRandomizePolygonScale {
+  type: "RANDOMIZE_POLYGON_SCALE"
+  group: number
+  polygon: number
+}
+interface ActionRandomizePolygonDots {
+  type: "RANDOMIZE_POLYGON_DOTS"
+  group: number
+  polygon: number
 }
 
 export type PolygonGroupsActions =
@@ -136,6 +166,12 @@ export type PolygonGroupsActions =
   | ActionUpdatePolygonSides
   | ActionUpdatePolygonActive
   | ActionUpdatePolygonGroupActive
+  | ActionRandomizePolygonRings
+  | ActionRandomizePolygon
+  | ActionRandomizePolygonSides
+  | ActionRandomizePolygonRotation
+  | ActionRandomizePolygonScale
+  | ActionRandomizePolygonDots
 
 type NotReadonly<T> = {
   -readonly [P in keyof T]: T[P]
@@ -159,6 +195,135 @@ function getDraftUpdatedByOptions<T>(draft: T, options: Partial<T>): T {
   })
 
   return newState as T
+}
+
+// Randomizing Functions taken from MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+
+function getRandomArbitrary(min: number, max: number): number {
+  return Math.random() * (max - min) + min
+}
+
+function getRandomIntInclusive(min: number, max: number): number {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+function getRandomMinAndMaxInt(
+  inputMin: number,
+  inputMax: number
+): { min: number; max: number } {
+  const min = getRandomIntInclusive(inputMin, inputMax - 1)
+  const max = getRandomIntInclusive(min + 1, inputMax)
+  return { min, max }
+}
+
+function getRandomBoolean(): boolean {
+  return getRandomIntInclusive(0, 1) === 1 ? true : false
+}
+
+/**
+ * Taken from https://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion/9493060#9493060
+ *
+ * Converts an HSL color value to RGB. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Assumes h, s, and l are contained in the set [0, 1] and
+ * returns r, g, and b in the set [0, 255].
+ *
+ *
+ * @param   {number}  h       The hue
+ * @param   {number}  s       The saturation
+ * @param   {number}  l       The lightness
+ * @return  {Array}           The RGB representation
+ */
+function hslToRgb(h: number, s: number, l: number): [number, number, number] {
+  var r, g, b
+
+  if (s === 0) {
+    r = g = b = l // achromatic
+  } else {
+    var hue2rgb = function hue2rgb(p: number, q: number, t: number) {
+      if (t < 0) t += 1
+      if (t > 1) t -= 1
+      if (t < 1 / 6) return p + (q - p) * 6 * t
+      if (t < 1 / 2) return q
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
+      return p
+    }
+
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s
+    var p = 2 * l - q
+    r = hue2rgb(p, q, h + 1 / 3)
+    g = hue2rgb(p, q, h)
+    b = hue2rgb(p, q, h - 1 / 3)
+  }
+
+  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)]
+}
+
+function getRandomRGB(): string {
+  const h = getRandomArbitrary(0, 1)
+  const s = getRandomArbitrary(0.5, 0.7)
+  const l = getRandomArbitrary(0.5, 0.7)
+  const [r, g, b] = hslToRgb(h, s, l)
+  return `rgb(${r},${g},${b})`
+}
+
+function getRandomColoursForPolygon(amountOfSides: number): string[] {
+  const amountOfColours = getRandomIntInclusive(1, amountOfSides)
+
+  return [...Array(amountOfColours)].map(() => getRandomRGB())
+}
+
+function getRandomSides(): PolygonRingSides {
+  const sidesAmount = getRandomIntInclusive(3, 12)
+  return {
+    enabled: getRandomBoolean(),
+    strokeWidth: getRandomIntInclusive(0, 10),
+    amount: sidesAmount,
+    colours: getRandomColoursForPolygon(sidesAmount),
+  }
+}
+function getRandomDots(amountOfSides: number): PolygonRingDots {
+  return {
+    enabled: getRandomBoolean(),
+    fillColours: getRandomColoursForPolygon(amountOfSides),
+    size: getRandomIntInclusive(1, 100),
+    strokeWidth: getRandomIntInclusive(0, 10),
+    strokeColours: getRandomColoursForPolygon(amountOfSides),
+  }
+}
+function getRandomRotation(): PolygonRingRotation {
+  return {
+    enabled: getRandomBoolean(),
+    clockwise: getRandomBoolean(),
+    speed: getRandomIntInclusive(1, 100),
+  }
+}
+function getRandomScale(): PolygonRingScale {
+  return {
+    enabled: getRandomBoolean(),
+    range: getRandomMinAndMaxInt(1, 100),
+    speed: getRandomIntInclusive(1, 100),
+  }
+}
+
+function getRandomPolygon({
+  active = true,
+  position = { x: 0, y: 0 },
+}: Partial<PolygonRing> = {}): PolygonRing {
+  const sides = getRandomSides()
+  const dots = getRandomDots(sides.amount)
+  const rotation = getRandomRotation()
+  const scale = getRandomScale()
+
+  return { active, position, sides, dots, rotation, scale }
+}
+
+function createRandomPolygonRings(): PolygonRing[] {
+  const amountOfRings = getRandomIntInclusive(2, 6)
+
+  return [...Array(amountOfRings)].map(() => getRandomPolygon())
 }
 
 export const polygonGroupsReducer = produce(
@@ -201,7 +366,7 @@ export const polygonGroupsReducer = produce(
       case "UPDATE_POLYGON_ALL": {
         const draftPolygon = draft[action.group].rings[
           action.polygon
-        ] as NotReadonly<PolygonState>
+        ] as NotReadonly<PolygonRing>
         if (action.polygonState.active !== undefined) {
           draftPolygon.active = action.polygonState.active
         }
@@ -209,24 +374,25 @@ export const polygonGroupsReducer = produce(
           draftPolygon.position = action.polygonState.position
         }
         if (action.polygonState.dots !== undefined) {
-          draftPolygon.dots = getDraftUpdatedByOptions<PolygonStateDots>(
+          draftPolygon.dots = getDraftUpdatedByOptions<PolygonRingDots>(
             draftPolygon.dots,
             action.polygonState.dots
           )
         }
         if (action.polygonState.rotation !== undefined) {
-          draftPolygon.rotation = getDraftUpdatedByOptions<
-            PolygonStateRotation
-          >(draftPolygon.rotation, action.polygonState.rotation)
+          draftPolygon.rotation = getDraftUpdatedByOptions<PolygonRingRotation>(
+            draftPolygon.rotation,
+            action.polygonState.rotation
+          )
         }
         if (action.polygonState.sides !== undefined) {
-          draftPolygon.sides = getDraftUpdatedByOptions<PolygonStateSides>(
+          draftPolygon.sides = getDraftUpdatedByOptions<PolygonRingSides>(
             draftPolygon.sides,
             action.polygonState.sides
           )
         }
         if (action.polygonState.scale !== undefined) {
-          draftPolygon.scale = getDraftUpdatedByOptions<PolygonStateScale>(
+          draftPolygon.scale = getDraftUpdatedByOptions<PolygonRingScale>(
             draftPolygon.scale,
             action.polygonState.scale
           )
@@ -244,8 +410,8 @@ export const polygonGroupsReducer = produce(
       case "UPDATE_POLYGON_DOTS": {
         const draftPolygon = draft[action.group].rings[
           action.polygon
-        ] as NotReadonly<PolygonState>
-        draftPolygon.dots = getDraftUpdatedByOptions<PolygonStateDots>(
+        ] as NotReadonly<PolygonRing>
+        draftPolygon.dots = getDraftUpdatedByOptions<PolygonRingDots>(
           draftPolygon.dots,
           action.dots
         )
@@ -253,7 +419,7 @@ export const polygonGroupsReducer = produce(
       }
       case "UPDATE_POLYGON_ROTATION": {
         const draftPolygon = draft[action.group].rings[action.polygon]
-        draftPolygon.rotation = getDraftUpdatedByOptions<PolygonStateRotation>(
+        draftPolygon.rotation = getDraftUpdatedByOptions<PolygonRingRotation>(
           draftPolygon.rotation,
           action.rotation
         )
@@ -262,8 +428,8 @@ export const polygonGroupsReducer = produce(
       case "UPDATE_POLYGON_SIDES": {
         const draftPolygon = draft[action.group].rings[
           action.polygon
-        ] as NotReadonly<PolygonState>
-        draftPolygon.sides = getDraftUpdatedByOptions<PolygonStateSides>(
+        ] as NotReadonly<PolygonRing>
+        draftPolygon.sides = getDraftUpdatedByOptions<PolygonRingSides>(
           draftPolygon.sides,
           action.sides
         )
@@ -271,10 +437,53 @@ export const polygonGroupsReducer = produce(
       }
       case "UPDATE_POLYGON_SCALE": {
         const draftPolygon = draft[action.group].rings[action.polygon]
-        draftPolygon.scale = getDraftUpdatedByOptions<PolygonStateScale>(
+        draftPolygon.scale = getDraftUpdatedByOptions<PolygonRingScale>(
           draftPolygon.scale,
           action.scale
         )
+        break
+      }
+      case "RANDOMIZE_POLYGON_RINGS": {
+        const draftGroups = draft[action.group] as NotReadonly<PolygonGroup>
+        draftGroups.rings = createRandomPolygonRings()
+        break
+      }
+      case "RANDOMIZE_POLYGON": {
+        const draftRings = draft[action.group].rings as NotReadonly<
+          PolygonRing[]
+        >
+        draftRings[action.polygon] = getRandomPolygon(
+          original(draftRings[action.polygon])
+        )
+        break
+      }
+      case "RANDOMIZE_POLYGON_SIDES": {
+        const draftPolygon = draft[action.group].rings[
+          action.polygon
+        ] as NotReadonly<PolygonRing>
+        draftPolygon.sides = getRandomSides()
+        break
+      }
+      case "RANDOMIZE_POLYGON_ROTATION": {
+        const draftPolygon = draft[action.group].rings[
+          action.polygon
+        ] as NotReadonly<PolygonRing>
+        draftPolygon.rotation = getRandomRotation()
+        break
+      }
+      case "RANDOMIZE_POLYGON_SCALE": {
+        const draftPolygon = draft[action.group].rings[
+          action.polygon
+        ] as NotReadonly<PolygonRing>
+        draftPolygon.scale = getRandomScale()
+        break
+      }
+      case "RANDOMIZE_POLYGON_DOTS": {
+        const draftPolygon = draft[action.group].rings[
+          action.polygon
+        ] as NotReadonly<PolygonRing>
+        const sides = draftPolygon.sides.amount
+        draftPolygon.dots = getRandomDots(sides)
         break
       }
     }
