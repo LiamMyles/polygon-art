@@ -218,8 +218,12 @@ function getRandomMinAndMaxInt(
   inputMax: number
 ): { min: number; max: number } {
   const min = getRandomIntInclusive(inputMin, inputMax - 1)
-  const max = getRandomIntInclusive(min, inputMax)
+  const max = getRandomIntInclusive(min + 1, inputMax)
   return { min, max }
+}
+
+function getRandomBoolean(): boolean {
+  return getRandomIntInclusive(0, 1) === 1 ? true : false
 }
 
 /**
@@ -261,7 +265,7 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
   return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)]
 }
 
-function getRandomRGB() {
+function getRandomRGB(): string {
   const h = getRandomArbitrary(0, 1)
   const s = getRandomArbitrary(0.5, 0.7)
   const l = getRandomArbitrary(0.5, 0.7)
@@ -269,10 +273,44 @@ function getRandomRGB() {
   return `rgb(${r},${g},${b})`
 }
 
-function getRandomSides() {}
-function getRandomDots() {}
-function getRandomRotation() {}
-function getRandomScale() {}
+function getRandomColoursForPolygon(amountOfSides: number): string[] {
+  const amountOfColours = getRandomIntInclusive(1, amountOfSides)
+
+  return [...Array(amountOfColours)].map(() => getRandomRGB())
+}
+
+function getRandomSides(): PolygonRingSides {
+  const sidesAmount = getRandomIntInclusive(3, 12)
+  return {
+    enabled: getRandomBoolean(),
+    strokeWidth: getRandomIntInclusive(0, 10),
+    amount: sidesAmount,
+    colours: getRandomColoursForPolygon(sidesAmount),
+  }
+}
+function getRandomDots(amountOfSides: number): PolygonRingDots {
+  return {
+    enabled: getRandomBoolean(),
+    fillColours: getRandomColoursForPolygon(amountOfSides),
+    size: getRandomIntInclusive(1, 100),
+    strokeWidth: getRandomIntInclusive(0, 10),
+    strokeColours: getRandomColoursForPolygon(amountOfSides),
+  }
+}
+function getRandomRotation(): PolygonRingRotation {
+  return {
+    enabled: getRandomBoolean(),
+    clockwise: getRandomBoolean(),
+    speed: getRandomIntInclusive(1, 100),
+  }
+}
+function getRandomScale(): PolygonRingScale {
+  return {
+    enabled: getRandomBoolean(),
+    range: getRandomMinAndMaxInt(1, 100),
+    speed: getRandomIntInclusive(1, 100),
+  }
+}
 
 function getRandomPolygon(): PolygonRing {
   getRandomSides()
@@ -416,15 +454,32 @@ export const polygonGroupsReducer = produce(
         break
       }
       case "RANDOMIZE_POLYGON_SIDES": {
+        const draftPolygon = draft[action.group].rings[
+          action.polygon
+        ] as NotReadonly<PolygonRing>
+        draftPolygon.sides = getRandomSides()
         break
       }
       case "RANDOMIZE_POLYGON_ROTATION": {
+        const draftPolygon = draft[action.group].rings[
+          action.polygon
+        ] as NotReadonly<PolygonRing>
+        draftPolygon.rotation = getRandomRotation()
         break
       }
       case "RANDOMIZE_POLYGON_SCALE": {
+        const draftPolygon = draft[action.group].rings[
+          action.polygon
+        ] as NotReadonly<PolygonRing>
+        draftPolygon.scale = getRandomScale()
         break
       }
       case "RANDOMIZE_POLYGON_DOTS": {
+        const draftPolygon = draft[action.group].rings[
+          action.polygon
+        ] as NotReadonly<PolygonRing>
+        const sides = draftPolygon.sides.amount
+        draftPolygon.dots = getRandomDots(sides)
         break
       }
     }
