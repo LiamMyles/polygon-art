@@ -35,7 +35,7 @@ export interface PolygonRingSides {
   colours: ReadonlyArray<string>
 }
 
-export interface PolygonRing {
+interface PolygonRing {
   active: boolean
   position: Cords
   rotation: PolygonRingRotation
