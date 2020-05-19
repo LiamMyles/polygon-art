@@ -312,11 +312,16 @@ function getRandomScale(): PolygonRingScale {
   }
 }
 
-function getRandomPolygon(): PolygonRing {
-  getRandomSides()
-  getRandomDots()
-  getRandomRotation()
-  getRandomScale()
+function getRandomPolygon({
+  active = true,
+  position = { x: 0, y: 0 },
+}: Partial<PolygonRing> = {}): PolygonRing {
+  const sides = getRandomSides()
+  const dots = getRandomDots(sides.amount)
+  const rotation = getRandomRotation()
+  const scale = getRandomScale()
+
+  return { active, position, sides, dots, rotation, scale }
 }
 
 function createRandomPolygonRings(): [PolygonRing] {
@@ -451,6 +456,12 @@ export const polygonGroupsReducer = produce(
         break
       }
       case "RANDOMIZE_POLYGON": {
+        const draftRings = draft[action.group].rings as NotReadonly<
+          PolygonRing[]
+        >
+        draftRings[action.polygon] = getRandomPolygon(
+          original(draftRings[action.polygon])
+        )
         break
       }
       case "RANDOMIZE_POLYGON_SIDES": {
