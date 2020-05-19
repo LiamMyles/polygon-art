@@ -124,9 +124,6 @@ interface ActionUpdatePolygonSides {
   sides: Partial<PolygonRingSides>
 }
 
-interface ActionRandomizePolygonGroups {
-  type: "RANDOMIZE_POLYGON_GROUPS"
-}
 interface ActionRandomizePolygonRings {
   type: "RANDOMIZE_POLYGON_RINGS"
   group: number
@@ -169,7 +166,6 @@ export type PolygonGroupsActions =
   | ActionUpdatePolygonSides
   | ActionUpdatePolygonActive
   | ActionUpdatePolygonGroupActive
-  | ActionRandomizePolygonGroups
   | ActionRandomizePolygonRings
   | ActionRandomizePolygon
   | ActionRandomizePolygonSides
@@ -324,12 +320,10 @@ function getRandomPolygon({
   return { active, position, sides, dots, rotation, scale }
 }
 
-function createRandomPolygonRings(): [PolygonRing] {
-  getRandomPolygon()
-}
+function createRandomPolygonRings(): PolygonRing[] {
+  const amountOfRings = getRandomIntInclusive(2, 6)
 
-function createRandomGroups(): [PolygonGroup] {
-  getRandomPolygon()
+  return [...Array(amountOfRings)].map(() => getRandomPolygon())
 }
 
 export const polygonGroupsReducer = produce(
@@ -449,10 +443,9 @@ export const polygonGroupsReducer = produce(
         )
         break
       }
-      case "RANDOMIZE_POLYGON_GROUPS": {
-        break
-      }
       case "RANDOMIZE_POLYGON_RINGS": {
+        const draftGroups = draft[action.group] as NotReadonly<PolygonGroup>
+        draftGroups.rings = createRandomPolygonRings()
         break
       }
       case "RANDOMIZE_POLYGON": {

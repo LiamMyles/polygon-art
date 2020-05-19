@@ -1391,6 +1391,63 @@ describe("Polygon Reducer", () => {
       )
     })
   })
+  describe("RANDOMIZED_POLYGON_RINGS", () => {
+    it("should return an array of randomized polygon", () => {
+      const action: PolygonGroupsActions = {
+        type: "RANDOMIZE_POLYGON_RINGS",
+        group: 0,
+      }
+      const actualState = polygonGroupsReducer(initialState, action)
+      expect(actualState[0].rings.length).toBeGreaterThan(2)
+      expect(actualState[0].rings[0].dots).not.toEqual(
+        initialState[0].rings[0].dots
+      )
+      expect(actualState[0].rings[0].dots).toEqual(
+        expect.objectContaining<PolygonRingDots>({
+          enabled: expect.any(Boolean),
+          size: expect.any(Number),
+          fillColours: expect.any(Array),
+          strokeColours: expect.any(Array),
+          strokeWidth: expect.any(Number),
+        })
+      )
+      expect(actualState[0].rings[0].sides).not.toEqual(
+        initialState[0].rings[0].sides
+      )
+      expect(actualState[0].rings[0].sides).toEqual(
+        expect.objectContaining<PolygonRingSides>({
+          enabled: expect.any(Boolean),
+          amount: expect.any(Number),
+          strokeWidth: expect.any(Number),
+          colours: expect.any(Array),
+        })
+      )
+      expect(actualState[0].rings[0].scale).not.toEqual(
+        initialState[0].rings[0].scale
+      )
+      expect(actualState[0].rings[0].scale).toEqual(
+        expect.objectContaining<PolygonRingScale>({
+          enabled: expect.any(Boolean),
+          speed: expect.any(Number),
+          range: expect.objectContaining({
+            min: expect.any(Number),
+            max: expect.any(Number),
+          }),
+        })
+      )
+
+      expect(actualState[0].rings[0].rotation).not.toEqual(
+        initialState[0].rings[0].rotation
+      )
+      expect(actualState[0].rings[0].rotation).toEqual(
+        expect.objectContaining<PolygonRingRotation>({
+          enabled: expect.any(Boolean),
+          clockwise: expect.any(Boolean),
+          speed: expect.any(Number),
+        })
+      )
+    })
+  })
 })
 
 describe("Polygon Context", () => {
