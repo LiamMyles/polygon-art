@@ -1,4 +1,7 @@
-import { PolygonAnimationCalculation } from "polygon-logic/polygon-animation-calculation"
+import {
+  PolygonAnimationCalculation,
+  PolygonAnimation,
+} from "polygon-logic/polygon-animation-calculation"
 import { PolygonRing } from "reducer-contexts/polygon-groups"
 
 describe("Polygon Animation Calculation Class", () => {
@@ -8,65 +11,66 @@ describe("Polygon Animation Calculation Class", () => {
       position: { x: 0, y: 0 },
       dots: {
         enabled: true,
-        fillColours: ["black"],
+        fillColours: ["Black"],
         size: 1,
-        strokeColours: ["black"],
+        strokeColours: ["Black"],
         strokeWidth: 1,
       },
       rotation: { clockwise: true, enabled: true, speed: 1 },
       scale: {
         enabled: true,
         speed: 1,
-        range: { max: 10, min: 0 },
-        startingSize: 5,
+        range: { max: 100, min: 0 },
+        startingSize: 50,
       },
       sides: {
         enabled: true,
         strokeWidth: 1,
-        colours: ["black"],
-        amount: 6,
+        colours: ["Black"],
+        amount: 3,
       },
     }
 
-    const expectedPolygon = {
+    const expectedPolygon: PolygonAnimation = {
       position: { x: 0, y: 0 },
-      points: {
+      dots: {
         enabled: true,
+        strokeWidth: 1,
         position: [
           {
-            x: -26,
-            y: -44,
+            x: -25,
+            y: -43,
           },
           {
             x: 50,
-            y: -1,
+            y: -0,
           },
           {
             x: -25,
             y: 43,
           },
         ],
-        fillColour: "",
-        strokeColour: "",
+        fillColours: ["Black"],
+        strokeColours: ["Black"],
       },
-
       sides: {
         enabled: true,
+        strokeWidth: 1,
         positions: [
           [
             {
-              x: -26,
-              y: -44,
+              x: -25,
+              y: -43,
             },
             {
               x: 50,
-              y: -1,
+              y: -0,
             },
           ],
           [
             {
               x: 50,
-              y: -1,
+              y: -0,
             },
             {
               x: -25,
@@ -79,18 +83,18 @@ describe("Polygon Animation Calculation Class", () => {
               y: 43,
             },
             {
-              x: -26,
-              y: -44,
+              x: -25,
+              y: -43,
             },
           ],
         ],
-        strokeColour: "",
+        strokeColours: ["Black"],
       },
     }
 
-    const PolygonAnimation = new PolygonAnimationCalculation(polygonRingState)
+    const Polygon = new PolygonAnimationCalculation(polygonRingState)
 
-    expect(PolygonAnimation.getPolygonAnimation()).toEqual(expectedPolygon)
+    expect(Polygon.getPolygonFrame()).toEqual(expectedPolygon)
   })
   it.todo("should update polygon and persist state of update")
   it.todo("should not update scale if not enabled")
