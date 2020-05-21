@@ -1,40 +1,29 @@
-import { PolygonRing } from "reducer-contexts/polygon-groups"
+import {
+  PolygonRing,
+  PolygonRingSides,
+  PolygonRingDots,
+  Mutable,
+  Cords,
+} from "reducer-contexts/polygon-groups"
 
 interface PolygonAnimation {
-  position: {
-    x: number
-    y: number
-  }
+  position: Cords
   points: {
     enabled: boolean
-    position: {
-      x: number
-      y: number
-    }[]
+    position: Cords[]
     fillColour: string
     strokeColour: string
     strokeWidth: number
   }
   sides: {
     enabled: boolean
-    positions: [
-      {
-        x: number
-        y: number
-      },
-      {
-        x: number
-        y: number
-      }
-    ][]
+    positions: [Cords, Cords][]
     strokeColour: string
     strokeWidth: number
   }
 }
 
-interface PolygonPoint {
-  x: number
-  y: number
+interface PolygonPoint extends Cords {
   cos: number
   sin: number
 }
@@ -68,10 +57,20 @@ export class PolygonAnimationCalculation {
   constructor(polygonRingState: PolygonRing) {
     const {
       sides: { amount: sidesAmount },
+      sides,
+      dots,
       scale: { startingSize },
-    }: PolygonRing = polygonRingState
+    } = { ...polygonRingState }
 
     this.points = this.getInitialPoints(sidesAmount, startingSize)
+    this.style = getInitialStyles(sides, dots)
+  }
+
+  private getInitialStyles(
+    sides: Mutable<PolygonRingSides>,
+    dots: Mutable<PolygonRingSides>
+  ): PolygonStyle {
+    return { sides: { colours: sides.colours } }
   }
 
   private getInitialPoints(sides: number, startingSize: number): PolygonPoints {

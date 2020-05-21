@@ -1,9 +1,13 @@
 import React, { useReducer, createContext } from "react"
 import produce, { Draft, original } from "immer"
 
-interface Cords {
+export interface Cords {
   x: number
   y: number
+}
+
+export type Mutable<T> = {
+  -readonly [P in keyof T]: T[P]
 }
 
 export interface PolygonRingRotation {
@@ -173,10 +177,6 @@ export type PolygonGroupsActions =
   | ActionRandomizePolygonRotation
   | ActionRandomizePolygonScale
   | ActionRandomizePolygonDots
-
-type NotReadonly<T> = {
-  -readonly [P in keyof T]: T[P]
-}
 
 /**
  * Takes in the current draft for the matching options
@@ -374,7 +374,7 @@ export const polygonGroupsReducer = produce(
       case "UPDATE_POLYGON_ALL": {
         const draftPolygon = draft[action.group].rings[
           action.polygon
-        ] as NotReadonly<PolygonRing>
+        ] as Mutable<PolygonRing>
         if (action.polygonState.active !== undefined) {
           draftPolygon.active = action.polygonState.active
         }
@@ -418,7 +418,7 @@ export const polygonGroupsReducer = produce(
       case "UPDATE_POLYGON_DOTS": {
         const draftPolygon = draft[action.group].rings[
           action.polygon
-        ] as NotReadonly<PolygonRing>
+        ] as Mutable<PolygonRing>
         draftPolygon.dots = getDraftUpdatedByOptions<PolygonRingDots>(
           draftPolygon.dots,
           action.dots
@@ -436,7 +436,7 @@ export const polygonGroupsReducer = produce(
       case "UPDATE_POLYGON_SIDES": {
         const draftPolygon = draft[action.group].rings[
           action.polygon
-        ] as NotReadonly<PolygonRing>
+        ] as Mutable<PolygonRing>
         draftPolygon.sides = getDraftUpdatedByOptions<PolygonRingSides>(
           draftPolygon.sides,
           action.sides
@@ -452,14 +452,12 @@ export const polygonGroupsReducer = produce(
         break
       }
       case "RANDOMIZE_POLYGON_RINGS": {
-        const draftGroups = draft[action.group] as NotReadonly<PolygonGroup>
+        const draftGroups = draft[action.group] as Mutable<PolygonGroup>
         draftGroups.rings = createRandomPolygonRings()
         break
       }
       case "RANDOMIZE_POLYGON": {
-        const draftRings = draft[action.group].rings as NotReadonly<
-          PolygonRing[]
-        >
+        const draftRings = draft[action.group].rings as Mutable<PolygonRing[]>
         draftRings[action.polygon] = getRandomPolygon(
           original(draftRings[action.polygon])
         )
@@ -468,28 +466,28 @@ export const polygonGroupsReducer = produce(
       case "RANDOMIZE_POLYGON_SIDES": {
         const draftPolygon = draft[action.group].rings[
           action.polygon
-        ] as NotReadonly<PolygonRing>
+        ] as Mutable<PolygonRing>
         draftPolygon.sides = getRandomSides()
         break
       }
       case "RANDOMIZE_POLYGON_ROTATION": {
         const draftPolygon = draft[action.group].rings[
           action.polygon
-        ] as NotReadonly<PolygonRing>
+        ] as Mutable<PolygonRing>
         draftPolygon.rotation = getRandomRotation()
         break
       }
       case "RANDOMIZE_POLYGON_SCALE": {
         const draftPolygon = draft[action.group].rings[
           action.polygon
-        ] as NotReadonly<PolygonRing>
+        ] as Mutable<PolygonRing>
         draftPolygon.scale = getRandomScale()
         break
       }
       case "RANDOMIZE_POLYGON_DOTS": {
         const draftPolygon = draft[action.group].rings[
           action.polygon
-        ] as NotReadonly<PolygonRing>
+        ] as Mutable<PolygonRing>
         const sides = draftPolygon.sides.amount
         draftPolygon.dots = getRandomDots(sides)
         break
