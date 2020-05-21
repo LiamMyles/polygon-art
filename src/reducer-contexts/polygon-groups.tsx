@@ -19,6 +19,7 @@ export interface PolygonRingScale {
     min: number
     max: number
   }
+  startingSize: number
 }
 
 export interface PolygonRingDots {
@@ -35,7 +36,7 @@ export interface PolygonRingSides {
   colours: ReadonlyArray<string>
 }
 
-interface PolygonRing {
+export interface PolygonRing {
   active: boolean
   position: Cords
   rotation: PolygonRingRotation
@@ -301,10 +302,12 @@ function getRandomRotation(): PolygonRingRotation {
   }
 }
 function getRandomScale(): PolygonRingScale {
+  const { min, max } = getRandomMinAndMaxInt(1, 100)
   return {
     enabled: getRandomBoolean(),
-    range: getRandomMinAndMaxInt(1, 100),
+    range: { min, max },
     speed: getRandomIntInclusive(1, 100),
+    startingSize: getRandomIntInclusive(min, max),
   }
 }
 
@@ -345,7 +348,12 @@ export const polygonGroupsReducer = produce(
             strokeWidth: 1,
           },
           rotation: { clockwise: true, enabled: true, speed: 1 },
-          scale: { enabled: true, speed: 1, range: { max: 10, min: 0 } },
+          scale: {
+            enabled: true,
+            speed: 1,
+            range: { max: 10, min: 0 },
+            startingSize: 5,
+          },
           sides: {
             enabled: true,
             strokeWidth: 1,
@@ -506,7 +514,12 @@ const polygonGroupsInitialState: PolygonInitialState = [
           strokeWidth: 1,
         },
         rotation: { clockwise: true, enabled: true, speed: 1 },
-        scale: { enabled: true, speed: 1, range: { max: 10, min: 0 } },
+        scale: {
+          enabled: true,
+          speed: 1,
+          range: { max: 10, min: 0 },
+          startingSize: 5,
+        },
         sides: {
           enabled: true,
           strokeWidth: 1,
