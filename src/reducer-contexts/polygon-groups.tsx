@@ -10,6 +10,7 @@ export interface PolygonRingRotation {
   enabled: boolean
   clockwise: boolean
   speed: number
+  startingRotation: number
 }
 
 export interface PolygonRingScale {
@@ -295,6 +296,7 @@ function getRandomRotation(): PolygonRingRotation {
     enabled: getRandomBoolean(),
     clockwise: getRandomBoolean(),
     speed: getRandomIntInclusive(1, 100),
+    startingRotation: getRandomIntInclusive(1, 360),
   }
 }
 function getRandomScale(): PolygonRingScale {
@@ -325,7 +327,11 @@ function createRandomPolygonRings(): PolygonRing[] {
   return [...Array(amountOfRings)].map(() => getRandomPolygon())
 }
 
-export const polygonGroupsReducer = produce(
+type PolygonGroupsReducer = React.Reducer<
+  Readonly<PolygonInitialState>,
+  PolygonGroupsActions
+>
+export const polygonGroupsReducer: PolygonGroupsReducer = produce(
   (draft: Draft<PolygonInitialState>, action: PolygonGroupsActions) => {
     switch (action.type) {
       case "CREATE_POLYGON_GROUP": {
@@ -343,7 +349,12 @@ export const polygonGroupsReducer = produce(
             strokeColours: ["black"],
             strokeWidth: 1,
           },
-          rotation: { clockwise: true, enabled: true, speed: 1 },
+          rotation: {
+            clockwise: true,
+            enabled: true,
+            speed: 1,
+            startingRotation: 1,
+          },
           scale: {
             enabled: true,
             speed: 1,
@@ -493,7 +504,12 @@ const polygonGroupsInitialState: PolygonInitialState = [
           strokeColours: ["black"],
           strokeWidth: 1,
         },
-        rotation: { clockwise: true, enabled: true, speed: 1 },
+        rotation: {
+          clockwise: true,
+          enabled: true,
+          speed: 1,
+          startingRotation: 1,
+        },
         scale: {
           enabled: true,
           speed: 1,

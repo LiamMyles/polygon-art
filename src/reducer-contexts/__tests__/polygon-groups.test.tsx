@@ -30,7 +30,12 @@ describe("Polygon Reducer", () => {
             strokeColours: ["black"],
             strokeWidth: 1,
           },
-          rotation: { clockwise: true, enabled: true, speed: 1 },
+          rotation: {
+            clockwise: true,
+            enabled: true,
+            speed: 1,
+            startingRotation: 1,
+          },
           scale: {
             enabled: true,
             speed: 1,
@@ -66,7 +71,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -108,7 +118,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -132,7 +147,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -169,7 +189,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -199,7 +224,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -247,7 +277,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -292,7 +327,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -338,7 +378,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -383,7 +428,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -415,6 +465,7 @@ describe("Polygon Reducer", () => {
           clockwise: false,
           enabled: false,
           speed: 10,
+          startingRotation: 90,
         },
       }
       const expectedState: PolygonInitialState = [
@@ -432,7 +483,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: false, enabled: false, speed: 10 },
+              rotation: {
+                clockwise: false,
+                enabled: false,
+                speed: 10,
+                startingRotation: 90,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -477,7 +533,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: false, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: false,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -523,7 +584,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: false, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: false,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -568,7 +634,62 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 10 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 10,
+                startingRotation: 1,
+              },
+              scale: {
+                enabled: true,
+                speed: 1,
+                range: { max: 10, min: 0 },
+                startingSize: 5,
+              },
+              sides: {
+                enabled: true,
+                strokeWidth: 1,
+                colours: ["black"],
+                amount: 6,
+              },
+            },
+          ],
+        },
+      ]
+      const actualState = polygonGroupsReducer(initialState, action)
+
+      expect(actualState).toEqual(expectedState)
+    })
+    it("should update polygon rotation startingRotation option", () => {
+      const action: PolygonGroupsActions = {
+        type: "UPDATE_POLYGON_ROTATION",
+        group: 0,
+        polygon: 0,
+        rotation: {
+          startingRotation: 90,
+        },
+      }
+      const expectedState: PolygonInitialState = [
+        {
+          active: true,
+          position: { x: 0, y: 0 },
+          rings: [
+            {
+              active: true,
+              position: { x: 0, y: 0 },
+              dots: {
+                enabled: true,
+                fillColours: ["black"],
+                size: 1,
+                strokeColours: ["black"],
+                strokeWidth: 1,
+              },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 10,
+                startingRotation: 90,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -618,7 +739,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: false,
                 speed: 10,
@@ -662,7 +788,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -706,7 +837,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: false,
                 speed: 1,
@@ -750,7 +886,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 10,
@@ -794,7 +935,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -845,7 +991,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["white"],
                 strokeWidth: 10,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -890,7 +1041,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -935,7 +1091,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -980,7 +1141,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -1025,7 +1191,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 10,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -1070,7 +1241,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["white"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -1120,7 +1296,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -1165,7 +1346,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -1210,7 +1396,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -1255,7 +1446,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -1300,7 +1496,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["black"],
                 strokeWidth: 1,
               },
-              rotation: { clockwise: true, enabled: true, speed: 1 },
+              rotation: {
+                clockwise: true,
+                enabled: true,
+                speed: 1,
+                startingRotation: 1,
+              },
               scale: {
                 enabled: true,
                 speed: 1,
@@ -1338,7 +1539,12 @@ describe("Polygon Reducer", () => {
             strokeColours: ["white"],
             strokeWidth: 10,
           },
-          rotation: { clockwise: false, enabled: false, speed: 10 },
+          rotation: {
+            clockwise: false,
+            enabled: false,
+            speed: 10,
+            startingRotation: 90,
+          },
           scale: {
             enabled: false,
             speed: 10,
@@ -1368,7 +1574,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["white"],
                 strokeWidth: 10,
               },
-              rotation: { clockwise: false, enabled: false, speed: 10 },
+              rotation: {
+                clockwise: false,
+                enabled: false,
+                speed: 10,
+                startingRotation: 90,
+              },
               scale: {
                 enabled: false,
                 speed: 10,
@@ -1402,7 +1613,7 @@ describe("Polygon Reducer", () => {
             strokeColours: ["white"],
             strokeWidth: 10,
           },
-          rotation: { clockwise: false, speed: 10 },
+          rotation: { clockwise: false, speed: 10, startingRotation: 90 },
           scale: { speed: 10, range: { max: 100, min: 10 }, startingSize: 50 },
           sides: {
             strokeWidth: 10,
@@ -1426,7 +1637,12 @@ describe("Polygon Reducer", () => {
                 strokeColours: ["white"],
                 strokeWidth: 10,
               },
-              rotation: { clockwise: false, enabled: true, speed: 10 },
+              rotation: {
+                clockwise: false,
+                enabled: true,
+                speed: 10,
+                startingRotation: 90,
+              },
               scale: {
                 enabled: true,
                 speed: 10,
@@ -1531,6 +1747,7 @@ describe("Polygon Reducer", () => {
           enabled: expect.any(Boolean),
           clockwise: expect.any(Boolean),
           speed: expect.any(Number),
+          startingRotation: expect.any(Number),
         })
       )
     })
@@ -1590,6 +1807,7 @@ describe("Polygon Reducer", () => {
           enabled: expect.any(Boolean),
           clockwise: expect.any(Boolean),
           speed: expect.any(Number),
+          startingRotation: expect.any(Number),
         })
       )
     })
@@ -1648,6 +1866,7 @@ describe("Polygon Reducer", () => {
           enabled: expect.any(Boolean),
           clockwise: expect.any(Boolean),
           speed: expect.any(Number),
+          startingRotation: expect.any(Number),
         })
       )
     })
