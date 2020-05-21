@@ -73,7 +73,7 @@ export class PolygonAnimationCalculation {
         enabled: sides.enabled,
       },
       dots: {
-        enabled: sides.enabled,
+        enabled: dots.enabled,
         fillColours: dots.fillColours,
         strokeColours: dots.strokeColours,
         strokeWidth: dots.strokeWidth,
