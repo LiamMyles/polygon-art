@@ -57,13 +57,13 @@ interface PolygonActions {
   isRotating: boolean
   isScaling: boolean
   isExpanding: boolean
-  isRotatingClockwise: boolean  
+  isRotatingClockwise: boolean
 }
 
 export class PolygonAnimationCalculation {
   private points: PolygonPoints
   private style: PolygonStyle
-  private actions: 
+  private actions: PolygonActions
 
   constructor(polygonRingState: PolygonRing) {
     const {
