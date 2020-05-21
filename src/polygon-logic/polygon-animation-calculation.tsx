@@ -1,12 +1,8 @@
-import {
-  PolygonRing,
-  PolygonRingSides,
-  PolygonRingDots,
-  Cords,
-} from "reducer-contexts/polygon-groups"
+import { PolygonRing, Cords } from "reducer-contexts/polygon-groups"
 
 export interface PolygonAnimation {
   position: Cords
+  currentRotation: number
   dots: {
     enabled: boolean
     fillColours: string[]
@@ -27,7 +23,22 @@ interface PolygonPoint extends Cords {
   sin: number
 }
 
-type PolygonPoints = PolygonPoint[]
+interface PolygonAnimationConstants {
+  rotationSpeed: number
+  scalingSpeed: number
+  scalingRange: { min: number; max: number }
+  isActive: boolean
+  isRotating: boolean
+  isScaling: boolean
+  isRotatingClockwise: boolean
+}
+
+interface PolygonAnimationState {
+  currentRotation: number
+  currentSize: number
+  currentlyExpanding: boolean
+  polygonPoints: PolygonPoint[]
+}
 
 interface PolygonStyle {
   sides: {
@@ -43,35 +54,18 @@ interface PolygonStyle {
   }
 }
 
-interface PolygonActions {
-  isActive: boolean
-  isRotating: boolean
-  isScaling: boolean
-  isRotatingClockwise: boolean
-}
-
 export class PolygonAnimationCalculation {
-  private points: PolygonPoints
   private style: PolygonStyle
-  private actions: PolygonActions
+  private animationState: PolygonAnimationState
+  private animationConstants: PolygonAnimationConstants
 
   constructor(polygon: PolygonRing) {
-    const {
-      sides: { amount: sidesAmount },
-      sides,
-      dots,
-      scale: { startingSize },
-    } = { ...polygon }
-
-    this.points = this.getInitialPoints(sidesAmount, startingSize)
-    this.style = this.getInitialStyles(sides, dots)
-    this.actions = this.getInitialActions(polygon)
+    this.style = this.getInitialStyles(polygon)
+    this.animationConstants = this.getInitialConstants(polygon)
+    this.animationState = this.getInitialState(polygon)
   }
 
-  private getInitialStyles(
-    sides: PolygonRingSides,
-    dots: PolygonRingDots
-  ): PolygonStyle {
+  private getInitialStyles({ sides, dots }: PolygonRing): PolygonStyle {
     return {
       sides: {
         colours: sides.colours,
@@ -87,7 +81,10 @@ export class PolygonAnimationCalculation {
     }
   }
 
-  private getInitialPoints(sides: number, startingSize: number): PolygonPoints {
+  private getInitialPoints(
+    sides: number,
+    startingSize: number
+  ): PolygonPoint[] {
     const twoPi = Math.PI * 2
     const angleBetweenPoints = twoPi / sides
 
@@ -103,41 +100,135 @@ export class PolygonAnimationCalculation {
     })
   }
 
-  private getInitialActions({
+  private getInitialConstants({
     active,
     rotation,
     scale,
-  }: PolygonRing): PolygonActions {
+  }: PolygonRing): PolygonAnimationConstants {
     return {
       isActive: active,
       isRotating: rotation.enabled,
       isScaling: scale.enabled,
       isRotatingClockwise: rotation.clockwise,
+      rotationSpeed: rotation.speed,
+      scalingSpeed: scale.speed,
+      scalingRange: scale.range,
+    }
+  }
+
+  private getInitialState({
+    scale,
+    rotation,
+    sides,
+  }: PolygonRing): PolygonAnimationState {
+    const polygonPoints = this.getInitialPoints(
+      sides.amount,
+      scale.startingSize
+    )
+    const currentlyExpanding =
+      scale.startingSize <= (scale.range.max - scale.range.min) / 2
+    return {
+      currentRotation: rotation.startingRotation,
+      currentSize: scale.startingSize,
+      currentlyExpanding,
+      polygonPoints,
+    }
+  }
+
+  private updateRotation() {
+    const {
+      isRotating,
+      isRotatingClockwise,
+      rotationSpeed,
+    } = this.animationConstants
+    const { currentRotation } = this.animationState
+
+    let newRotation: number
+    if (isRotating) {
+      if (isRotatingClockwise) {
+        newRotation = currentRotation + rotationSpeed
+      } else {
+        newRotation = currentRotation - rotationSpeed
+      }
+      if (newRotation >= 360) {
+        const amountOver = currentRotation - 360
+        newRotation = 0 + amountOver
+      } else if (newRotation <= -360) {
+        const amountOver = currentRotation - 360
+        newRotation = 0 - amountOver
+      }
+
+      this.animationState.currentRotation = newRotation
+    }
+  }
+
+  private updateScale() {
+    const { isScaling, scalingSpeed, scalingRange } = this.animationConstants
+    const {
+      currentlyExpanding,
+      polygonPoints,
+      currentSize,
+    } = this.animationState
+
+    if (isScaling) {
+      let updatedSize: number
+      let updatedCurrentlyExpanding = currentlyExpanding
+      if (currentlyExpanding) {
+        updatedSize = currentSize + scalingSpeed
+      } else {
+        updatedSize = currentSize - scalingSpeed
+      }
+
+      if (updatedSize >= scalingRange.max) {
+        updatedSize = scalingRange.max
+        updatedCurrentlyExpanding = false
+      } else if (updatedSize <= scalingRange.min) {
+        updatedSize = scalingRange.min
+        updatedCurrentlyExpanding = true
+      }
+
+      const newPolygonPoints = polygonPoints.map((point) => {
+        const { cos, sin } = point
+        const newPoint = { ...point }
+
+        newPoint.x = Math.round(cos * updatedSize)
+        newPoint.y = Math.round(sin * updatedSize)
+
+        return newPoint
+      })
+
+      this.animationState.currentSize = updatedSize
+      this.animationState.currentlyExpanding = updatedCurrentlyExpanding
+      this.animationState.polygonPoints = newPolygonPoints
     }
   }
 
   public getPolygonFrame(): PolygonAnimation {
     const { dots, sides } = this.style
-    const dotPositions = this.points.map((point) => {
+    const { currentRotation, polygonPoints } = this.animationState
+    const dotPositions = polygonPoints.map((point) => {
       return { x: point.x, y: point.y }
     })
-    const sidesPositions: [Cords, Cords][] = this.points.map((point, index) => {
-      const totalPoints = this.points.length
-      const nextIndex = index + 1
-      let nextPoint: Cords
-      if (nextIndex === totalPoints) {
-        nextPoint = { x: this.points[0].x, y: this.points[0].y }
-      } else {
-        nextPoint = {
-          x: this.points[nextIndex].x,
-          y: this.points[nextIndex].y,
+    const sidesPositions: [Cords, Cords][] = polygonPoints.map(
+      (point, index) => {
+        const totalPoints = polygonPoints.length
+        const nextIndex = index + 1
+        let nextPoint: Cords
+        if (nextIndex === totalPoints) {
+          nextPoint = { x: polygonPoints[0].x, y: polygonPoints[0].y }
+        } else {
+          nextPoint = {
+            x: polygonPoints[nextIndex].x,
+            y: polygonPoints[nextIndex].y,
+          }
         }
+        return [{ x: point.x, y: point.y }, nextPoint]
       }
-      return [{ x: point.x, y: point.y }, nextPoint]
-    })
+    )
 
     return {
       position: { x: 0, y: 0 },
+      currentRotation,
       dots: {
         enabled: dots.enabled,
         position: dotPositions,
@@ -153,7 +244,13 @@ export class PolygonAnimationCalculation {
       },
     }
   }
-  // public getPolygonFrameAndStep(): PolygonAnimation {
-  //   return {}
-  // }
+  public getPolygonFrameAndStep(): PolygonAnimation {
+    const { isActive } = this.animationConstants
+    const currentFrame = this.getPolygonFrame()
+    if (isActive) {
+      this.updateScale()
+      this.updateRotation()
+    }
+    return currentFrame
+  }
 }
