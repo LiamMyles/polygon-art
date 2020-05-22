@@ -1,12 +1,27 @@
 import React, { useContext } from "react"
 import styled from "styled-components"
 
+import { P5 } from "types/p5"
 import {
   navigationState as navigationStateContext,
   navigationDispatch as navigationDispatchContext,
 } from "reducer-contexts/navigation"
 
 import Screens from "components/Screens"
+import { P5Canvas } from "components/P5Canvas"
+
+const sketch = (p5: P5) => {
+  p5.setup = () => {
+    p5.createCanvas(400, 400)
+  }
+  let int = 0
+  p5.draw = () => {
+    int++
+    p5.background("white")
+    p5.textSize(32)
+    p5.text(`${int}`, 10, 30)
+  }
+}
 
 const Main = styled.main`
   display: grid;
@@ -20,17 +35,19 @@ const App: React.FC = () => {
   return (
     <Main>
       <Screens currentScreen={navigationState.currentScreen}>
-        <h1
-          style={{
-            background: "red",
-            width: "100%",
-            height: "100%",
-            textAlign: "center",
-            fontSize: 200,
-          }}
-        >
-          Hello
-        </h1>
+        <>
+          <div
+            style={{
+              background: "white",
+              width: "100%",
+              height: "100%",
+              textAlign: "center",
+              fontSize: 200,
+            }}
+          >
+            <P5Canvas sketch={sketch} />
+          </div>
+        </>
         <h1
           style={{
             background: "purple",
