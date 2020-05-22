@@ -1,12 +1,15 @@
 import React from "react"
 import { render } from "@testing-library/react"
+import p5 from "p5"
 
 import { P5Canvas } from "components/P5Canvas"
 
-//Need to look into mocking a sketch Or at least watch p5 run
+jest.mock("p5")
 
-it("should render and run sketch code", () => {
-  const { getByText } = render(<P5Canvas />)
-  const title = getByText(/Hello/i)
-  expect(title).toBeInTheDocument()
+describe("P5Canvas Component", () => {
+  it("should render and run sketch code", () => {
+    render(<P5Canvas sketch={() => {}} />)
+
+    expect(p5).toHaveBeenCalledTimes(1)
+  })
 })
