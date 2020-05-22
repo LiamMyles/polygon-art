@@ -687,7 +687,7 @@ describe("Polygon Reducer", () => {
               rotation: {
                 clockwise: true,
                 enabled: true,
-                speed: 10,
+                speed: 1,
                 startingRotation: 90,
               },
               scale: {

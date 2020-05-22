@@ -34,6 +34,7 @@ const App: React.FC = () => {
   const navigationDispatch = useContext(navigationDispatchContext)
   return (
     <Main>
+      <h1>Hello</h1>
       <Screens currentScreen={navigationState.currentScreen}>
         <>
           <div
@@ -57,7 +58,7 @@ const App: React.FC = () => {
             fontSize: 200,
           }}
         >
-          World
+          Hello
         </h1>
         <h1
           style={{
@@ -68,7 +69,7 @@ const App: React.FC = () => {
             fontSize: 200,
           }}
         >
-          This
+          World
         </h1>
       </Screens>
       <div>
