@@ -34,7 +34,6 @@ const App: React.FC = () => {
   const navigationDispatch = useContext(navigationDispatchContext)
   return (
     <Main>
-      <h1>Hello</h1>
       <Screens currentScreen={navigationState.currentScreen}>
         <>
           <div
@@ -73,6 +72,7 @@ const App: React.FC = () => {
         </h1>
       </Screens>
       <div>
+        <h1>Hello</h1>
         <button
           onClick={() => {
             navigationDispatch({ type: "PREV_SCREEN" })
