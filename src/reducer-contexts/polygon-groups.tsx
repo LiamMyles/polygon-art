@@ -46,7 +46,7 @@ export interface PolygonRing {
   sides: PolygonRingSides
 }
 
-interface PolygonGroup {
+export interface PolygonGroup {
   active: boolean
   position: Cords
   rings: PolygonRing[]
@@ -286,7 +286,7 @@ function getRandomDots(amountOfSides: number): PolygonRingDots {
   return {
     enabled: getRandomBoolean(),
     fillColours: getRandomColoursForPolygon(amountOfSides),
-    size: getRandomIntInclusive(1, 100),
+    size: getRandomIntInclusive(1, 10),
     strokeWidth: getRandomIntInclusive(0, 10),
     strokeColours: getRandomColoursForPolygon(amountOfSides),
   }
@@ -295,16 +295,16 @@ function getRandomRotation(): PolygonRingRotation {
   return {
     enabled: getRandomBoolean(),
     clockwise: getRandomBoolean(),
-    speed: getRandomIntInclusive(1, 100),
+    speed: getRandomIntInclusive(1, 5),
     startingRotation: getRandomIntInclusive(1, 360),
   }
 }
 function getRandomScale(): PolygonRingScale {
-  const { min, max } = getRandomMinAndMaxInt(1, 100)
+  const { min, max } = getRandomMinAndMaxInt(1, 300)
   return {
     enabled: getRandomBoolean(),
     range: { min, max },
-    speed: getRandomIntInclusive(1, 100),
+    speed: getRandomIntInclusive(1, 5),
     startingSize: getRandomIntInclusive(min, max),
   }
 }
@@ -527,24 +527,24 @@ const polygonGroupsInitialState: PolygonInitialState = [
   },
 ]
 
-export const NavigationContextWrapper: React.FC = ({ children }) => {
+export const PolygonGroupsContextWrapper: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(
     polygonGroupsReducer,
     polygonGroupsInitialState
   )
 
   return (
-    <polygonGroupsDispatch.Provider value={dispatch}>
-      <polygonGroupsState.Provider value={state}>
+    <polygonGroupsDispatchContext.Provider value={dispatch}>
+      <polygonGroupsStateContext.Provider value={state}>
         {children}
-      </polygonGroupsState.Provider>
-    </polygonGroupsDispatch.Provider>
+      </polygonGroupsStateContext.Provider>
+    </polygonGroupsDispatchContext.Provider>
   )
 }
 
-export const polygonGroupsDispatch = createContext(
+export const polygonGroupsDispatchContext = createContext(
   {} as React.Dispatch<PolygonGroupsActions>
 )
-export const polygonGroupsState = createContext(
+export const polygonGroupsStateContext = createContext(
   [] as Readonly<PolygonInitialState>
 )

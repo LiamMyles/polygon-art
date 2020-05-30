@@ -5,9 +5,9 @@ import {
   polygonGroupsReducer,
   PolygonGroupsActions,
   PolygonInitialState,
-  NavigationContextWrapper,
-  polygonGroupsDispatch,
-  polygonGroupsState,
+  PolygonGroupsContextWrapper,
+  polygonGroupsDispatchContext,
+  polygonGroupsStateContext,
   PolygonRingRotation,
   PolygonRingScale,
   PolygonRingDots,
@@ -1877,8 +1877,8 @@ describe("Polygon Context", () => {
   let TestComponent: React.FC
   beforeAll(() => {
     TestComponent = () => {
-      const dispatch = useContext(polygonGroupsDispatch)
-      const state = useContext(polygonGroupsState)
+      const dispatch = useContext(polygonGroupsDispatchContext)
+      const state = useContext(polygonGroupsStateContext)
       return (
         <>
           <p>Scale: {`${state[0].rings[0].scale.enabled}`}</p>
@@ -1901,18 +1901,18 @@ describe("Polygon Context", () => {
   })
   it("should expose context state", () => {
     const { getByText } = render(
-      <NavigationContextWrapper>
+      <PolygonGroupsContextWrapper>
         <TestComponent />
-      </NavigationContextWrapper>
+      </PolygonGroupsContextWrapper>
     )
     expect(getByText("Scale: true")).toBeInTheDocument()
     expect(getByText("Active: true")).toBeInTheDocument()
   })
   it("should expose context dispatch and allow update", () => {
     const { getByText } = render(
-      <NavigationContextWrapper>
+      <PolygonGroupsContextWrapper>
         <TestComponent />
-      </NavigationContextWrapper>
+      </PolygonGroupsContextWrapper>
     )
     expect(getByText("Scale: true")).toBeInTheDocument()
 
