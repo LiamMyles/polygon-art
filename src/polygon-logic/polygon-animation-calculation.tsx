@@ -8,6 +8,7 @@ export interface PolygonAnimation {
     fillColours: string[]
     strokeColours: string[]
     strokeWidth: number
+    size: number
     position: Cords[]
   }
   sides: {
@@ -51,6 +52,7 @@ interface PolygonStyle {
     strokeColours: string[]
     fillColours: string[]
     strokeWidth: number
+    size: number
   }
 }
 
@@ -74,6 +76,7 @@ export class PolygonAnimationCalculation {
       },
       dots: {
         enabled: dots.enabled,
+        size: dots.size,
         fillColours: dots.fillColours,
         strokeColours: dots.strokeColours,
         strokeWidth: dots.strokeWidth,
@@ -231,6 +234,7 @@ export class PolygonAnimationCalculation {
       currentRotation,
       dots: {
         enabled: dots.enabled,
+        size: dots.size,
         position: dotPositions,
         fillColours: dots.fillColours,
         strokeColours: dots.strokeColours,

@@ -1,27 +1,13 @@
 import React, { useContext } from "react"
 import styled from "styled-components"
 
-import { P5 } from "types/p5"
 import {
   navigationState as navigationStateContext,
   navigationDispatch as navigationDispatchContext,
 } from "reducer-contexts/navigation"
 
 import Screens from "components/Screens"
-import { P5Canvas } from "components/P5Canvas"
-
-const sketch = (p5: P5) => {
-  p5.setup = () => {
-    p5.createCanvas(400, 400)
-  }
-  let int = 0
-  p5.draw = () => {
-    int++
-    p5.background("white")
-    p5.textSize(32)
-    p5.text(`${int}`, 10, 30)
-  }
-}
+import { MainCanvas } from "components/MainCanvas"
 
 const Main = styled.main`
   display: grid;
@@ -45,7 +31,7 @@ const App: React.FC = () => {
               fontSize: 200,
             }}
           >
-            <P5Canvas sketch={sketch} />
+            <MainCanvas />
           </div>
         </>
         <h1
