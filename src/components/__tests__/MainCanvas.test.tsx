@@ -15,7 +15,7 @@ jest.mock("p5", () => {
 test("Renders Main Canvas", () => {
   render(
     <PolygonGroupsContextWrapper>
-      <MainCanvas />
+      <MainCanvas containerSize={{ width: 100, height: 100 }} />
     </PolygonGroupsContextWrapper>
   )
 })

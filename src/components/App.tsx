@@ -1,5 +1,6 @@
-import React, { useContext } from "react"
+import React, { useContext, useRef } from "react"
 import styled from "styled-components"
+import useComponentSize from "@rehooks/component-size"
 
 import {
   navigationState as navigationStateContext,
@@ -18,11 +19,14 @@ const Main = styled.main`
 const App: React.FC = () => {
   const navigationState = useContext(navigationStateContext)
   const navigationDispatch = useContext(navigationDispatchContext)
+  const mainScreen = useRef(null)
+  const size = useComponentSize(mainScreen)
   return (
     <Main>
       <Screens currentScreen={navigationState.currentScreen}>
         <>
           <div
+            ref={mainScreen}
             style={{
               background: "white",
               width: "100%",
@@ -31,7 +35,7 @@ const App: React.FC = () => {
               fontSize: 200,
             }}
           >
-            <MainCanvas />
+            <MainCanvas containerSize={size} />
           </div>
         </>
         <h1

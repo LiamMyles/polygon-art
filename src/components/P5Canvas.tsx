@@ -12,8 +12,11 @@ export const P5Canvas: React.FC<P5CanvasProps> = ({ sketch }) => {
 
   useEffect(() => {
     const node = divRef.current as HTMLDivElement
-    const p5Instance = new p5(sketch, node)
-    P5Ref.current = p5Instance
+
+    if (P5Ref.current === undefined) {
+      const p5Instance = new p5(sketch, node)
+      P5Ref.current = p5Instance
+    }
 
     return () => {
       const P5Instance = P5Ref.current as P5

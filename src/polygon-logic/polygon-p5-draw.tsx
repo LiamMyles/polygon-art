@@ -3,6 +3,7 @@ import {
   PolygonAnimationCalculation,
   PolygonAnimation,
 } from "polygon-logic/polygon-animation-calculation"
+// eslint-disable-next-line
 import { PolygonRing, PolygonGroup } from "reducer-contexts/polygon-groups"
 
 function singlePolygonDraw(polygonAnimation: PolygonAnimation, p5: P5) {

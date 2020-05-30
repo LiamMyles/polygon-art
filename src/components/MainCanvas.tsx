@@ -9,7 +9,10 @@ import { generateAllPolygonRingGroupsSketch } from "polygon-logic/polygon-p5-dra
 
 import { P5Canvas } from "components/P5Canvas"
 
-function generateKey(polygonGroups: Readonly<PolygonGroup[]>): string {
+function generateKey(
+  polygonGroups: Readonly<PolygonGroup[]>,
+  containerSize: { height: number; width: number }
+): string {
   const polygonGroupLength = polygonGroups.length
   const polygonRingLengths = polygonGroups
     .map((polygonGroup) => polygonGroup.rings.length)
@@ -20,10 +23,12 @@ function generateKey(polygonGroups: Readonly<PolygonGroup[]>): string {
     )
     .join("-")
 
-  return `${polygonGroupLength}-${polygonRingLengths}-${polygonRingRotations}`
+  return `${polygonGroupLength}-${polygonRingLengths}-${polygonRingRotations}-${containerSize.width}-${containerSize.height}`
 }
 
-export function MainCanvas() {
+export const MainCanvas: React.FC<{
+  containerSize: { width: number; height: number }
+}> = ({ containerSize }) => {
   const polygonDispatch = useContext(polygonGroupsDispatchContext)
   const polygonContext = useContext(polygonGroupsStateContext)
   const sketchAll = generateAllPolygonRingGroupsSketch(polygonContext)
@@ -39,5 +44,10 @@ export function MainCanvas() {
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 8 })
   }, [polygonDispatch])
 
-  return <P5Canvas sketch={sketchAll} key={generateKey(polygonContext)} />
+  return (
+    <P5Canvas
+      sketch={sketchAll}
+      key={generateKey(polygonContext, containerSize)}
+    />
+  )
 }
