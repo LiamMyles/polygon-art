@@ -1,7 +1,12 @@
 import React, { useEffect, useRef } from "react"
 import p5 from "p5"
 import { P5 } from "types/p5"
+import styled from "styled-components"
 
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+`
 interface P5CanvasProps {
   sketch: (p5: P5) => void
 }
@@ -12,7 +17,6 @@ export const P5Canvas: React.FC<P5CanvasProps> = ({ sketch }) => {
 
   useEffect(() => {
     const node = divRef.current as HTMLDivElement
-
     if (P5Ref.current === undefined) {
       const p5Instance = new p5(sketch, node)
       P5Ref.current = p5Instance
@@ -24,5 +28,5 @@ export const P5Canvas: React.FC<P5CanvasProps> = ({ sketch }) => {
     }
   }, [P5Ref, divRef, sketch])
 
-  return <div ref={divRef} />
+  return <Container ref={divRef} />
 }

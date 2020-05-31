@@ -31,7 +31,10 @@ export const MainCanvas: React.FC<{
 }> = ({ containerSize }) => {
   const polygonDispatch = useContext(polygonGroupsDispatchContext)
   const polygonContext = useContext(polygonGroupsStateContext)
-  const sketchAll = generateAllPolygonRingGroupsSketch(polygonContext)
+  const sketchAll = generateAllPolygonRingGroupsSketch(
+    polygonContext,
+    containerSize
+  )
   useEffect(() => {
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 0 })
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 1 })

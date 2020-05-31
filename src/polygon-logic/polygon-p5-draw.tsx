@@ -6,10 +6,16 @@ import {
 // eslint-disable-next-line
 import { PolygonRing, PolygonGroup } from "reducer-contexts/polygon-groups"
 
-function singlePolygonDraw(polygonAnimation: PolygonAnimation, p5: P5) {
-  const { currentRotation, dots, sides } = polygonAnimation
+function singlePolygonDraw(
+  polygonAnimation: PolygonAnimation,
+  size: { width: number; height: number },
+  p5: P5
+) {
+  const { currentRotation, dots, sides, position } = polygonAnimation
+  const x = Math.floor(size.width * (position.x / 100))
+  const y = Math.floor(size.height * (position.y / 100))
   p5.push()
-  p5.translate(0, 0)
+  p5.translate(x, y)
   p5.rotate(currentRotation)
   if (sides.enabled) {
     sides.positions.forEach((cords, index) => {
@@ -35,25 +41,29 @@ function singlePolygonDraw(polygonAnimation: PolygonAnimation, p5: P5) {
   p5.pop()
 }
 
-export function generatePolygonRingSketch(PolygonRing: Readonly<PolygonRing>) {
+export function generatePolygonRingSketch(
+  PolygonRing: Readonly<PolygonRing>,
+  size: { height: number; width: number }
+) {
   const polygonRingInstance = new PolygonAnimationCalculation(PolygonRing)
 
   return (p5: P5) => {
     p5.setup = () => {
-      p5.createCanvas(600, 600)
+      p5.createCanvas(size.width, size.height)
       p5.background("grey")
     }
     p5.draw = () => {
       polygonRingInstance.getPolygonFrameAndStep()
       p5.angleMode("degrees")
-      p5.translate(300, 300)
-      singlePolygonDraw(polygonRingInstance.getPolygonFrameAndStep(), p5)
+      p5.translate(size.width / 2, size.height / 2)
+      singlePolygonDraw(polygonRingInstance.getPolygonFrameAndStep(), size, p5)
     }
   }
 }
 
 export function generatePolygonGroupSketch(
-  polygonGroup: Readonly<PolygonGroup>
+  polygonGroup: Readonly<PolygonGroup>,
+  size: { height: number; width: number }
 ) {
   const polygonRingInstances = polygonGroup.rings.map((polygonRing) => {
     return new PolygonAnimationCalculation(polygonRing)
@@ -61,16 +71,16 @@ export function generatePolygonGroupSketch(
 
   return (p5: P5) => {
     p5.setup = () => {
-      p5.createCanvas(600, 600)
+      p5.createCanvas(size.width, size.height)
       p5.background("grey")
     }
     p5.draw = () => {
       p5.angleMode("degrees")
       p5.background("grey")
-      p5.translate(300, 300)
+      p5.translate(size.width / 2, size.height / 2)
       p5.push()
       for (const polygonRing of polygonRingInstances) {
-        singlePolygonDraw(polygonRing.getPolygonFrameAndStep(), p5)
+        singlePolygonDraw(polygonRing.getPolygonFrameAndStep(), size, p5)
       }
       p5.pop()
     }
@@ -78,7 +88,8 @@ export function generatePolygonGroupSketch(
 }
 
 export function generateAllPolygonRingGroupsSketch(
-  polygonGroups: Readonly<PolygonGroup[]>
+  polygonGroups: Readonly<PolygonGroup[]>,
+  size: { height: number; width: number }
 ) {
   const polygonGroupInstances = polygonGroups.map(({ rings }) =>
     rings.map((polygonRing) => {
@@ -88,18 +99,22 @@ export function generateAllPolygonRingGroupsSketch(
 
   return (p5: P5) => {
     p5.setup = () => {
-      p5.createCanvas(600, 600)
+      p5.createCanvas(size.width, size.height)
       p5.background("grey")
     }
     p5.draw = () => {
       p5.angleMode("degrees")
       p5.background("grey")
-      p5.translate(300, 300)
+      p5.translate(size.width / 2, size.height / 2)
       for (const polygonGroupRings of polygonGroupInstances) {
         p5.push()
-        p5.translate(0, 0)
+        // p5.translate(0, 0) -- TODO Placeholder for group translation, needs some thinking. Might just change it to offset in the ring
         for (const polygonRingInstance of polygonGroupRings) {
-          singlePolygonDraw(polygonRingInstance.getPolygonFrameAndStep(), p5)
+          singlePolygonDraw(
+            polygonRingInstance.getPolygonFrameAndStep(),
+            size,
+            p5
+          )
         }
         p5.pop()
       }
