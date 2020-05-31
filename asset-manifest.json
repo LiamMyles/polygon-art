@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/playing-with-polygons/static/css/main.d099b148.chunk.css",
-    "main.js": "/playing-with-polygons/static/js/main.2b11e28c.chunk.js",
-    "main.js.map": "/playing-with-polygons/static/js/main.2b11e28c.chunk.js.map",
+    "main.css": "/playing-with-polygons/static/css/main.fc4e5973.chunk.css",
+    "main.js": "/playing-with-polygons/static/js/main.1ce84307.chunk.js",
+    "main.js.map": "/playing-with-polygons/static/js/main.1ce84307.chunk.js.map",
     "runtime-main.js": "/playing-with-polygons/static/js/runtime-main.835b837a.js",
     "runtime-main.js.map": "/playing-with-polygons/static/js/runtime-main.835b837a.js.map",
-    "static/js/2.9053da8c.chunk.js": "/playing-with-polygons/static/js/2.9053da8c.chunk.js",
-    "static/js/2.9053da8c.chunk.js.map": "/playing-with-polygons/static/js/2.9053da8c.chunk.js.map",
+    "static/js/2.1972bd4b.chunk.js": "/playing-with-polygons/static/js/2.1972bd4b.chunk.js",
+    "static/js/2.1972bd4b.chunk.js.map": "/playing-with-polygons/static/js/2.1972bd4b.chunk.js.map",
     "index.html": "/playing-with-polygons/index.html",
-    "precache-manifest.d177f0eb6fa53c7ed3b8fa885ebacc0b.js": "/playing-with-polygons/precache-manifest.d177f0eb6fa53c7ed3b8fa885ebacc0b.js",
+    "precache-manifest.39ba29a2dcf72b8f1ffe463e2e6ecc1c.js": "/playing-with-polygons/precache-manifest.39ba29a2dcf72b8f1ffe463e2e6ecc1c.js",
     "service-worker.js": "/playing-with-polygons/service-worker.js",
-    "static/css/main.d099b148.chunk.css.map": "/playing-with-polygons/static/css/main.d099b148.chunk.css.map",
-    "static/js/2.9053da8c.chunk.js.LICENSE.txt": "/playing-with-polygons/static/js/2.9053da8c.chunk.js.LICENSE.txt"
+    "static/css/main.fc4e5973.chunk.css.map": "/playing-with-polygons/static/css/main.fc4e5973.chunk.css.map",
+    "static/js/2.1972bd4b.chunk.js.LICENSE.txt": "/playing-with-polygons/static/js/2.1972bd4b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.835b837a.js",
-    "static/js/2.9053da8c.chunk.js",
-    "static/css/main.d099b148.chunk.css",
-    "static/js/main.2b11e28c.chunk.js"
+    "static/js/2.1972bd4b.chunk.js",
+    "static/css/main.fc4e5973.chunk.css",
+    "static/js/main.1ce84307.chunk.js"
   ]
 }
