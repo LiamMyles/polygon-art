@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 
 import {
   polygonGroupsDispatchContext,
@@ -27,14 +27,27 @@ function generateKey(
 }
 
 export const MainCanvas: React.FC<{
-  containerSize: { width: number; height: number }
-}> = ({ containerSize }) => {
+  containerRef?: React.MutableRefObject<null | HTMLDivElement>
+}> = ({ containerRef }) => {
   const polygonDispatch = useContext(polygonGroupsDispatchContext)
   const polygonContext = useContext(polygonGroupsStateContext)
-  const sketchAll = generateAllPolygonRingGroupsSketch(
-    polygonContext,
-    containerSize
-  )
+
+  const [, updateState] = React.useState()
+  const forceUpdate = React.useCallback(() => updateState({}), [])
+
+  useEffect(() => {
+    let timeoutId: number
+    const throttledForceUpdate = () => {
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(() => forceUpdate(), 250)
+    }
+
+    window.addEventListener("resize", throttledForceUpdate)
+    return () => {
+      window.removeEventListener("resize", throttledForceUpdate)
+    }
+  }, [forceUpdate])
+
   useEffect(() => {
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 0 })
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 1 })
@@ -45,12 +58,24 @@ export const MainCanvas: React.FC<{
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 6 })
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 7 })
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 8 })
-  }, [polygonDispatch])
+  }, [polygonDispatch, containerRef])
 
-  return (
-    <P5Canvas
-      sketch={sketchAll}
-      key={generateKey(polygonContext, containerSize)}
-    />
-  )
+  if (containerRef?.current) {
+    const containerSize = {
+      height: containerRef.current.offsetHeight,
+      width: containerRef.current.offsetWidth,
+    }
+    const sketchAll = generateAllPolygonRingGroupsSketch(
+      polygonContext,
+      containerSize
+    )
+    return (
+      <P5Canvas
+        sketch={sketchAll}
+        key={generateKey(polygonContext, containerSize)}
+      />
+    )
+  } else {
+    return <h1>DEBUG: Main Canvas Wasn't Ready</h1>
+  }
 }
