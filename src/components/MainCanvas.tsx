@@ -79,11 +79,30 @@ export const MainCanvas: React.FC = () => {
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 1 })
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 2 })
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 3 })
-    polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 4 })
-    polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 5 })
-    polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 6 })
-    polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 7 })
-    polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 8 })
+    polygonDispatch({
+      type: "UPDATE_POLYGON_POSITION",
+      group: 0,
+      polygon: 0,
+      position: { x: 0, y: 50 },
+    })
+    polygonDispatch({
+      type: "UPDATE_POLYGON_POSITION",
+      group: 0,
+      polygon: 1,
+      position: { x: 50, y: 0 },
+    })
+    polygonDispatch({
+      type: "UPDATE_POLYGON_POSITION",
+      group: 0,
+      polygon: 2,
+      position: { x: -50, y: 0 },
+    })
+    polygonDispatch({
+      type: "UPDATE_POLYGON_POSITION",
+      group: 0,
+      polygon: 3,
+      position: { x: 0, y: -50 },
+    })
   }, [polygonDispatch, mainWrapper])
 
   const sketchAll = generateAllPolygonRingGroupsSketch(

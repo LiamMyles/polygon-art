@@ -38,7 +38,10 @@ describe("Generate p5 Sketch", () => {
       },
     }
     it("should get a sketch function", () => {
-      const actualSketch = generatePolygonRingSketch(polygonRing)
+      const actualSketch = generatePolygonRingSketch(polygonRing, {
+        height: 100,
+        width: 100,
+      })
       expect(actualSketch).toEqual(expect.any(Function))
     })
   })
@@ -79,7 +82,10 @@ describe("Generate p5 Sketch", () => {
       ],
     }
     it("should get a sketch function", () => {
-      const actualSketch = generatePolygonGroupSketch(polygonGroup)
+      const actualSketch = generatePolygonGroupSketch(polygonGroup, {
+        height: 100,
+        width: 100,
+      })
       expect(actualSketch).toEqual(expect.any(Function))
     })
   })
@@ -122,7 +128,10 @@ describe("Generate p5 Sketch", () => {
       },
     ]
     it("should get a sketch function", () => {
-      const actualSketch = generateAllPolygonRingGroupsSketch(polygonGroups)
+      const actualSketch = generateAllPolygonRingGroupsSketch(polygonGroups, {
+        height: 100,
+        width: 100,
+      })
       expect(actualSketch).toEqual(expect.any(Function))
     })
   })

@@ -25,6 +25,7 @@ interface PolygonPoint extends Cords {
 }
 
 interface PolygonAnimationConstants {
+  position: Cords
   rotationSpeed: number
   scalingSpeed: number
   scalingRange: { min: number; max: number }
@@ -107,8 +108,10 @@ export class PolygonAnimationCalculation {
     active,
     rotation,
     scale,
+    position,
   }: PolygonRing): PolygonAnimationConstants {
     return {
+      position,
       isActive: active,
       isRotating: rotation.enabled,
       isScaling: scale.enabled,
@@ -209,6 +212,7 @@ export class PolygonAnimationCalculation {
   public getPolygonFrame(): PolygonAnimation {
     const { dots, sides } = this.style
     const { currentRotation, polygonPoints } = this.animationState
+    const { position } = this.animationConstants
     const dotPositions = polygonPoints.map((point) => {
       return { x: point.x, y: point.y }
     })
@@ -230,7 +234,7 @@ export class PolygonAnimationCalculation {
     )
 
     return {
-      position: { x: 0, y: 0 },
+      position,
       currentRotation,
       dots: {
         enabled: dots.enabled,
