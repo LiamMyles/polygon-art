@@ -3,8 +3,18 @@ import {
   PolygonAnimationCalculation,
   PolygonAnimation,
 } from "polygon-logic/polygon-animation-calculation"
+// Disabled because PolygonRing is only used as a type and is getting flagged
 // eslint-disable-next-line
 import { PolygonRing, PolygonGroup } from "reducer-contexts/polygon-groups"
+
+function getSizeConstrainedCords(
+  size: { width: number; height: number },
+  cords: { x: number; y: number }
+): { x: number; y: number } {
+  const x = Math.floor((size.width * (cords.x / 100)) / 2)
+  const y = Math.floor((size.height * (cords.y / 100)) / 2)
+  return { x, y }
+}
 
 function singlePolygonDraw(
   polygonAnimation: PolygonAnimation,
@@ -12,8 +22,7 @@ function singlePolygonDraw(
   p5: P5
 ) {
   const { currentRotation, dots, sides, position } = polygonAnimation
-  const x = Math.floor((size.width * (position.x / 100)) / 2)
-  const y = Math.floor((size.height * (position.y / 100)) / 2)
+  const { x, y } = getSizeConstrainedCords(size, position)
 
   p5.push()
   p5.translate(x, y)
@@ -111,9 +120,13 @@ export function generateAllPolygonRingGroupsSketch(
       p5.angleMode("degrees")
       p5.background("lightgrey")
       p5.translate(windowSize.width / 2, windowSize.height / 2)
-      for (const polygonGroupRings of polygonGroupInstances) {
+      polygonGroupInstances.forEach((polygonGroupRings, index) => {
         p5.push()
-        // p5.translate(0, 0) -- TODO Placeholder for group translation, needs some thinking. Might just change it to offset in the ring
+        const { x, y } = getSizeConstrainedCords(
+          windowSize,
+          polygonGroups[index].position
+        )
+        p5.translate(x, y)
         for (const polygonRingInstance of polygonGroupRings) {
           singlePolygonDraw(
             polygonRingInstance.getPolygonFrameAndStep(),
@@ -122,7 +135,7 @@ export function generateAllPolygonRingGroupsSketch(
           )
         }
         p5.pop()
-      }
+      })
     }
   }
 }

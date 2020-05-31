@@ -80,6 +80,11 @@ export const MainCanvas: React.FC = () => {
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 2 })
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 3 })
     polygonDispatch({
+      type: "UPDATE_POLYGON_GROUP_POSITION",
+      group: 0,
+      position: { x: -50, y: 50 },
+    })
+    polygonDispatch({
       type: "UPDATE_POLYGON_POSITION",
       group: 0,
       polygon: 0,
