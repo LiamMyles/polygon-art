@@ -18,25 +18,12 @@ const Main = styled.main`
 const App: React.FC = () => {
   const navigationState = useContext(navigationStateContext)
   const navigationDispatch = useContext(navigationDispatchContext)
-  const mainScreen = useRef(null)
+
   return (
     <Main>
       <Screens currentScreen={navigationState.currentScreen}>
-        <>
-          <div
-            ref={mainScreen}
-            style={{
-              background: "white",
-              width: "100%",
-              height: "100%",
-              maxWidth: "100vw",
-              textAlign: "center",
-              fontSize: 200,
-            }}
-          >
-            <MainCanvas containerRef={mainScreen} />
-          </div>
-        </>
+        <MainCanvas />
+
         <h1
           style={{
             background: "purple",

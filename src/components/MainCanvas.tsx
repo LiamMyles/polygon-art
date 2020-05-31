@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 
 import {
   polygonGroupsDispatchContext,
@@ -26,27 +26,53 @@ function generateKey(
   return `${polygonGroupLength}-${polygonRingLengths}-${polygonRingRotations}-${containerSize.width}-${containerSize.height}`
 }
 
-export const MainCanvas: React.FC<{
-  containerRef?: React.MutableRefObject<null | HTMLDivElement>
-}> = ({ containerRef }) => {
+export const MainCanvas: React.FC = () => {
   const polygonDispatch = useContext(polygonGroupsDispatchContext)
   const polygonContext = useContext(polygonGroupsStateContext)
+  const [currentSize, setCurrentSize] = useState({ height: 0, width: 0 })
+  const mainWrapper = useRef(
+    null
+  ) as React.MutableRefObject<null | HTMLDivElement>
 
-  const [, updateState] = React.useState()
-  const forceUpdate = React.useCallback(() => updateState({}), [])
+  /**
+   * Updates the canvas size when the ref for the wrapping component
+   * comes back.
+   *
+   * Also listens to the window resize and updates the canvas size if
+   * it changes. But its throttled by 250ms
+   */
+  useEffect(() => {
+    if (mainWrapper?.current) {
+      setCurrentSize({
+        height: mainWrapper.current.offsetHeight,
+        width: mainWrapper.current.offsetWidth,
+      })
+    }
+  }, [mainWrapper, setCurrentSize])
 
   useEffect(() => {
-    let timeoutId: number
-    const throttledForceUpdate = () => {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(() => forceUpdate(), 250)
+    function updateCanvasSize() {
+      if (mainWrapper?.current) {
+        setCurrentSize({
+          height: mainWrapper.current.offsetHeight,
+          width: mainWrapper.current.offsetWidth,
+        })
+      }
     }
 
-    window.addEventListener("resize", throttledForceUpdate)
-    return () => {
-      window.removeEventListener("resize", throttledForceUpdate)
+    updateCanvasSize()
+
+    let timeoutId: number
+    const throttledWindowUpdate = () => {
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(() => updateCanvasSize(), 250)
     }
-  }, [forceUpdate])
+
+    window.addEventListener("resize", throttledWindowUpdate)
+    return () => {
+      window.removeEventListener("resize", throttledWindowUpdate)
+    }
+  }, [mainWrapper, setCurrentSize])
 
   useEffect(() => {
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 0 })
@@ -58,24 +84,28 @@ export const MainCanvas: React.FC<{
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 6 })
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 7 })
     polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 8 })
-  }, [polygonDispatch, containerRef])
+  }, [polygonDispatch, mainWrapper])
 
-  if (containerRef?.current) {
-    const containerSize = {
-      height: containerRef.current.offsetHeight,
-      width: containerRef.current.offsetWidth,
-    }
-    const sketchAll = generateAllPolygonRingGroupsSketch(
-      polygonContext,
-      containerSize
-    )
-    return (
+  const sketchAll = generateAllPolygonRingGroupsSketch(
+    polygonContext,
+    currentSize
+  )
+  return (
+    <div
+      ref={mainWrapper}
+      style={{
+        background: "white",
+        width: "100%",
+        height: "100%",
+        maxWidth: "100vw",
+        textAlign: "center",
+        fontSize: 200,
+      }}
+    >
       <P5Canvas
         sketch={sketchAll}
-        key={generateKey(polygonContext, containerSize)}
+        key={generateKey(polygonContext, currentSize)}
       />
-    )
-  } else {
-    return <h1>DEBUG: Main Canvas Wasn't Ready</h1>
-  }
+    </div>
+  )
 }
