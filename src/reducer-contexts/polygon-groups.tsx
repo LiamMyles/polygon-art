@@ -207,15 +207,6 @@ function getRandomIntInclusive(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-function getRandomMinAndMaxInt(
-  inputMin: number,
-  inputMax: number
-): { min: number; max: number } {
-  const min = getRandomIntInclusive(inputMin, inputMax - 1)
-  const max = getRandomIntInclusive(min + 1, inputMax)
-  return { min, max }
-}
-
 function getRandomBoolean(): boolean {
   return getRandomIntInclusive(0, 1) === 1 ? true : false
 }
@@ -276,37 +267,92 @@ function getRandomColoursForPolygon(amountOfSides: number): string[] {
 function getRandomSides(): PolygonRingSides {
   const sidesAmount = getRandomIntInclusive(3, 12)
   return {
-    enabled: getRandomBoolean(),
-    strokeWidth: getRandomIntInclusive(0, 10),
+    enabled: true,
+    strokeWidth: getRandomIntInclusive(1, 10),
     amount: sidesAmount,
     colours: getRandomColoursForPolygon(sidesAmount),
   }
 }
 function getRandomDots(amountOfSides: number): PolygonRingDots {
   return {
-    enabled: getRandomBoolean(),
+    enabled: true,
     fillColours: getRandomColoursForPolygon(amountOfSides),
-    size: getRandomIntInclusive(1, 10),
+    size: getRandomIntInclusive(5, 10),
     strokeWidth: getRandomIntInclusive(0, 10),
     strokeColours: getRandomColoursForPolygon(amountOfSides),
   }
 }
 function getRandomRotation(): PolygonRingRotation {
   return {
-    enabled: getRandomBoolean(),
+    enabled: true,
     clockwise: getRandomBoolean(),
     speed: getRandomIntInclusive(1, 5),
     startingRotation: getRandomIntInclusive(1, 360),
   }
 }
 function getRandomScale(): PolygonRingScale {
-  const { min, max } = getRandomMinAndMaxInt(1, 300)
+  const min = getRandomIntInclusive(0, 20)
+  const max = getRandomIntInclusive(200, 500)
+
   return {
-    enabled: getRandomBoolean(),
+    enabled: true,
     range: { min, max },
     speed: getRandomIntInclusive(1, 5),
     startingSize: getRandomIntInclusive(min, max),
   }
+}
+
+function getRandomEnabled(): {
+  sidesEnabled: boolean
+  dotsEnabled: boolean
+  rotationEnabled: boolean
+  scaleEnabled: boolean
+} {
+  const randomNumber = getRandomIntInclusive(0, 100)
+
+  let enabledFields
+  if (randomNumber <= 48) {
+    // Full motion Sides
+    enabledFields = {
+      sidesEnabled: true,
+      dotsEnabled: false,
+      rotationEnabled: true,
+      scaleEnabled: true,
+    }
+  } else if (randomNumber <= 50) {
+    // Rotating Sides
+    enabledFields = {
+      sidesEnabled: true,
+      dotsEnabled: false,
+      rotationEnabled: true,
+      scaleEnabled: false,
+    }
+  } else if (randomNumber <= 90) {
+    // Full Motion Dots
+    enabledFields = {
+      sidesEnabled: false,
+      dotsEnabled: true,
+      rotationEnabled: true,
+      scaleEnabled: true,
+    }
+  } else if (randomNumber <= 95) {
+    // Rotating Dots
+    enabledFields = {
+      sidesEnabled: false,
+      dotsEnabled: true,
+      rotationEnabled: true,
+      scaleEnabled: false,
+    }
+  } else {
+    // Dots & Sides Full Motion
+    enabledFields = {
+      sidesEnabled: true,
+      dotsEnabled: true,
+      rotationEnabled: true,
+      scaleEnabled: true,
+    }
+  }
+  return enabledFields
 }
 
 function getRandomPolygon({
@@ -317,6 +363,17 @@ function getRandomPolygon({
   const dots = getRandomDots(sides.amount)
   const rotation = getRandomRotation()
   const scale = getRandomScale()
+  const {
+    sidesEnabled,
+    scaleEnabled,
+    rotationEnabled,
+    dotsEnabled,
+  } = getRandomEnabled()
+
+  sides.enabled = sidesEnabled
+  dots.enabled = dotsEnabled
+  scale.enabled = scaleEnabled
+  rotation.enabled = rotationEnabled
 
   return { active, position, sides, dots, rotation, scale }
 }

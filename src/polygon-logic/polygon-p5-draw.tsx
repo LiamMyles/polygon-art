@@ -118,7 +118,7 @@ export function generateAllPolygonRingGroupsSketch(
     }
     p5.draw = () => {
       p5.angleMode("degrees")
-      p5.background("lightgrey")
+      p5.background("rgba(255,255,255, 0.05)")
       p5.translate(windowSize.width / 2, windowSize.height / 2)
       polygonGroupInstances.forEach((polygonGroupRings, index) => {
         p5.push()
