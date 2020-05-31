@@ -26,7 +26,7 @@ describe("P5Canvas Component", () => {
     unmount()
     expect(mockP5RemoveFunction).toHaveBeenCalledTimes(1)
   })
-  it("shouldn't trigger p5 when rendered with the same key", async () => {
+  it("shouldn't should remove extra p5 instance when rendered with same key", async () => {
     const TestComponent: React.FC = () => {
       const [count, setCount] = useState(0)
       const [count2, setCount2] = useState(false)
@@ -58,7 +58,6 @@ describe("P5Canvas Component", () => {
 
     await waitFor(() => expect(getByText("Count: 2")).toBeInTheDocument())
 
-    expect(p5).toHaveBeenCalledTimes(3)
-    expect(mockP5RemoveFunction).toHaveBeenCalledTimes(3)
+    expect(mockP5RemoveFunction).toHaveBeenCalledTimes(4)
   })
 })
