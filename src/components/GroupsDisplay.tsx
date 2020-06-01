@@ -1,39 +1,114 @@
 import React, { useContext } from "react"
 import styled from "styled-components"
 
-import { polygonGroupsStateContext } from "reducer-contexts/polygon-groups"
+import {
+  polygonGroupsStateContext,
+  PolygonRing,
+} from "reducer-contexts/polygon-groups"
 
-import { generatePolygonGroupSketch } from "polygon-logic/polygon-p5-draw"
+import {
+  generatePolygonGroupSketch,
+  generatePolygonRingSketch,
+} from "polygon-logic/polygon-p5-draw"
 
 import { P5Canvas } from "components/P5Canvas"
 
-const GroupDisplayWrapper = styled.div`
-  background: lightgrey;
-  width: 100%;
+const GroupsUl = styled.ul`
+  display: grid;
+  grid-gap: 10px;
+  background: grey;
+  list-style: none;
+  overflow-y: scroll;
   height: 100%;
-  max-width: 100vw;
 `
+
+const GroupsLi = styled.li`
+  background: lightgrey;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-rows: 200px 170px;
+`
+const AddGroupButton = styled.button`
+  margin: 0 10px;
+  font-size: 18px;
+  border-radius: 10px;
+  height: 50px;
+  margin-bottom: 10px;
+`
+
+const GroupCanvas = styled.div`
+  justify-self: center;
+`
+
+const RingsUl = styled.ul`
+  display: flex;
+  width: 100%;
+  overflow-x: scroll;
+`
+
+const RingsLi = styled.li`
+  margin: 0 5px 0;
+`
+
 export function GroupsDisplay() {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   return (
-    <GroupDisplayWrapper>
-      {polygonGroupsState.map((polygonGroup, index) => {
-        const key = `${polygonGroup.rings.length}-${polygonGroup.rings[0].rotation.startingRotation}-${index}`
+    <GroupsUl>
+      {polygonGroupsState.map((polygonGroup, groupIndex) => {
+        const key = `${polygonGroup.rings.length}-${polygonGroup.rings[0].rotation.startingRotation}-${groupIndex}`
+        const isLastPolygonGroup = groupIndex === polygonGroupsState.length - 1
         return (
-          <div key={key} aria-label={`Group ${index} Canvas`}>
-            <P5Canvas
-              sketch={generatePolygonGroupSketch(
-                polygonGroup,
-                {
-                  height: 200,
-                  width: 200,
-                },
-                0.2
-              )}
+          <GroupsLi key={key} aria-label={`Group ${groupIndex} Canvas`}>
+            <GroupCanvas>
+              <P5Canvas
+                sketch={generatePolygonGroupSketch(
+                  polygonGroup,
+                  {
+                    height: 200,
+                    width: 200,
+                  },
+                  0.2
+                )}
+              />
+            </GroupCanvas>
+            <PolygonRingsDisplay
+              polygonRings={polygonGroup.rings}
+              groupNumber={groupIndex}
             />
-          </div>
+            {isLastPolygonGroup && <AddGroupButton>Add Group</AddGroupButton>}
+          </GroupsLi>
         )
       })}
-    </GroupDisplayWrapper>
+    </GroupsUl>
+  )
+}
+
+const PolygonRingsDisplay: React.FC<{
+  polygonRings: PolygonRing[]
+  groupNumber: number
+}> = ({ polygonRings, groupNumber }) => {
+  return (
+    <RingsUl>
+      {polygonRings.map((ring, ringIndex) => {
+        const key = `${polygonRings.length}-${ring.rotation.startingRotation}-${ringIndex}`
+        return (
+          <RingsLi
+            key={key}
+            aria-label={`Group ${groupNumber}, Ring ${ringIndex} Canvas`}
+          >
+            <P5Canvas
+              sketch={generatePolygonRingSketch(
+                ring,
+                {
+                  height: 150,
+                  width: 150,
+                },
+                0.15
+              )}
+            />
+          </RingsLi>
+        )
+      })}
+    </RingsUl>
   )
 }
