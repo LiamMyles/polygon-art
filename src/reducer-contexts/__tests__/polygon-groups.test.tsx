@@ -4,10 +4,10 @@ import { render, fireEvent } from "@testing-library/react"
 import {
   polygonGroupsReducer,
   PolygonGroupsActions,
-  PolygonInitialState,
-  NavigationContextWrapper,
-  polygonGroupsDispatch,
-  polygonGroupsState,
+  PolygonGroup,
+  PolygonGroupsContextWrapper,
+  polygonGroupsDispatchContext,
+  polygonGroupsStateContext,
   PolygonRingRotation,
   PolygonRingScale,
   PolygonRingDots,
@@ -15,7 +15,7 @@ import {
 } from "reducer-contexts/polygon-groups"
 
 describe("Polygon Reducer", () => {
-  let initialState: PolygonInitialState = [
+  let initialState: PolygonGroup[] = [
     {
       active: true,
       position: { x: 0, y: 0 },
@@ -56,7 +56,7 @@ describe("Polygon Reducer", () => {
     it("should create polygon group", () => {
       const action: PolygonGroupsActions = { type: "CREATE_POLYGON_GROUP" }
 
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -103,7 +103,7 @@ describe("Polygon Reducer", () => {
     it("should create polygon on existing group", () => {
       const action: PolygonGroupsActions = { type: "CREATE_POLYGON", group: 0 }
 
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -174,7 +174,7 @@ describe("Polygon Reducer", () => {
       expect(actualState).toEqual(expectedState)
     })
     it("should add polygon to second ring group", () => {
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -262,7 +262,7 @@ describe("Polygon Reducer", () => {
         position: { x: 10, y: 10 },
       }
 
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 10, y: 10 },
@@ -312,7 +312,7 @@ describe("Polygon Reducer", () => {
         active: false,
       }
 
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: false,
           position: { x: 0, y: 0 },
@@ -363,7 +363,7 @@ describe("Polygon Reducer", () => {
         position: { x: 10, y: 10 },
       }
 
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -413,7 +413,7 @@ describe("Polygon Reducer", () => {
         polygon: 0,
         active: false,
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -468,7 +468,7 @@ describe("Polygon Reducer", () => {
           startingRotation: 90,
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -518,7 +518,7 @@ describe("Polygon Reducer", () => {
           enabled: false,
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -569,7 +569,7 @@ describe("Polygon Reducer", () => {
         },
       }
 
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -619,7 +619,7 @@ describe("Polygon Reducer", () => {
           speed: 10,
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -669,7 +669,7 @@ describe("Polygon Reducer", () => {
           startingRotation: 90,
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -687,7 +687,7 @@ describe("Polygon Reducer", () => {
               rotation: {
                 clockwise: true,
                 enabled: true,
-                speed: 10,
+                speed: 1,
                 startingRotation: 90,
               },
               scale: {
@@ -724,7 +724,7 @@ describe("Polygon Reducer", () => {
           startingSize: 15,
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -773,7 +773,7 @@ describe("Polygon Reducer", () => {
         scale: { startingSize: 10 },
       }
 
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -822,7 +822,7 @@ describe("Polygon Reducer", () => {
         scale: { enabled: false },
       }
 
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -871,7 +871,7 @@ describe("Polygon Reducer", () => {
         scale: { speed: 10 },
       }
 
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -920,7 +920,7 @@ describe("Polygon Reducer", () => {
         scale: { range: { max: 100, min: 50 } },
       }
 
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -976,7 +976,7 @@ describe("Polygon Reducer", () => {
           strokeWidth: 10,
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -1026,7 +1026,7 @@ describe("Polygon Reducer", () => {
           enabled: false,
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -1076,7 +1076,7 @@ describe("Polygon Reducer", () => {
           size: 10,
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -1126,7 +1126,7 @@ describe("Polygon Reducer", () => {
           fillColours: ["white"],
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -1176,7 +1176,7 @@ describe("Polygon Reducer", () => {
           strokeWidth: 10,
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -1226,7 +1226,7 @@ describe("Polygon Reducer", () => {
           strokeColours: ["white"],
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -1281,7 +1281,7 @@ describe("Polygon Reducer", () => {
           amount: 3,
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -1331,7 +1331,7 @@ describe("Polygon Reducer", () => {
           enabled: false,
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -1381,7 +1381,7 @@ describe("Polygon Reducer", () => {
           amount: 3,
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -1431,7 +1431,7 @@ describe("Polygon Reducer", () => {
           strokeWidth: 10,
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -1481,7 +1481,7 @@ describe("Polygon Reducer", () => {
           colours: ["white"],
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -1559,7 +1559,7 @@ describe("Polygon Reducer", () => {
           },
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -1622,7 +1622,7 @@ describe("Polygon Reducer", () => {
           },
         },
       }
-      const expectedState: PolygonInitialState = [
+      const expectedState: PolygonGroup[] = [
         {
           active: true,
           position: { x: 0, y: 0 },
@@ -1877,8 +1877,8 @@ describe("Polygon Context", () => {
   let TestComponent: React.FC
   beforeAll(() => {
     TestComponent = () => {
-      const dispatch = useContext(polygonGroupsDispatch)
-      const state = useContext(polygonGroupsState)
+      const dispatch = useContext(polygonGroupsDispatchContext)
+      const state = useContext(polygonGroupsStateContext)
       return (
         <>
           <p>Scale: {`${state[0].rings[0].scale.enabled}`}</p>
@@ -1901,18 +1901,18 @@ describe("Polygon Context", () => {
   })
   it("should expose context state", () => {
     const { getByText } = render(
-      <NavigationContextWrapper>
+      <PolygonGroupsContextWrapper>
         <TestComponent />
-      </NavigationContextWrapper>
+      </PolygonGroupsContextWrapper>
     )
     expect(getByText("Scale: true")).toBeInTheDocument()
     expect(getByText("Active: true")).toBeInTheDocument()
   })
   it("should expose context dispatch and allow update", () => {
     const { getByText } = render(
-      <NavigationContextWrapper>
+      <PolygonGroupsContextWrapper>
         <TestComponent />
-      </NavigationContextWrapper>
+      </PolygonGroupsContextWrapper>
     )
     expect(getByText("Scale: true")).toBeInTheDocument()
 

@@ -40,6 +40,7 @@ describe("Polygon Animation Calculation Class", () => {
       currentRotation: 1,
       dots: {
         enabled: true,
+        size: 1,
         strokeWidth: 1,
         position: [
           {

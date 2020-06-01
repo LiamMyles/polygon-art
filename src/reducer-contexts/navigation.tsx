@@ -50,15 +50,15 @@ export const NavigationContextWrapper: React.FC = ({ children }) => {
   )
 
   return (
-    <navigationDispatch.Provider value={dispatch}>
-      <navigationState.Provider value={state}>
+    <navigationDispatchContext.Provider value={dispatch}>
+      <navigationStateContext.Provider value={state}>
         {children}
-      </navigationState.Provider>
-    </navigationDispatch.Provider>
+      </navigationStateContext.Provider>
+    </navigationDispatchContext.Provider>
   )
 }
 
-export const navigationDispatch = createContext(
+export const navigationDispatchContext = createContext(
   {} as React.Dispatch<NavigationActions>
 )
-export const navigationState = createContext({} as NavigationState)
+export const navigationStateContext = createContext({} as NavigationState)

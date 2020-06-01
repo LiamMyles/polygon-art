@@ -8,6 +8,7 @@ export interface PolygonAnimation {
     fillColours: string[]
     strokeColours: string[]
     strokeWidth: number
+    size: number
     position: Cords[]
   }
   sides: {
@@ -24,6 +25,7 @@ interface PolygonPoint extends Cords {
 }
 
 interface PolygonAnimationConstants {
+  position: Cords
   rotationSpeed: number
   scalingSpeed: number
   scalingRange: { min: number; max: number }
@@ -51,6 +53,7 @@ interface PolygonStyle {
     strokeColours: string[]
     fillColours: string[]
     strokeWidth: number
+    size: number
   }
 }
 
@@ -74,6 +77,7 @@ export class PolygonAnimationCalculation {
       },
       dots: {
         enabled: dots.enabled,
+        size: dots.size,
         fillColours: dots.fillColours,
         strokeColours: dots.strokeColours,
         strokeWidth: dots.strokeWidth,
@@ -104,8 +108,10 @@ export class PolygonAnimationCalculation {
     active,
     rotation,
     scale,
+    position,
   }: PolygonRing): PolygonAnimationConstants {
     return {
+      position,
       isActive: active,
       isRotating: rotation.enabled,
       isScaling: scale.enabled,
@@ -206,6 +212,7 @@ export class PolygonAnimationCalculation {
   public getPolygonFrame(): PolygonAnimation {
     const { dots, sides } = this.style
     const { currentRotation, polygonPoints } = this.animationState
+    const { position } = this.animationConstants
     const dotPositions = polygonPoints.map((point) => {
       return { x: point.x, y: point.y }
     })
@@ -227,10 +234,11 @@ export class PolygonAnimationCalculation {
     )
 
     return {
-      position: { x: 0, y: 0 },
+      position,
       currentRotation,
       dots: {
         enabled: dots.enabled,
+        size: dots.size,
         position: dotPositions,
         fillColours: dots.fillColours,
         strokeColours: dots.strokeColours,

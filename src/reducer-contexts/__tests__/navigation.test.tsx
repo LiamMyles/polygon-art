@@ -4,8 +4,8 @@ import {
   navigationReducer,
   NavigationActions,
   NavigationContextWrapper,
-  navigationDispatch,
-  navigationState,
+  navigationDispatchContext,
+  navigationStateContext,
 } from "reducer-contexts/navigation"
 
 describe("Navigation Reducer", () => {
@@ -52,8 +52,8 @@ describe("Navigation Context", () => {
   let TestComponent: React.FC
   beforeAll(() => {
     TestComponent = () => {
-      const state = useContext(navigationState)
-      const dispatch = useContext(navigationDispatch)
+      const state = useContext(navigationStateContext)
+      const dispatch = useContext(navigationDispatchContext)
       return (
         <>
           <p>Screen: {state.currentScreen}</p>

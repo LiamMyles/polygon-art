@@ -2,11 +2,14 @@ import React, { useContext } from "react"
 import styled from "styled-components"
 
 import {
-  navigationState as navigationStateContext,
-  navigationDispatch as navigationDispatchContext,
+  navigationStateContext,
+  navigationDispatchContext,
 } from "reducer-contexts/navigation"
 
+import { polygonGroupsDispatchContext } from "reducer-contexts/polygon-groups"
+
 import Screens from "components/Screens"
+import { MainCanvas } from "components/MainCanvas"
 
 const Main = styled.main`
   display: grid;
@@ -17,12 +20,16 @@ const Main = styled.main`
 const App: React.FC = () => {
   const navigationState = useContext(navigationStateContext)
   const navigationDispatch = useContext(navigationDispatchContext)
+  const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
+
   return (
     <Main>
       <Screens currentScreen={navigationState.currentScreen}>
+        <MainCanvas />
+
         <h1
           style={{
-            background: "red",
+            background: "purple",
             width: "100%",
             height: "100%",
             textAlign: "center",
@@ -33,7 +40,7 @@ const App: React.FC = () => {
         </h1>
         <h1
           style={{
-            background: "purple",
+            background: "pink",
             width: "100%",
             height: "100%",
             textAlign: "center",
@@ -42,19 +49,9 @@ const App: React.FC = () => {
         >
           World
         </h1>
-        <h1
-          style={{
-            background: "pink",
-            width: "100%",
-            height: "100%",
-            textAlign: "center",
-            fontSize: 200,
-          }}
-        >
-          This
-        </h1>
       </Screens>
       <div>
+        <h1>Hello</h1>
         <button
           onClick={() => {
             navigationDispatch({ type: "PREV_SCREEN" })
@@ -68,6 +65,14 @@ const App: React.FC = () => {
           }}
         >
           Next
+        </button>
+        <br />
+        <button
+          onClick={() => {
+            polygonGroupsDispatch({ type: "RANDOMIZE_POLYGON_RINGS", group: 0 })
+          }}
+        >
+          Randomize!
         </button>
       </div>
     </Main>

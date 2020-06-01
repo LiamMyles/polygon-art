@@ -46,13 +46,11 @@ export interface PolygonRing {
   sides: PolygonRingSides
 }
 
-interface PolygonGroup {
+export interface PolygonGroup {
   active: boolean
   position: Cords
   rings: PolygonRing[]
 }
-
-export type PolygonInitialState = PolygonGroup[]
 
 interface ActionCreateGroup {
   type: "CREATE_POLYGON_GROUP"
@@ -207,15 +205,6 @@ function getRandomIntInclusive(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-function getRandomMinAndMaxInt(
-  inputMin: number,
-  inputMax: number
-): { min: number; max: number } {
-  const min = getRandomIntInclusive(inputMin, inputMax - 1)
-  const max = getRandomIntInclusive(min + 1, inputMax)
-  return { min, max }
-}
-
 function getRandomBoolean(): boolean {
   return getRandomIntInclusive(0, 1) === 1 ? true : false
 }
@@ -276,37 +265,92 @@ function getRandomColoursForPolygon(amountOfSides: number): string[] {
 function getRandomSides(): PolygonRingSides {
   const sidesAmount = getRandomIntInclusive(3, 12)
   return {
-    enabled: getRandomBoolean(),
-    strokeWidth: getRandomIntInclusive(0, 10),
+    enabled: true,
+    strokeWidth: getRandomIntInclusive(1, 10),
     amount: sidesAmount,
     colours: getRandomColoursForPolygon(sidesAmount),
   }
 }
 function getRandomDots(amountOfSides: number): PolygonRingDots {
   return {
-    enabled: getRandomBoolean(),
+    enabled: true,
     fillColours: getRandomColoursForPolygon(amountOfSides),
-    size: getRandomIntInclusive(1, 100),
+    size: getRandomIntInclusive(5, 10),
     strokeWidth: getRandomIntInclusive(0, 10),
     strokeColours: getRandomColoursForPolygon(amountOfSides),
   }
 }
 function getRandomRotation(): PolygonRingRotation {
   return {
-    enabled: getRandomBoolean(),
+    enabled: true,
     clockwise: getRandomBoolean(),
-    speed: getRandomIntInclusive(1, 100),
+    speed: getRandomIntInclusive(1, 5),
     startingRotation: getRandomIntInclusive(1, 360),
   }
 }
 function getRandomScale(): PolygonRingScale {
-  const { min, max } = getRandomMinAndMaxInt(1, 100)
+  const min = getRandomIntInclusive(0, 20)
+  const max = getRandomIntInclusive(200, 500)
+
   return {
-    enabled: getRandomBoolean(),
+    enabled: true,
     range: { min, max },
-    speed: getRandomIntInclusive(1, 100),
+    speed: getRandomIntInclusive(1, 5),
     startingSize: getRandomIntInclusive(min, max),
   }
+}
+
+function getRandomEnabled(): {
+  sidesEnabled: boolean
+  dotsEnabled: boolean
+  rotationEnabled: boolean
+  scaleEnabled: boolean
+} {
+  const randomNumber = getRandomIntInclusive(0, 100)
+
+  let enabledFields
+  if (randomNumber <= 48) {
+    // Full motion Sides
+    enabledFields = {
+      sidesEnabled: true,
+      dotsEnabled: false,
+      rotationEnabled: true,
+      scaleEnabled: true,
+    }
+  } else if (randomNumber <= 50) {
+    // Rotating Sides
+    enabledFields = {
+      sidesEnabled: true,
+      dotsEnabled: false,
+      rotationEnabled: true,
+      scaleEnabled: false,
+    }
+  } else if (randomNumber <= 90) {
+    // Full Motion Dots
+    enabledFields = {
+      sidesEnabled: false,
+      dotsEnabled: true,
+      rotationEnabled: true,
+      scaleEnabled: true,
+    }
+  } else if (randomNumber <= 95) {
+    // Rotating Dots
+    enabledFields = {
+      sidesEnabled: false,
+      dotsEnabled: true,
+      rotationEnabled: true,
+      scaleEnabled: false,
+    }
+  } else {
+    // Dots & Sides Full Motion
+    enabledFields = {
+      sidesEnabled: true,
+      dotsEnabled: true,
+      rotationEnabled: true,
+      scaleEnabled: true,
+    }
+  }
+  return enabledFields
 }
 
 function getRandomPolygon({
@@ -317,22 +361,33 @@ function getRandomPolygon({
   const dots = getRandomDots(sides.amount)
   const rotation = getRandomRotation()
   const scale = getRandomScale()
+  const {
+    sidesEnabled,
+    scaleEnabled,
+    rotationEnabled,
+    dotsEnabled,
+  } = getRandomEnabled()
+
+  sides.enabled = sidesEnabled
+  dots.enabled = dotsEnabled
+  scale.enabled = scaleEnabled
+  rotation.enabled = rotationEnabled
 
   return { active, position, sides, dots, rotation, scale }
 }
 
 function createRandomPolygonRings(): PolygonRing[] {
-  const amountOfRings = getRandomIntInclusive(2, 6)
+  const amountOfRings = getRandomIntInclusive(2, 8)
 
   return [...Array(amountOfRings)].map(() => getRandomPolygon())
 }
 
 type PolygonGroupsReducer = React.Reducer<
-  Readonly<PolygonInitialState>,
+  Readonly<PolygonGroup[]>,
   PolygonGroupsActions
 >
 export const polygonGroupsReducer: PolygonGroupsReducer = produce(
-  (draft: Draft<PolygonInitialState>, action: PolygonGroupsActions) => {
+  (draft: Draft<PolygonGroup[]>, action: PolygonGroupsActions) => {
     switch (action.type) {
       case "CREATE_POLYGON_GROUP": {
         draft.push({ active: true, position: { x: 0, y: 0 }, rings: [] })
@@ -489,7 +544,7 @@ export const polygonGroupsReducer: PolygonGroupsReducer = produce(
   }
 )
 
-const polygonGroupsInitialState: PolygonInitialState = [
+const polygonGroupsInitialState: PolygonGroup[] = [
   {
     active: true,
     position: { x: 0, y: 0 },
@@ -527,24 +582,33 @@ const polygonGroupsInitialState: PolygonInitialState = [
   },
 ]
 
-export const NavigationContextWrapper: React.FC = ({ children }) => {
+function polygonGroupsInit(
+  polygonGroupsInitialState: PolygonGroup[]
+): PolygonGroup[] {
+  const newPolygon = [...polygonGroupsInitialState]
+  newPolygon[0].rings = createRandomPolygonRings()
+  return newPolygon
+}
+
+export const PolygonGroupsContextWrapper: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(
     polygonGroupsReducer,
-    polygonGroupsInitialState
+    polygonGroupsInitialState,
+    polygonGroupsInit
   )
 
   return (
-    <polygonGroupsDispatch.Provider value={dispatch}>
-      <polygonGroupsState.Provider value={state}>
+    <polygonGroupsDispatchContext.Provider value={dispatch}>
+      <polygonGroupsStateContext.Provider value={state}>
         {children}
-      </polygonGroupsState.Provider>
-    </polygonGroupsDispatch.Provider>
+      </polygonGroupsStateContext.Provider>
+    </polygonGroupsDispatchContext.Provider>
   )
 }
 
-export const polygonGroupsDispatch = createContext(
+export const polygonGroupsDispatchContext = createContext(
   {} as React.Dispatch<PolygonGroupsActions>
 )
-export const polygonGroupsState = createContext(
-  [] as Readonly<PolygonInitialState>
+export const polygonGroupsStateContext = createContext(
+  [] as Readonly<PolygonGroup[]>
 )

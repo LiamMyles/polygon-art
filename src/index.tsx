@@ -4,14 +4,17 @@ import * as serviceWorker from "./serviceWorker"
 
 import App from "components/App"
 import { NavigationContextWrapper } from "reducer-contexts/navigation"
+import { PolygonGroupsContextWrapper } from "reducer-contexts/polygon-groups"
 
 import "./reset.css"
 
 ReactDOM.render(
   <React.StrictMode>
-    <NavigationContextWrapper>
-      <App />
-    </NavigationContextWrapper>
+    <PolygonGroupsContextWrapper>
+      <NavigationContextWrapper>
+        <App />
+      </NavigationContextWrapper>
+    </PolygonGroupsContextWrapper>
   </React.StrictMode>,
   document.getElementById("root")
 )

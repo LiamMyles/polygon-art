@@ -1,10 +1,9 @@
 import React from "react"
 import { render } from "@testing-library/react"
 
-import { NavigationContextWrapper } from "reducer-contexts/navigation"
 import { PolygonGroupsContextWrapper } from "reducer-contexts/polygon-groups"
 
-import App from "components/App"
+import { MainCanvas } from "components/MainCanvas"
 
 const mockP5RemoveFunction = jest.fn()
 jest.mock("p5", () => {
@@ -13,14 +12,10 @@ jest.mock("p5", () => {
   })
 })
 
-test("Renders Basic Text", () => {
-  const { getByText } = render(
+test("Renders Main Canvas", () => {
+  render(
     <PolygonGroupsContextWrapper>
-      <NavigationContextWrapper>
-        <App />
-      </NavigationContextWrapper>
+      <MainCanvas containerSize={{ width: 100, height: 100 }} />
     </PolygonGroupsContextWrapper>
   )
-  const title = getByText(/Hello/i)
-  expect(title).toBeInTheDocument()
 })
