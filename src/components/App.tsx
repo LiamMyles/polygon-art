@@ -2,9 +2,11 @@ import React, { useContext } from "react"
 import styled from "styled-components"
 
 import {
-  navigationState as navigationStateContext,
-  navigationDispatch as navigationDispatchContext,
+  navigationStateContext,
+  navigationDispatchContext,
 } from "reducer-contexts/navigation"
+
+import { polygonGroupsDispatchContext } from "reducer-contexts/polygon-groups"
 
 import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
@@ -18,6 +20,7 @@ const Main = styled.main`
 const App: React.FC = () => {
   const navigationState = useContext(navigationStateContext)
   const navigationDispatch = useContext(navigationDispatchContext)
+  const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
 
   return (
     <Main>
@@ -62,6 +65,14 @@ const App: React.FC = () => {
           }}
         >
           Next
+        </button>
+        <br />
+        <button
+          onClick={() => {
+            polygonGroupsDispatch({ type: "RANDOMIZE_POLYGON_RINGS", group: 0 })
+          }}
+        >
+          Randomize!
         </button>
       </div>
     </Main>

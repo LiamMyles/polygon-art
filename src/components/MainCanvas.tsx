@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
 
 import {
-  polygonGroupsDispatchContext,
   polygonGroupsStateContext,
   PolygonGroup,
 } from "reducer-contexts/polygon-groups"
@@ -27,7 +26,6 @@ function generateKey(
 }
 
 export const MainCanvas: React.FC = () => {
-  const polygonDispatch = useContext(polygonGroupsDispatchContext)
   const polygonContext = useContext(polygonGroupsStateContext)
   const [currentSize, setCurrentSize] = useState({ height: 0, width: 0 })
   const mainWrapper = useRef(
@@ -73,13 +71,6 @@ export const MainCanvas: React.FC = () => {
       window.removeEventListener("resize", throttledWindowUpdate)
     }
   }, [mainWrapper, setCurrentSize])
-
-  useEffect(() => {
-    polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 0 })
-    polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 1 })
-    polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 2 })
-    polygonDispatch({ type: "RANDOMIZE_POLYGON", group: 0, polygon: 3 })
-  }, [polygonDispatch, mainWrapper])
 
   const sketchAll = generateAllPolygonRingGroupsSketch(
     polygonContext,

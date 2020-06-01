@@ -52,8 +52,6 @@ export interface PolygonGroup {
   rings: PolygonRing[]
 }
 
-export type PolygonInitialState = PolygonGroup[]
-
 interface ActionCreateGroup {
   type: "CREATE_POLYGON_GROUP"
 }
@@ -379,17 +377,17 @@ function getRandomPolygon({
 }
 
 function createRandomPolygonRings(): PolygonRing[] {
-  const amountOfRings = getRandomIntInclusive(2, 6)
+  const amountOfRings = getRandomIntInclusive(2, 8)
 
   return [...Array(amountOfRings)].map(() => getRandomPolygon())
 }
 
 type PolygonGroupsReducer = React.Reducer<
-  Readonly<PolygonInitialState>,
+  Readonly<PolygonGroup[]>,
   PolygonGroupsActions
 >
 export const polygonGroupsReducer: PolygonGroupsReducer = produce(
-  (draft: Draft<PolygonInitialState>, action: PolygonGroupsActions) => {
+  (draft: Draft<PolygonGroup[]>, action: PolygonGroupsActions) => {
     switch (action.type) {
       case "CREATE_POLYGON_GROUP": {
         draft.push({ active: true, position: { x: 0, y: 0 }, rings: [] })
@@ -546,7 +544,7 @@ export const polygonGroupsReducer: PolygonGroupsReducer = produce(
   }
 )
 
-const polygonGroupsInitialState: PolygonInitialState = [
+const polygonGroupsInitialState: PolygonGroup[] = [
   {
     active: true,
     position: { x: 0, y: 0 },
@@ -584,10 +582,19 @@ const polygonGroupsInitialState: PolygonInitialState = [
   },
 ]
 
+function polygonGroupsInit(
+  polygonGroupsInitialState: PolygonGroup[]
+): PolygonGroup[] {
+  const newPolygon = [...polygonGroupsInitialState]
+  newPolygon[0].rings = createRandomPolygonRings()
+  return newPolygon
+}
+
 export const PolygonGroupsContextWrapper: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(
     polygonGroupsReducer,
-    polygonGroupsInitialState
+    polygonGroupsInitialState,
+    polygonGroupsInit
   )
 
   return (
@@ -603,5 +610,5 @@ export const polygonGroupsDispatchContext = createContext(
   {} as React.Dispatch<PolygonGroupsActions>
 )
 export const polygonGroupsStateContext = createContext(
-  [] as Readonly<PolygonInitialState>
+  [] as Readonly<PolygonGroup[]>
 )
