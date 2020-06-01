@@ -3,6 +3,7 @@ import styled from "styled-components"
 
 import {
   polygonGroupsStateContext,
+  polygonGroupsDispatchContext,
   PolygonRing,
 } from "reducer-contexts/polygon-groups"
 
@@ -52,6 +53,7 @@ const RingsLi = styled.li`
 
 export function GroupsDisplay() {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
+  const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
   return (
     <GroupsUl>
       {polygonGroupsState.map((polygonGroup, groupIndex) => {
@@ -75,7 +77,15 @@ export function GroupsDisplay() {
               polygonRings={polygonGroup.rings}
               groupNumber={groupIndex}
             />
-            {isLastPolygonGroup && <AddGroupButton>Add Group</AddGroupButton>}
+            {isLastPolygonGroup && (
+              <AddGroupButton
+                onClick={() => {
+                  polygonGroupsDispatch({ type: "CREATE_POLYGON_GROUP" })
+                }}
+              >
+                Add Group
+              </AddGroupButton>
+            )}
           </GroupsLi>
         )
       })}

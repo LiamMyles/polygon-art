@@ -3,10 +3,7 @@ import p5 from "p5"
 import { P5 } from "types/p5"
 import styled from "styled-components"
 
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-`
+const ContainerDiv = styled.div``
 interface P5CanvasProps {
   sketch: (p5: P5) => void
 }
@@ -29,5 +26,5 @@ export const P5Canvas: React.FC<P5CanvasProps> = ({ sketch }) => {
     }
   }, [P5Ref, divRef, sketch])
 
-  return <Container ref={divRef} />
+  return <ContainerDiv ref={divRef} />
 }
