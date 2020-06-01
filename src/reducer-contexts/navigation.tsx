@@ -41,7 +41,7 @@ export const navigationReducer = produce(
   }
 )
 
-export const navigationInitialState = { currentScreen: 1, totalScreens: 3 }
+export const navigationInitialState = { currentScreen: 2, totalScreens: 3 }
 
 export const NavigationContextWrapper: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(

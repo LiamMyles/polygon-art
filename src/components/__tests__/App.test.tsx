@@ -13,14 +13,14 @@ jest.mock("p5", () => {
   })
 })
 
-test("Renders Basic Text", () => {
-  const { getByText } = render(
-    <PolygonGroupsContextWrapper>
-      <NavigationContextWrapper>
-        <App />
-      </NavigationContextWrapper>
-    </PolygonGroupsContextWrapper>
-  )
-  const title = getByText(/Hello/i)
-  expect(title).toBeInTheDocument()
+describe("App Component", () => {
+  it("should render App", () => {
+    render(
+      <PolygonGroupsContextWrapper>
+        <NavigationContextWrapper>
+          <App />
+        </NavigationContextWrapper>
+      </PolygonGroupsContextWrapper>
+    )
+  })
 })
