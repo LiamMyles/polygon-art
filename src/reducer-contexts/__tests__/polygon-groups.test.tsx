@@ -52,51 +52,98 @@ describe("Polygon Reducer", () => {
       ],
     },
   ]
+
+  const expectedRingObject = {
+    active: expect.any(Boolean),
+    position: expect.objectContaining({
+      x: expect.any(Number),
+      y: expect.any(Number),
+    }),
+    dots: {
+      enabled: expect.any(Boolean),
+      fillColours: expect.arrayContaining([expect.any(String)]),
+      size: expect.any(Number),
+      strokeColours: expect.arrayContaining([expect.any(String)]),
+      strokeWidth: expect.any(Number),
+    },
+    rotation: {
+      clockwise: expect.any(Boolean),
+      enabled: expect.any(Boolean),
+      speed: expect.any(Number),
+      startingRotation: expect.any(Number),
+    },
+    scale: {
+      enabled: expect.any(Boolean),
+      speed: expect.any(Number),
+      range: expect.objectContaining({
+        max: expect.any(Number),
+        min: expect.any(Number),
+      }),
+      startingSize: expect.any(Number),
+    },
+    sides: {
+      enabled: expect.any(Boolean),
+      strokeWidth: expect.any(Number),
+      colours: expect.arrayContaining([expect.any(String)]),
+      amount: expect.any(Number),
+    },
+  }
+
   describe("CREATE_POLYGON_GROUP", () => {
     it("should create polygon group", () => {
       const action: PolygonGroupsActions = { type: "CREATE_POLYGON_GROUP" }
 
-      const expectedState: PolygonGroup[] = [
-        {
-          active: true,
-          position: { x: 0, y: 0 },
-          rings: [
-            {
-              active: true,
-              position: { x: 0, y: 0 },
-              dots: {
-                enabled: true,
-                fillColours: ["black"],
-                size: 1,
-                strokeColours: ["black"],
-                strokeWidth: 1,
-              },
-              rotation: {
-                clockwise: true,
-                enabled: true,
-                speed: 1,
-                startingRotation: 1,
-              },
-              scale: {
-                enabled: true,
-                speed: 1,
-                range: { max: 10, min: 0 },
-                startingSize: 5,
-              },
-              sides: {
-                enabled: true,
-                strokeWidth: 1,
-                colours: ["black"],
-                amount: 6,
-              },
+      const expectedInitialGroup: PolygonGroup = {
+        active: true,
+        position: { x: 0, y: 0 },
+        rings: [
+          {
+            active: true,
+            position: { x: 0, y: 0 },
+            dots: {
+              enabled: true,
+              fillColours: ["black"],
+              size: 1,
+              strokeColours: ["black"],
+              strokeWidth: 1,
             },
-          ],
-        },
-        { active: true, position: { x: 0, y: 0 }, rings: [] },
-      ]
+            rotation: {
+              clockwise: true,
+              enabled: true,
+              speed: 1,
+              startingRotation: 1,
+            },
+            scale: {
+              enabled: true,
+              speed: 1,
+              range: { max: 10, min: 0 },
+              startingSize: 5,
+            },
+            sides: {
+              enabled: true,
+              strokeWidth: 1,
+              colours: ["black"],
+              amount: 6,
+            },
+          },
+        ],
+      }
+
       const actualState = polygonGroupsReducer(initialState, action)
 
-      expect(actualState).toEqual(expectedState)
+      expect(actualState[0]).toEqual(expectedInitialGroup)
+      expect(actualState[1]).toEqual(
+        expect.objectContaining({
+          active: expect.any(Boolean),
+          position: expect.objectContaining({
+            x: expect.any(Number),
+            y: expect.any(Number),
+          }),
+          rings: expect.arrayContaining([
+            expect.objectContaining(expectedRingObject),
+          ]),
+        })
+      )
     })
   })
   describe("CREATE_POLYGON", () => {
@@ -107,70 +154,14 @@ describe("Polygon Reducer", () => {
         {
           active: true,
           position: { x: 0, y: 0 },
-          rings: [
-            {
-              active: true,
-              position: { x: 0, y: 0 },
-              dots: {
-                enabled: true,
-                fillColours: ["black"],
-                size: 1,
-                strokeColours: ["black"],
-                strokeWidth: 1,
-              },
-              rotation: {
-                clockwise: true,
-                enabled: true,
-                speed: 1,
-                startingRotation: 1,
-              },
-              scale: {
-                enabled: true,
-                speed: 1,
-                range: { max: 10, min: 0 },
-                startingSize: 5,
-              },
-              sides: {
-                enabled: true,
-                strokeWidth: 1,
-                colours: ["black"],
-                amount: 6,
-              },
-            },
-            {
-              active: true,
-              position: { x: 0, y: 0 },
-              dots: {
-                enabled: true,
-                fillColours: ["black"],
-                size: 1,
-                strokeColours: ["black"],
-                strokeWidth: 1,
-              },
-              rotation: {
-                clockwise: true,
-                enabled: true,
-                speed: 1,
-                startingRotation: 1,
-              },
-              scale: {
-                enabled: true,
-                speed: 1,
-                range: { max: 10, min: 0 },
-                startingSize: 5,
-              },
-              sides: {
-                enabled: true,
-                strokeWidth: 1,
-                colours: ["black"],
-                amount: 6,
-              },
-            },
-          ],
+          rings: expect.arrayContaining([expectedRingObject]),
         },
       ]
       const actualState = polygonGroupsReducer(initialState, action)
 
+      expect(actualState[0].rings.length).toEqual(
+        initialState[0].rings.length + 1
+      )
       expect(actualState).toEqual(expectedState)
     })
     it("should add polygon to second ring group", () => {
@@ -178,72 +169,12 @@ describe("Polygon Reducer", () => {
         {
           active: true,
           position: { x: 0, y: 0 },
-          rings: [
-            {
-              active: true,
-              position: { x: 0, y: 0 },
-              dots: {
-                enabled: true,
-                fillColours: ["black"],
-                size: 1,
-                strokeColours: ["black"],
-                strokeWidth: 1,
-              },
-              rotation: {
-                clockwise: true,
-                enabled: true,
-                speed: 1,
-                startingRotation: 1,
-              },
-              scale: {
-                enabled: true,
-                speed: 1,
-                range: { max: 10, min: 0 },
-                startingSize: 5,
-              },
-              sides: {
-                enabled: true,
-                strokeWidth: 1,
-                colours: ["black"],
-                amount: 6,
-              },
-            },
-          ],
+          rings: expect.arrayContaining([expectedRingObject]),
         },
         {
           active: true,
           position: { x: 0, y: 0 },
-          rings: [
-            {
-              active: true,
-              position: { x: 0, y: 0 },
-              dots: {
-                enabled: true,
-                fillColours: ["black"],
-                size: 1,
-                strokeColours: ["black"],
-                strokeWidth: 1,
-              },
-              rotation: {
-                clockwise: true,
-                enabled: true,
-                speed: 1,
-                startingRotation: 1,
-              },
-              scale: {
-                enabled: true,
-                speed: 1,
-                range: { max: 10, min: 0 },
-                startingSize: 5,
-              },
-              sides: {
-                enabled: true,
-                strokeWidth: 1,
-                colours: ["black"],
-                amount: 6,
-              },
-            },
-          ],
+          rings: expect.arrayContaining([expectedRingObject]),
         },
       ]
       const action1: PolygonGroupsActions = { type: "CREATE_POLYGON_GROUP" }
@@ -251,6 +182,9 @@ describe("Polygon Reducer", () => {
       const groupAddedState = polygonGroupsReducer(initialState, action1)
       const actualState = polygonGroupsReducer(groupAddedState, action2)
 
+      expect(actualState[1].rings.length).toEqual(
+        groupAddedState[1].rings.length + 1
+      )
       expect(actualState).toEqual(expectedState)
     })
   })
