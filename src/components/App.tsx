@@ -64,6 +64,13 @@ const App: React.FC = () => {
         >
           Randomize!
         </button>
+        <button
+          onClick={() => {
+            polygonGroupsDispatch({ type: "CREATE_POLYGON_GROUP" })
+          }}
+        >
+          App Group!
+        </button>
       </div>
     </Main>
   )
