@@ -26,7 +26,7 @@ describe("P5Canvas Component", () => {
     unmount()
     expect(mockP5RemoveFunction).toHaveBeenCalledTimes(1)
   })
-  it("shouldn't should remove extra p5 instance when rendered with same key", async () => {
+  it("should remove extra p5 instance when rendered with same key", async () => {
     const TestComponent: React.FC = () => {
       const [count, setCount] = useState(0)
       const [count2, setCount2] = useState(false)

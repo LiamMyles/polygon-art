@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
+import styled from "styled-components"
 
 import {
   polygonGroupsStateContext,
@@ -7,6 +8,15 @@ import {
 import { generateAllPolygonRingGroupsSketch } from "polygon-logic/polygon-p5-draw"
 
 import { P5Canvas } from "components/P5Canvas"
+
+const MainCanvasWrapper = styled.div`
+  background: white;
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+  text-align: center;
+  font-size: 200;
+`
 
 function generateKey(
   polygonGroups: Readonly<PolygonGroup[]>,
@@ -72,26 +82,12 @@ export const MainCanvas: React.FC = () => {
     }
   }, [mainWrapper, setCurrentSize])
 
-  const sketchAll = generateAllPolygonRingGroupsSketch(
-    polygonContext,
-    currentSize
-  )
   return (
-    <div
-      ref={mainWrapper}
-      style={{
-        background: "white",
-        width: "100%",
-        height: "100%",
-        maxWidth: "100vw",
-        textAlign: "center",
-        fontSize: 200,
-      }}
-    >
+    <MainCanvasWrapper ref={mainWrapper}>
       <P5Canvas
-        sketch={sketchAll}
+        sketch={generateAllPolygonRingGroupsSketch(polygonContext, currentSize)}
         key={generateKey(polygonContext, currentSize)}
       />
-    </div>
+    </MainCanvasWrapper>
   )
 }
