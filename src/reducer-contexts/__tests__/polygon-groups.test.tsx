@@ -1805,6 +1805,45 @@ describe("Polygon Reducer", () => {
       )
     })
   })
+
+  describe("DELETE_POLYGON_GROUP", () => {
+    it("should delete passed polygon group", () => {
+      const createPolygonGroupAction: PolygonGroupsActions = {
+        type: "CREATE_POLYGON_GROUP",
+      }
+      const deletePolygonGroupAction: PolygonGroupsActions = {
+        type: "DELETE_POLYGON_GROUP",
+        group: 0,
+      }
+
+      const extraPolygonGroupState = polygonGroupsReducer(
+        initialState,
+        createPolygonGroupAction
+      )
+      expect(extraPolygonGroupState.length).toEqual(2)
+      const deletedPolygonGroupState = polygonGroupsReducer(
+        extraPolygonGroupState,
+        deletePolygonGroupAction
+      )
+      expect(deletedPolygonGroupState.length).toEqual(1)
+    })
+    it("shouldn't delete last polygon group", () => {
+      const deletePolygonGroupAction: PolygonGroupsActions = {
+        type: "DELETE_POLYGON_GROUP",
+        group: 0,
+      }
+
+      const deletedPolygonGroupState = polygonGroupsReducer(
+        initialState,
+        deletePolygonGroupAction
+      )
+      expect(deletedPolygonGroupState).toEqual(initialState)
+    })
+  })
+
+  describe("DELETE_POLYGON_RING", () => {
+    it.todo("should delete passed polygon ring")
+  })
 })
 
 describe("Polygon Context", () => {

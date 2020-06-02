@@ -154,6 +154,11 @@ interface ActionRandomizePolygonDots {
   polygon: number
 }
 
+interface ActionDeletePolygonGroup {
+  type: "DELETE_POLYGON_GROUP"
+  group: number
+}
+
 export type PolygonGroupsActions =
   | ActionCreateGroup
   | ActionCreatePolygon
@@ -172,6 +177,7 @@ export type PolygonGroupsActions =
   | ActionRandomizePolygonRotation
   | ActionRandomizePolygonScale
   | ActionRandomizePolygonDots
+  | ActionDeletePolygonGroup
 
 /**
  * Takes in the current draft for the matching options
@@ -514,6 +520,14 @@ export const polygonGroupsReducer: PolygonGroupsReducer = produce(
         const draftPolygon = draft[action.group].rings[action.polygon]
         const sides = draftPolygon.sides.amount
         draftPolygon.dots = getRandomDots(sides)
+        break
+      }
+      case "DELETE_POLYGON_GROUP": {
+        const originalDraft = original(draft)
+        const totalGroups = originalDraft ? originalDraft.length : 1
+        if (originalDraft && totalGroups > 1) {
+          draft.splice(action.group, 1)
+        }
         break
       }
     }

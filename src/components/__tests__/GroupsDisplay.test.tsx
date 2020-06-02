@@ -78,8 +78,30 @@ describe("GroupDisplay Component", () => {
     expect(group1Ring1).not.toBeInTheDocument()
     expect(newGroup1Ring1).toBeInTheDocument()
   })
-  it.todo("should be able to delete groups")
-  it.todo("should not be able to delete first group")
+  it("should be able to delete groups", () => {
+    const { getByLabelText, getByRole, queryByLabelText } = render(
+      <PolygonGroupsContextWrapper>
+        <GroupsDisplay />
+      </PolygonGroupsContextWrapper>
+    )
+    const group1 = getByLabelText("Group 0 Canvas")
+    expect(group1).toBeInTheDocument()
+
+    fireEvent.click(getByRole("button", { name: "Add Group" }))
+
+    expect(group1).toBeInTheDocument()
+    expect(getByLabelText("Group 1 Canvas")).toBeInTheDocument()
+
+    const group1DeleteButton = within(group1).getByRole("button", {
+      name: "Delete",
+    })
+    fireEvent.click(group1DeleteButton)
+
+    expect(group1).not.toBeInTheDocument()
+    expect(getByLabelText("Group 0 Canvas")).toBeInTheDocument()
+    expect(queryByLabelText(/Group 1 Canvas/)).not.toBeInTheDocument()
+  })
+  it.todo("should not be able to delete last group")
   it.todo("should be able to add new rings")
   it.todo("should be able to delete rings")
   it.todo("should not be able to delete first ring")
