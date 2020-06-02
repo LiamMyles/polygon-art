@@ -27,7 +27,7 @@ const GroupsLi = styled.li`
   background: lightgrey;
   display: grid;
   grid-gap: 10px;
-  grid-template-rows: 200px 170px;
+  grid-template-rows: 200px 1fr;
 `
 const AddGroupButton = styled.button`
   margin: 0 10px;
@@ -64,7 +64,25 @@ const RingsUl = styled.ul`
 `
 
 const RingsLi = styled.li`
-  margin: 0 5px 0;
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr;
+  grid-template-rows: 150px 50px;
+  grid-gap: 10px;
+  margin: 0 5px 10px;
+`
+const RingCanvasDiv = styled.div`
+  grid-column: 1/3;
+`
+
+const RingRandomizeButton = styled.button`
+  min-height: 50px;
+  border-radius: 5px;
+  grid-row: 2/3;
+`
+const RingDeleteButton = styled.button`
+  min-height: 50px;
+  border-radius: 5px;
+  grid-row: 2/3;
 `
 
 export function GroupsDisplay() {
@@ -135,6 +153,8 @@ const PolygonRingsDisplay: React.FC<{
   polygonRings: PolygonRing[]
   groupNumber: number
 }> = ({ polygonRings, groupNumber }) => {
+  const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
+
   return (
     <RingsUl>
       {polygonRings.map((ring, ringIndex) => {
@@ -144,16 +164,20 @@ const PolygonRingsDisplay: React.FC<{
             key={key}
             aria-label={`Group ${groupNumber}, Ring ${ringIndex} Canvas`}
           >
-            <P5Canvas
-              sketch={generatePolygonRingSketch(
-                ring,
-                {
-                  height: 150,
-                  width: 150,
-                },
-                0.15
-              )}
-            />
+            <RingCanvasDiv>
+              <P5Canvas
+                sketch={generatePolygonRingSketch(
+                  ring,
+                  {
+                    height: 150,
+                    width: 150,
+                  },
+                  0.15
+                )}
+              />
+            </RingCanvasDiv>
+            <RingRandomizeButton>Randomize</RingRandomizeButton>
+            <RingDeleteButton>Delete</RingDeleteButton>
           </RingsLi>
         )
       })}
