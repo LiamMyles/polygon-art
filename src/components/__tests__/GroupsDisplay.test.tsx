@@ -1,5 +1,5 @@
 import React from "react"
-import { render, fireEvent } from "@testing-library/react"
+import { render, fireEvent, within } from "@testing-library/react"
 import p5 from "p5"
 
 import { PolygonGroupsContextWrapper } from "reducer-contexts/polygon-groups"
@@ -55,7 +55,29 @@ describe("GroupDisplay Component", () => {
     expect(getByLabelText("Group 0 Canvas")).toBeInTheDocument()
     expect(getByLabelText("Group 1 Canvas")).toBeInTheDocument()
   })
-  it.todo("should be able to re-roll rings of group")
+  it("should be able to re-roll rings of group", () => {
+    const { getByLabelText } = render(
+      <PolygonGroupsContextWrapper>
+        <GroupsDisplay />
+      </PolygonGroupsContextWrapper>
+    )
+    const group1 = getByLabelText("Group 0 Canvas")
+    const group1Ring1 = within(group1).getByLabelText("Group 0, Ring 1 Canvas")
+    const group1RandomizeButton = within(group1).getByRole("button", {
+      name: "Randomize",
+    })
+
+    expect(group1).toBeInTheDocument()
+
+    fireEvent.click(group1RandomizeButton)
+
+    const newGroup1 = getByLabelText("Group 0 Canvas")
+    const newGroup1Ring1 = within(newGroup1).getByLabelText(
+      "Group 0, Ring 1 Canvas"
+    )
+    expect(group1Ring1).not.toBeInTheDocument()
+    expect(newGroup1Ring1).toBeInTheDocument()
+  })
   it.todo("should be able to delete groups")
   it.todo("should not be able to delete first group")
   it.todo("should be able to add new rings")

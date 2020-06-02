@@ -38,7 +38,15 @@ const AddGroupButton = styled.button`
 `
 
 const GroupCanvas = styled.div`
+  display: grid;
+  grid-template-columns: 200px 100px;
   justify-self: center;
+`
+const GroupRandomize = styled.button`
+  justify-self: center;
+  align-self: center;
+  min-height: 50px;
+  border-radius: 5px;
 `
 
 const RingsUl = styled.ul`
@@ -72,6 +80,16 @@ export function GroupsDisplay() {
                   0.2
                 )}
               />
+              <GroupRandomize
+                onClick={() => {
+                  polygonGroupsDispatch({
+                    type: "RANDOMIZE_POLYGON_RINGS",
+                    group: groupIndex,
+                  })
+                }}
+              >
+                Randomize
+              </GroupRandomize>
             </GroupCanvas>
             <PolygonRingsDisplay
               polygonRings={polygonGroup.rings}
