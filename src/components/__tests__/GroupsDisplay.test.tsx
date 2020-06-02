@@ -63,9 +63,9 @@ describe("GroupDisplay Component", () => {
     )
     const group1 = getByLabelText("Group 0 Canvas")
     const group1Ring1 = within(group1).getByLabelText("Group 0, Ring 1 Canvas")
-    const group1RandomizeButton = within(group1).getByRole("button", {
+    const group1RandomizeButton = within(group1).getAllByRole("button", {
       name: "Randomize",
-    })
+    })[0]
 
     expect(group1).toBeInTheDocument()
 
@@ -92,9 +92,9 @@ describe("GroupDisplay Component", () => {
     expect(group1).toBeInTheDocument()
     expect(getByLabelText("Group 1 Canvas")).toBeInTheDocument()
 
-    const group1DeleteButton = within(group1).getByRole("button", {
+    const group1DeleteButton = within(group1).getAllByRole("button", {
       name: "Delete",
-    })
+    })[0]
     fireEvent.click(group1DeleteButton)
 
     expect(group1).not.toBeInTheDocument()
@@ -108,9 +108,9 @@ describe("GroupDisplay Component", () => {
       </PolygonGroupsContextWrapper>
     )
     const group1 = getByLabelText("Group 0 Canvas")
-    const group1DeleteButton = within(group1).getByRole("button", {
+    const group1DeleteButton = within(group1).getAllByRole("button", {
       name: "Delete",
-    })
+    })[0]
 
     expect(group1).toBeInTheDocument()
     expect(group1DeleteButton).toBeDisabled()
