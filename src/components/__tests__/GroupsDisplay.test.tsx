@@ -101,8 +101,21 @@ describe("GroupDisplay Component", () => {
     expect(getByLabelText("Group 0 Canvas")).toBeInTheDocument()
     expect(queryByLabelText(/Group 1 Canvas/)).not.toBeInTheDocument()
   })
-  it.todo("should not be able to delete last group")
+  it("should not be able to delete last group", () => {
+    const { getByLabelText } = render(
+      <PolygonGroupsContextWrapper>
+        <GroupsDisplay />
+      </PolygonGroupsContextWrapper>
+    )
+    const group1 = getByLabelText("Group 0 Canvas")
+    const group1DeleteButton = within(group1).getByRole("button", {
+      name: "Delete",
+    })
+
+    expect(group1).toBeInTheDocument()
+    expect(group1DeleteButton).toBeDisabled()
+  })
   it.todo("should be able to add new rings")
   it.todo("should be able to delete rings")
-  it.todo("should not be able to delete first ring")
+  it.todo("should not be able to delete last ring in group")
 })
