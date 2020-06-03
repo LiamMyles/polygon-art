@@ -65,13 +65,14 @@ const RingsUl = styled.ul`
 
 const RingsLi = styled.li`
   display: grid;
-  grid-template-columns: 0.5fr 0.5fr;
+  grid-template-columns: 80px 80px;
   grid-template-rows: 150px 50px;
   grid-gap: 10px;
   margin: 0 5px 10px;
 `
 const RingCanvasDiv = styled.div`
   grid-column: 1/3;
+  justify-self: center;
 `
 
 const RingRandomizeButton = styled.button`
@@ -211,7 +212,16 @@ const PolygonRingsDisplay: React.FC<{
             </RingsLi>
             {isLastPolygon && (
               <RingsLi>
-                <AddRingButton>Add Polygon</AddRingButton>
+                <AddRingButton
+                  onClick={() => {
+                    polygonGroupsDispatch({
+                      type: "CREATE_POLYGON",
+                      group: groupNumber,
+                    })
+                  }}
+                >
+                  Add Polygon
+                </AddRingButton>
               </RingsLi>
             )}
           </React.Fragment>

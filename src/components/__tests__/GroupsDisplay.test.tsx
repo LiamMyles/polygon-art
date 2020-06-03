@@ -158,5 +158,27 @@ describe("GroupDisplay Component", () => {
   // This is tricky to test with the current randomness of rings being created
   it.todo("should not be able to delete last ring in group")
 
-  it.todo("should be able to add new ring to group")
+  it("should be able to add new ring to group", () => {
+    const { getByRole, getAllByRole } = render(
+      <PolygonGroupsContextWrapper>
+        <GroupsDisplay />
+      </PolygonGroupsContextWrapper>
+    )
+
+    const deleteButtonsBeforeAdd = getAllByRole("button", {
+      name: "Delete",
+    }).length
+
+    fireEvent.click(
+      getByRole("button", {
+        name: "Add Polygon",
+      })
+    )
+
+    const deleteButtonsAfterAdd = getAllByRole("button", {
+      name: "Delete",
+    }).length
+
+    expect(deleteButtonsAfterAdd).toEqual(deleteButtonsBeforeAdd + 1)
+  })
 })
