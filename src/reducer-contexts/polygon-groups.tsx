@@ -158,6 +158,11 @@ interface ActionDeletePolygonGroup {
   type: "DELETE_POLYGON_GROUP"
   group: number
 }
+interface ActionDeletePolygonGroupRing {
+  type: "DELETE_POLYGON_GROUP_RING"
+  group: number
+  polygon: number
+}
 
 export type PolygonGroupsActions =
   | ActionCreateGroup
@@ -178,6 +183,7 @@ export type PolygonGroupsActions =
   | ActionRandomizePolygonScale
   | ActionRandomizePolygonDots
   | ActionDeletePolygonGroup
+  | ActionDeletePolygonGroupRing
 
 /**
  * Takes in the current draft for the matching options
@@ -527,6 +533,16 @@ export const polygonGroupsReducer: PolygonGroupsReducer = produce(
         const totalGroups = originalDraft ? originalDraft.length : 1
         if (originalDraft && totalGroups > 1) {
           draft.splice(action.group, 1)
+        }
+        break
+      }
+      case "DELETE_POLYGON_GROUP_RING": {
+        const originalDraft = original(draft)
+        const totalRings = originalDraft
+          ? originalDraft[action.group].rings.length
+          : 1
+        if (totalRings > 1) {
+          draft[action.group].rings.splice(action.polygon, 1)
         }
         break
       }

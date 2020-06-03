@@ -1842,7 +1842,43 @@ describe("Polygon Reducer", () => {
   })
 
   describe("DELETE_POLYGON_RING", () => {
-    it.todo("should delete passed polygon ring")
+    it("should delete passed polygon ring", () => {
+      const randomizedPolygonAction: PolygonGroupsActions = {
+        type: "RANDOMIZE_POLYGON_RINGS",
+        group: 0,
+      }
+      const deletePolygonGroupRingAction: PolygonGroupsActions = {
+        type: "DELETE_POLYGON_GROUP_RING",
+        group: 0,
+        polygon: 0,
+      }
+
+      const randomisedPolygonState = polygonGroupsReducer(
+        initialState,
+        randomizedPolygonAction
+      )
+      const deletedPolygonGroupState = polygonGroupsReducer(
+        randomisedPolygonState,
+        deletePolygonGroupRingAction
+      )
+      const initialRings = randomisedPolygonState[0].rings.length
+      const updatedRings = deletedPolygonGroupState[0].rings.length
+
+      expect(updatedRings).toEqual(initialRings - 1)
+    })
+    it("shouldn't delete last polygon ring", () => {
+      const deletePolygonGroupAction: PolygonGroupsActions = {
+        type: "DELETE_POLYGON_GROUP_RING",
+        group: 0,
+        polygon: 0,
+      }
+
+      const deletedPolygonGroupRingState = polygonGroupsReducer(
+        initialState,
+        deletePolygonGroupAction
+      )
+      expect(deletedPolygonGroupRingState).toEqual(initialState)
+    })
   })
 })
 

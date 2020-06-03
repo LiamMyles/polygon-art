@@ -154,20 +154,20 @@ const PolygonRingsDisplay: React.FC<{
   groupNumber: number
 }> = ({ polygonRings, groupNumber }) => {
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
-
+  const totalPolygons = polygonRings.length
   return (
     <RingsUl>
-      {polygonRings.map((ring, ringIndex) => {
-        const key = `${polygonRings.length}-${ring.rotation.startingRotation}-${ringIndex}`
+      {polygonRings.map((polygon, polygonIndex) => {
+        const key = `${polygonRings.length}-${polygon.rotation.startingRotation}-${polygonIndex}`
         return (
           <RingsLi
             key={key}
-            aria-label={`Group ${groupNumber}, Ring ${ringIndex} Canvas`}
+            aria-label={`Group ${groupNumber}, Ring ${polygonIndex} Canvas`}
           >
             <RingCanvasDiv>
               <P5Canvas
                 sketch={generatePolygonRingSketch(
-                  ring,
+                  polygon,
                   {
                     height: 150,
                     width: 150,
@@ -176,8 +176,29 @@ const PolygonRingsDisplay: React.FC<{
                 )}
               />
             </RingCanvasDiv>
-            <RingRandomizeButton>Randomize</RingRandomizeButton>
-            <RingDeleteButton>Delete</RingDeleteButton>
+            <RingRandomizeButton
+              onClick={() => {
+                polygonGroupsDispatch({
+                  type: "RANDOMIZE_POLYGON",
+                  group: groupNumber,
+                  polygon: polygonIndex,
+                })
+              }}
+            >
+              Randomize
+            </RingRandomizeButton>
+            <RingDeleteButton
+              disabled={totalPolygons === 1}
+              onClick={() => {
+                polygonGroupsDispatch({
+                  type: "DELETE_POLYGON_GROUP_RING",
+                  group: groupNumber,
+                  polygon: polygonIndex,
+                })
+              }}
+            >
+              Delete
+            </RingDeleteButton>
           </RingsLi>
         )
       })}

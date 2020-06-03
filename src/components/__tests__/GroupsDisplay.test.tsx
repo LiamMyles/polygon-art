@@ -115,7 +115,46 @@ describe("GroupDisplay Component", () => {
     expect(group1).toBeInTheDocument()
     expect(group1DeleteButton).toBeDisabled()
   })
-  it.todo("should be able to add new rings")
-  it.todo("should be able to delete rings")
+  it("should be able to add new rings", () => {
+    const { getByLabelText } = render(
+      <PolygonGroupsContextWrapper>
+        <GroupsDisplay />
+      </PolygonGroupsContextWrapper>
+    )
+    const ring1 = getByLabelText("Group 0, Ring 0 Canvas")
+    const group1RandomizeButton = within(ring1).getAllByRole("button", {
+      name: "Randomize",
+    })[0]
+
+    fireEvent.click(group1RandomizeButton)
+
+    expect(ring1).not.toBeInTheDocument()
+    expect(getByLabelText("Group 0, Ring 0 Canvas")).toBeInTheDocument()
+  })
+  it("should be able to delete rings", () => {
+    const { getByLabelText, getAllByRole } = render(
+      <PolygonGroupsContextWrapper>
+        <GroupsDisplay />
+      </PolygonGroupsContextWrapper>
+    )
+    const ring1 = getByLabelText("Group 0, Ring 0 Canvas")
+    const deleteButtonsBeforeDelete = getAllByRole("button", {
+      name: "Delete",
+    }).length
+
+    const group1RandomizeButton = within(ring1).getByRole("button", {
+      name: "Delete",
+    })
+
+    fireEvent.click(group1RandomizeButton)
+
+    const deleteButtonsAfterDelete = getAllByRole("button", {
+      name: "Delete",
+    }).length
+
+    expect(deleteButtonsAfterDelete).toEqual(deleteButtonsBeforeDelete - 1)
+  })
+
+  // This is tricky to test with the current randomness of rings being created
   it.todo("should not be able to delete last ring in group")
 })
