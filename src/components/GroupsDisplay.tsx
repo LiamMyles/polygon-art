@@ -57,43 +57,6 @@ const GroupDelete = styled.button`
   grid-column: 2/3;
 `
 
-const RingsUl = styled.ul`
-  display: flex;
-  width: 100%;
-  overflow-x: scroll;
-`
-
-const RingsLi = styled.li`
-  display: grid;
-  grid-template-columns: 80px 80px;
-  grid-template-rows: 150px 50px;
-  grid-gap: 10px;
-  margin: 0 5px 10px;
-`
-const RingCanvasDiv = styled.div`
-  grid-column: 1/3;
-  justify-self: center;
-`
-
-const RingRandomizeButton = styled.button`
-  min-height: 50px;
-  border-radius: 5px;
-  grid-row: 2/3;
-`
-const RingDeleteButton = styled.button`
-  min-height: 50px;
-  border-radius: 5px;
-  grid-row: 2/3;
-`
-
-const AddRingButton = styled.button`
-  height: 50px;
-  justify-self: center;
-  align-self: center;
-  border-radius: 5px;
-  grid-column: 1/3;
-`
-
 export function GroupsDisplay() {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
@@ -157,6 +120,43 @@ export function GroupsDisplay() {
     </GroupsUl>
   )
 }
+
+const RingsUl = styled.ul`
+  display: flex;
+  width: 100%;
+  overflow-x: scroll;
+`
+
+const RingsLi = styled.li`
+  display: grid;
+  grid-template-columns: 80px 80px;
+  grid-template-rows: 150px 50px;
+  grid-gap: 10px;
+  margin: 0 5px 10px;
+`
+const RingCanvasDiv = styled.div`
+  grid-column: 1/3;
+  justify-self: center;
+`
+
+const RingRandomizeButton = styled.button`
+  min-height: 50px;
+  border-radius: 5px;
+  grid-row: 2/3;
+`
+const RingDeleteButton = styled.button`
+  min-height: 50px;
+  border-radius: 5px;
+  grid-row: 2/3;
+`
+
+const AddRingButton = styled.button`
+  height: 50px;
+  justify-self: center;
+  align-self: center;
+  border-radius: 5px;
+  grid-column: 1/3;
+`
 
 const PolygonRingsDisplay: React.FC<{
   polygonRings: PolygonRing[]

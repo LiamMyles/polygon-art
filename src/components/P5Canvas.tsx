@@ -1,9 +1,7 @@
 import React, { useEffect, useRef } from "react"
 import p5 from "p5"
 import { P5 } from "types/p5"
-import styled from "styled-components"
 
-const ContainerDiv = styled.div``
 interface P5CanvasProps {
   sketch: (p5: P5) => void
 }
@@ -26,5 +24,5 @@ export const P5Canvas: React.FC<P5CanvasProps> = ({ sketch }) => {
     }
   }, [P5Ref, divRef, sketch])
 
-  return <ContainerDiv ref={divRef} />
+  return <div ref={divRef} />
 }
