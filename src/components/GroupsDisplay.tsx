@@ -85,6 +85,14 @@ const RingDeleteButton = styled.button`
   grid-row: 2/3;
 `
 
+const AddRingButton = styled.button`
+  height: 50px;
+  justify-self: center;
+  align-self: center;
+  border-radius: 5px;
+  grid-column: 1/3;
+`
+
 export function GroupsDisplay() {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
@@ -158,48 +166,55 @@ const PolygonRingsDisplay: React.FC<{
   return (
     <RingsUl>
       {polygonRings.map((polygon, polygonIndex) => {
+        const isLastPolygon = totalPolygons === polygonIndex + 1
         const key = `${polygonRings.length}-${polygon.rotation.startingRotation}-${polygonIndex}`
         return (
-          <RingsLi
-            key={key}
-            aria-label={`Group ${groupNumber}, Ring ${polygonIndex} Canvas`}
-          >
-            <RingCanvasDiv>
-              <P5Canvas
-                sketch={generatePolygonRingSketch(
-                  polygon,
-                  {
-                    height: 150,
-                    width: 150,
-                  },
-                  0.15
-                )}
-              />
-            </RingCanvasDiv>
-            <RingRandomizeButton
-              onClick={() => {
-                polygonGroupsDispatch({
-                  type: "RANDOMIZE_POLYGON",
-                  group: groupNumber,
-                  polygon: polygonIndex,
-                })
-              }}
+          <React.Fragment key={key}>
+            <RingsLi
+              aria-label={`Group ${groupNumber}, Ring ${polygonIndex} Canvas`}
             >
-              Randomize
-            </RingRandomizeButton>
-            <RingDeleteButton
-              disabled={totalPolygons === 1}
-              onClick={() => {
-                polygonGroupsDispatch({
-                  type: "DELETE_POLYGON_GROUP_RING",
-                  group: groupNumber,
-                  polygon: polygonIndex,
-                })
-              }}
-            >
-              Delete
-            </RingDeleteButton>
-          </RingsLi>
+              <RingCanvasDiv>
+                <P5Canvas
+                  sketch={generatePolygonRingSketch(
+                    polygon,
+                    {
+                      height: 150,
+                      width: 150,
+                    },
+                    0.15
+                  )}
+                />
+              </RingCanvasDiv>
+              <RingRandomizeButton
+                onClick={() => {
+                  polygonGroupsDispatch({
+                    type: "RANDOMIZE_POLYGON",
+                    group: groupNumber,
+                    polygon: polygonIndex,
+                  })
+                }}
+              >
+                Randomize
+              </RingRandomizeButton>
+              <RingDeleteButton
+                disabled={totalPolygons === 1}
+                onClick={() => {
+                  polygonGroupsDispatch({
+                    type: "DELETE_POLYGON_GROUP_RING",
+                    group: groupNumber,
+                    polygon: polygonIndex,
+                  })
+                }}
+              >
+                Delete
+              </RingDeleteButton>
+            </RingsLi>
+            {isLastPolygon && (
+              <RingsLi>
+                <AddRingButton>Add Polygon</AddRingButton>
+              </RingsLi>
+            )}
+          </React.Fragment>
         )
       })}
     </RingsUl>

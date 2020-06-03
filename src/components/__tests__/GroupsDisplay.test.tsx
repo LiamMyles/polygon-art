@@ -157,4 +157,6 @@ describe("GroupDisplay Component", () => {
 
   // This is tricky to test with the current randomness of rings being created
   it.todo("should not be able to delete last ring in group")
+
+  it.todo("should be able to add new ring to group")
 })
