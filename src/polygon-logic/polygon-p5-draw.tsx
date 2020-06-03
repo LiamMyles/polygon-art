@@ -53,19 +53,24 @@ function singlePolygonDraw(
 
 export function generatePolygonRingSketch(
   PolygonRing: Readonly<PolygonRing>,
-  windowSize: { height: number; width: number }
+  windowSize: { height: number; width: number },
+  scale?: number
 ) {
   const polygonRingInstance = new PolygonAnimationCalculation(PolygonRing)
 
   return (p5: P5) => {
     p5.setup = () => {
       p5.createCanvas(windowSize.width, windowSize.height)
-      p5.background("grey")
+      p5.background("#f6f6f6")
     }
     p5.draw = () => {
       polygonRingInstance.getPolygonFrameAndStep()
       p5.angleMode("degrees")
+      p5.background("rgba(255,255,255, 0.05)")
       p5.translate(windowSize.width / 2, windowSize.height / 2)
+      if (scale) {
+        p5.scale(scale)
+      }
       singlePolygonDraw(
         polygonRingInstance.getPolygonFrameAndStep(),
         windowSize,
@@ -77,7 +82,8 @@ export function generatePolygonRingSketch(
 
 export function generatePolygonGroupSketch(
   polygonGroup: Readonly<PolygonGroup>,
-  windowSize: { height: number; width: number }
+  windowSize: { height: number; width: number },
+  scale?: number
 ) {
   const polygonRingInstances = polygonGroup.rings.map((polygonRing) => {
     return new PolygonAnimationCalculation(polygonRing)
@@ -86,12 +92,15 @@ export function generatePolygonGroupSketch(
   return (p5: P5) => {
     p5.setup = () => {
       p5.createCanvas(windowSize.width, windowSize.height)
-      p5.background("grey")
+      p5.background("#f6f6f6")
     }
     p5.draw = () => {
       p5.angleMode("degrees")
-      p5.background("grey")
+      p5.background("rgba(255,255,255, 0.05)")
       p5.translate(windowSize.width / 2, windowSize.height / 2)
+      if (scale) {
+        p5.scale(scale)
+      }
       p5.push()
       for (const polygonRing of polygonRingInstances) {
         singlePolygonDraw(polygonRing.getPolygonFrameAndStep(), windowSize, p5)
@@ -114,7 +123,7 @@ export function generateAllPolygonRingGroupsSketch(
   return (p5: P5) => {
     p5.setup = () => {
       p5.createCanvas(windowSize.width, windowSize.height)
-      p5.background("lightgrey")
+      p5.background("#f6f6f6")
     }
     p5.draw = () => {
       p5.angleMode("degrees")

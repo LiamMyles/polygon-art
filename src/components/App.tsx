@@ -10,6 +10,7 @@ import { polygonGroupsDispatchContext } from "reducer-contexts/polygon-groups"
 
 import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
+import { GroupsDisplay } from "components/GroupsDisplay"
 
 const Main = styled.main`
   display: grid;
@@ -26,18 +27,7 @@ const App: React.FC = () => {
     <Main>
       <Screens currentScreen={navigationState.currentScreen}>
         <MainCanvas />
-
-        <h1
-          style={{
-            background: "purple",
-            width: "100%",
-            height: "100%",
-            textAlign: "center",
-            fontSize: 200,
-          }}
-        >
-          Hello
-        </h1>
+        <GroupsDisplay />
         <h1
           style={{
             background: "pink",
@@ -73,6 +63,13 @@ const App: React.FC = () => {
           }}
         >
           Randomize!
+        </button>
+        <button
+          onClick={() => {
+            polygonGroupsDispatch({ type: "CREATE_POLYGON_GROUP" })
+          }}
+        >
+          App Group!
         </button>
       </div>
     </Main>

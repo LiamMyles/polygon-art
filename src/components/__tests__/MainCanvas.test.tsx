@@ -1,5 +1,6 @@
 import React from "react"
 import { render } from "@testing-library/react"
+import p5 from "p5"
 
 import { PolygonGroupsContextWrapper } from "reducer-contexts/polygon-groups"
 
@@ -12,10 +13,16 @@ jest.mock("p5", () => {
   })
 })
 
+beforeEach(() => {
+  const mockedP5: jest.MockInstance<any, any> = p5 as any
+  mockP5RemoveFunction.mockClear()
+  mockedP5.mockClear()
+})
+
 test("Renders Main Canvas", () => {
   render(
     <PolygonGroupsContextWrapper>
-      <MainCanvas containerSize={{ width: 100, height: 100 }} />
+      <MainCanvas />
     </PolygonGroupsContextWrapper>
   )
 })

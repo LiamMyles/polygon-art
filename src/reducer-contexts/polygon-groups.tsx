@@ -154,6 +154,16 @@ interface ActionRandomizePolygonDots {
   polygon: number
 }
 
+interface ActionDeletePolygonGroup {
+  type: "DELETE_POLYGON_GROUP"
+  group: number
+}
+interface ActionDeletePolygonGroupRing {
+  type: "DELETE_POLYGON_GROUP_RING"
+  group: number
+  polygon: number
+}
+
 export type PolygonGroupsActions =
   | ActionCreateGroup
   | ActionCreatePolygon
@@ -172,6 +182,8 @@ export type PolygonGroupsActions =
   | ActionRandomizePolygonRotation
   | ActionRandomizePolygonScale
   | ActionRandomizePolygonDots
+  | ActionDeletePolygonGroup
+  | ActionDeletePolygonGroupRing
 
 /**
  * Takes in the current draft for the matching options
@@ -390,39 +402,15 @@ export const polygonGroupsReducer: PolygonGroupsReducer = produce(
   (draft: Draft<PolygonGroup[]>, action: PolygonGroupsActions) => {
     switch (action.type) {
       case "CREATE_POLYGON_GROUP": {
-        draft.push({ active: true, position: { x: 0, y: 0 }, rings: [] })
+        draft.push({
+          active: true,
+          position: { x: 0, y: 0 },
+          rings: createRandomPolygonRings(),
+        })
         break
       }
       case "CREATE_POLYGON": {
-        draft[action.group].rings.push({
-          active: true,
-          position: { x: 0, y: 0 },
-          dots: {
-            enabled: true,
-            fillColours: ["black"],
-            size: 1,
-            strokeColours: ["black"],
-            strokeWidth: 1,
-          },
-          rotation: {
-            clockwise: true,
-            enabled: true,
-            speed: 1,
-            startingRotation: 1,
-          },
-          scale: {
-            enabled: true,
-            speed: 1,
-            range: { max: 10, min: 0 },
-            startingSize: 5,
-          },
-          sides: {
-            enabled: true,
-            strokeWidth: 1,
-            colours: ["black"],
-            amount: 6,
-          },
-        })
+        draft[action.group].rings.push(getRandomPolygon())
         break
       }
       case "UPDATE_POLYGON_GROUP_POSITION": {
@@ -538,6 +526,24 @@ export const polygonGroupsReducer: PolygonGroupsReducer = produce(
         const draftPolygon = draft[action.group].rings[action.polygon]
         const sides = draftPolygon.sides.amount
         draftPolygon.dots = getRandomDots(sides)
+        break
+      }
+      case "DELETE_POLYGON_GROUP": {
+        const originalDraft = original(draft)
+        const totalGroups = originalDraft ? originalDraft.length : 1
+        if (originalDraft && totalGroups > 1) {
+          draft.splice(action.group, 1)
+        }
+        break
+      }
+      case "DELETE_POLYGON_GROUP_RING": {
+        const originalDraft = original(draft)
+        const totalRings = originalDraft
+          ? originalDraft[action.group].rings.length
+          : 1
+        if (totalRings > 1) {
+          draft[action.group].rings.splice(action.polygon, 1)
+        }
         break
       }
     }
