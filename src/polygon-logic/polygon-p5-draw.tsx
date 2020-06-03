@@ -61,7 +61,7 @@ export function generatePolygonRingSketch(
   return (p5: P5) => {
     p5.setup = () => {
       p5.createCanvas(windowSize.width, windowSize.height)
-      p5.background("lightgrey")
+      p5.background("#f6f6f6")
     }
     p5.draw = () => {
       polygonRingInstance.getPolygonFrameAndStep()
@@ -92,7 +92,7 @@ export function generatePolygonGroupSketch(
   return (p5: P5) => {
     p5.setup = () => {
       p5.createCanvas(windowSize.width, windowSize.height)
-      p5.background("lightgrey")
+      p5.background("#f6f6f6")
     }
     p5.draw = () => {
       p5.angleMode("degrees")
@@ -123,7 +123,7 @@ export function generateAllPolygonRingGroupsSketch(
   return (p5: P5) => {
     p5.setup = () => {
       p5.createCanvas(windowSize.width, windowSize.height)
-      p5.background("lightgrey")
+      p5.background("#f6f6f6")
     }
     p5.draw = () => {
       p5.angleMode("degrees")
