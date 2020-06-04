@@ -4,7 +4,6 @@ import styled from "styled-components"
 import {
   polygonGroupsStateContext,
   polygonGroupsDispatchContext,
-  PolygonRing,
 } from "reducer-contexts/polygon-groups"
 import { generatePolygonRingSketch } from "polygon-logic/polygon-p5-draw"
 
