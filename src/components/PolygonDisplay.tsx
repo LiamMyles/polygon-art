@@ -10,8 +10,17 @@ import { generatePolygonRingSketch } from "polygon-logic/polygon-p5-draw"
 
 import { P5Canvas } from "components/P5Canvas"
 
+const PolygonPageWrappingDiv = styled.div`
+  display: grid;
+  grid-template-rows: 200px calc(90vh - 200px);
+`
+
 const PolygonCanvasDiv = styled.div`
   text-align: center;
+`
+
+const PolygonOptionsOverflowDiv = styled.div`
+  overflow-y: scroll;
 `
 
 export function PolygonDisplay() {
@@ -24,17 +33,20 @@ export function PolygonDisplay() {
   generatePolygonRingSketch(polygonToDisplay, { width: 200, height: 200 })
 
   return (
-    <PolygonCanvasDiv aria-label={`Ring ${currentRing} Canvas`}>
-      <P5Canvas
-        sketch={generatePolygonRingSketch(
-          polygonToDisplay,
-          {
-            width: 200,
-            height: 200,
-          },
-          0.2
-        )}
-      />
-    </PolygonCanvasDiv>
+    <PolygonPageWrappingDiv>
+      <PolygonCanvasDiv aria-label={`Ring ${currentRing} Canvas`}>
+        <P5Canvas
+          sketch={generatePolygonRingSketch(
+            polygonToDisplay,
+            {
+              width: 200,
+              height: 200,
+            },
+            0.2
+          )}
+        />
+      </PolygonCanvasDiv>
+      <PolygonOptionsOverflowDiv>Test content</PolygonOptionsOverflowDiv>
+    </PolygonPageWrappingDiv>
   )
 }
