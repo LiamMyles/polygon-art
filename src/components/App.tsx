@@ -11,6 +11,7 @@ import { polygonGroupsDispatchContext } from "reducer-contexts/polygon-groups"
 import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
 import { GroupsDisplay } from "components/GroupsDisplay"
+import { PolygonDisplay } from "components/PolygonDisplay"
 
 const Main = styled.main`
   display: grid;
@@ -28,17 +29,7 @@ const App: React.FC = () => {
       <Screens currentScreen={navigationState.currentScreen}>
         <MainCanvas />
         <GroupsDisplay />
-        <h1
-          style={{
-            background: "pink",
-            width: "100%",
-            height: "100%",
-            textAlign: "center",
-            fontSize: 200,
-          }}
-        >
-          World
-        </h1>
+        <PolygonDisplay />
       </Screens>
       <div>
         <h1>Hello</h1>
