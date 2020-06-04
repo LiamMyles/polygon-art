@@ -35,4 +35,20 @@ describe("PolygonDisplay Component", () => {
     )
     expect(getByLabelText("Ring 0 Canvas")).toBeInTheDocument()
   })
+
+  // This test needs some more thinking. It might be an idea to wrap it in
+  // a test component that renders some of the values of the ring, and just asset those change
+  it.skip("should randomize ring canvas", () => {
+    const { getByLabelText, getByRole } = render(
+      <PolygonGroupsContextWrapper>
+        <PolygonDisplay />
+      </PolygonGroupsContextWrapper>
+    )
+    const firstRing = getByLabelText("Ring 1 Canvas")
+
+    expect(firstRing).toBeInTheDocument()
+    fireEvent.click(getByRole("button", { name: "Randomize" }))
+    expect(firstRing).not.toBeInTheDocument()
+    expect(getByLabelText("Ring 0 Canvas")).toBeInTheDocument()
+  })
 })
