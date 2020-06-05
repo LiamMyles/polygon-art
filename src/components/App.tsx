@@ -12,11 +12,19 @@ import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
 import { GroupsDisplay } from "components/GroupsDisplay"
 import { PolygonDisplay } from "components/PolygonDisplay"
+import { ToggleSwitch } from "components/ToggleSwitch"
 
 const Main = styled.main`
   display: grid;
   grid-template-rows: minmax(90%, 90vh) minmax(10vh, 10px);
   overflow: hidden;
+`
+
+const CenterDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
 `
 
 const App: React.FC = () => {
