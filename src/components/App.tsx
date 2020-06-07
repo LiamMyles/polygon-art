@@ -12,7 +12,7 @@ import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
 import { GroupsDisplay } from "components/GroupsDisplay"
 import { PolygonDisplay } from "components/PolygonDisplay"
-import { ToggleSwitch } from "components/ToggleSwitch"
+import { MultiSlider } from "components/MultiSlider"
 
 const Main = styled.main`
   display: grid;
@@ -35,6 +35,16 @@ const App: React.FC = () => {
   return (
     <Main>
       <Screens currentScreen={navigationState.currentScreen}>
+        <CenterDiv>
+          <MultiSlider
+            id="testing-component"
+            label="Testing Component"
+            min={0}
+            max={100}
+            startingMin={10}
+            startingMax={90}
+          />
+        </CenterDiv>
         <MainCanvas />
         <GroupsDisplay />
         <PolygonDisplay />
