@@ -2,28 +2,16 @@ import React, { useReducer, useRef, useEffect, useState } from "react"
 import styled from "styled-components"
 import produce, { Draft } from "immer"
 
-const VisuallyHidden = styled.span`
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  white-space: nowrap;
-  width: 1px;
-`
-
 const SliderWrappingDiv = styled.div`
   display: grid;
   grid-template-columns: 1fr 10fr 1fr;
   grid-gap: 10px;
 `
-const SliderValueLabel = styled.label`
-  display: flex;
+
+const SliderValueDiv = styled.div`
+  width: 100%;
   font-size: 30px;
   font-weight: bold;
-`
-const SliderValueInput = styled.input`
-  width: 100%;
 `
 const SliderRailDiv = styled.div`
   display: flex;
@@ -49,7 +37,7 @@ const SliderRailThumbDivRight = styled(SliderRailThumbDiv)`
 `
 
 interface SliderActionsMouseMove {
-  type: "MOUSE_MOVE"
+  type: "DIRECT_UPDATE"
   isMinThumb: boolean
   newValue: number
 }
@@ -149,7 +137,7 @@ const sliderReducer = produce(
         }
         break
       }
-      case "MOUSE_MOVE": {
+      case "DIRECT_UPDATE": {
         if (action.isMinThumb) {
           const valueAboveMin =
             action.newValue <= draft.min ? draft.min : action.newValue
@@ -171,7 +159,7 @@ const sliderReducer = produce(
 )
 
 interface mouseDownOptions {
-  event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  event: React.MouseEvent<HTMLDivElement, PointerEvent>
   railDimensions: sliderRailDimensionsState
   max: number
   min: number
@@ -179,7 +167,7 @@ interface mouseDownOptions {
   railRef: HTMLDivElement | null
   isMinThumb: boolean
 }
-const mouseDown = ({
+const handlePointerDrag = ({
   event,
   railDimensions,
   min,
@@ -188,33 +176,53 @@ const mouseDown = ({
   isMinThumb,
   dispatch,
 }: mouseDownOptions) => {
-  function handleMouseMove(event: MouseEvent) {
-    const diffX = (event.pageX | event.clientX) - railDimensions.offsetLeft
+  const rail = railRef as HTMLDivElement
+
+  function dispatchChange(diffX: number) {
     const newValue = Math.round(
       min + ((max - min) * diffX) / railDimensions.offsetWidth
     )
 
-    dispatch({ type: "MOUSE_MOVE", isMinThumb, newValue })
+    dispatch({ type: "DIRECT_UPDATE", isMinThumb, newValue })
+  }
 
+  function handlePointerMove(event: PointerEvent) {
+    if (event.pointerType === "touch") return
+    const diffX = (event.pageX | event.clientX) - railDimensions.offsetLeft
+    dispatchChange(diffX)
+    event.preventDefault()
+    event.stopPropagation()
+  }
+  function handleTouchMove(event: TouchEvent) {
+    const diffX = event.touches[0].pageX - railDimensions.offsetLeft
+    dispatchChange(diffX)
     event.preventDefault()
     event.stopPropagation()
   }
 
-  function handleMouseUp() {
-    document.removeEventListener("mousemove", handleMouseMove)
-    document.removeEventListener("mouseup", handleMouseUp)
+  function handelPointerUp() {
+    rail.removeEventListener("touchmove", handleTouchMove)
+    document.removeEventListener("pointermove", handlePointerMove)
+    document.removeEventListener("pointerup", handelPointerUp)
+    document.removeEventListener("pointercancel", handlePointerCancel)
   }
 
-  document.addEventListener("mousemove", handleMouseMove)
-  document.addEventListener("mouseup", handleMouseUp)
+  function handlePointerCancel() {
+    rail.removeEventListener("touchmove", handleTouchMove)
+    document.removeEventListener("pointermove", handlePointerMove)
+    document.removeEventListener("pointerup", handelPointerUp)
+    document.removeEventListener("pointercancel", handlePointerCancel)
+  }
+
+  rail.addEventListener("touchmove", handleTouchMove)
+  document.addEventListener("pointermove", handlePointerMove)
+  document.addEventListener("pointerup", handelPointerUp)
+  document.addEventListener("pointercancel", handlePointerCancel)
 
   event.preventDefault()
   event.stopPropagation()
 
-  if (railRef) {
-    //Need to handle focus and blur
-    railRef.focus()
-  }
+  rail.focus()
 }
 
 interface MultiSliderProps {
@@ -263,18 +271,9 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
   }, [sliderRail, setRailDimensions])
   return (
     <SliderWrappingDiv>
-      <SliderValueLabel htmlFor={`${id}-min-input`}>
-        <span>
-          Min <VisuallyHidden>{`${label} Input`}</VisuallyHidden>
-        </span>
-        <SliderValueInput
-          id={`${id}-min-input`}
-          defaultValue={startingMin}
-          type="number"
-          max={max - 1}
-          min={min}
-        />
-      </SliderValueLabel>
+      <SliderValueDiv>
+        <span>Min {sliderState.currentMin}</span>
+      </SliderValueDiv>
       <SliderRailDiv ref={sliderRail}>
         <SliderRailThumbDivLeft
           onKeyDown={(event) => {
@@ -284,8 +283,8 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
               key: event.key,
             })
           }}
-          onMouseDown={(event) => {
-            mouseDown({
+          onPointerDown={(event) => {
+            handlePointerDrag({
               event,
               railDimensions,
               min,
@@ -303,7 +302,7 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
           tabIndex={0}
           aria-valuemin={min}
           aria-valuenow={sliderState.currentMin}
-          aria-valuetext={`${startingMin}`}
+          aria-valuetext={`${sliderState.currentMin}`}
           aria-valuemax={max - 1}
           aria-label={`${label} Minimum`}
         />
@@ -315,8 +314,8 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
               key: event.key,
             })
           }}
-          onMouseDown={(event) => {
-            mouseDown({
+          onPointerDown={(event) => {
+            handlePointerDrag({
               event,
               railDimensions,
               min,
@@ -336,23 +335,14 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
           tabIndex={0}
           aria-valuemin={min + 1}
           aria-valuenow={sliderState.currentMax}
-          aria-valuetext={`${startingMax}`}
+          aria-valuetext={`${sliderState.currentMax}`}
           aria-valuemax={max}
           aria-label={`${label} Maximum`}
         />
       </SliderRailDiv>
-      <SliderValueLabel htmlFor={`${id}-max-input`}>
-        <span>
-          Max <VisuallyHidden>{`${label} Input`}</VisuallyHidden>
-        </span>
-        <SliderValueInput
-          id={`${id}-max-input`}
-          defaultValue={startingMax}
-          type="number"
-          max={max}
-          min={min + 1}
-        />
-      </SliderValueLabel>
+      <SliderValueDiv>
+        <span>Max {sliderState.currentMax}</span>
+      </SliderValueDiv>
     </SliderWrappingDiv>
   )
 }

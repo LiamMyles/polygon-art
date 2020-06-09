@@ -293,30 +293,6 @@ describe("MultiSlider Component", () => {
 
       expect(updatedValue).toEqual("90")
     })
-    it("should update value when dragged", () => {
-      const { getByLabelText } = render(
-        <MultiSlider
-          id="testing-component"
-          label="Testing Component"
-          min={0}
-          max={100}
-          startingMin={10}
-          startingMax={90}
-        />
-      )
-      const minThumb = getByLabelText("Testing Component Minimum")
-      const startingValue = minThumb.getAttribute("aria-valuenow")
-
-      expect(startingValue).toEqual("10")
-
-      fireEvent.mouseDown(minThumb)
-      fireEvent.mouseMove(document, { clientX: -1 })
-      fireEvent.mouseUp(document)
-
-      const updatedValue = minThumb.getAttribute("aria-valuenow")
-
-      expect(updatedValue).toEqual("0")
-    })
   })
   describe("Max Thumb", () => {
     it("should increase in value when right arrow is pressed", () => {
@@ -586,30 +562,6 @@ describe("MultiSlider Component", () => {
       const updatedValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("100")
-    })
-    it("should update value when dragged", () => {
-      const { getByLabelText } = render(
-        <MultiSlider
-          id="testing-component"
-          label="Testing Component"
-          min={0}
-          max={200}
-          startingMin={10}
-          startingMax={90}
-        />
-      )
-      const maxThumb = getByLabelText("Testing Component Maximum")
-      const startingValue = maxThumb.getAttribute("aria-valuenow")
-
-      expect(startingValue).toEqual("90")
-
-      fireEvent.mouseDown(maxThumb)
-      fireEvent.mouseMove(document, { clientX: 1 })
-      fireEvent.mouseUp(document)
-
-      const updatedValue = maxThumb.getAttribute("aria-valuenow")
-
-      expect(updatedValue).toEqual("200")
     })
   })
 })
