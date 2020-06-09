@@ -2,43 +2,6 @@ import React, { useReducer, useRef, useEffect, useState } from "react"
 import styled from "styled-components"
 import produce, { Draft } from "immer"
 
-const SliderWrappingDiv = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 10fr 1fr;
-  grid-gap: 10px;
-`
-
-const SliderValueDiv = styled.div`
-  width: 100%;
-  font-size: 30px;
-  font-weight: bold;
-`
-const SliderRailDiv = styled.div`
-  display: flex;
-  align-items: center;
-  height: 10px;
-  width: 100%;
-  margin: 0 10px;
-  background-color: rebeccapurple;
-  align-self: center;
-  position: relative;
-`
-const SliderRailThumbDiv = styled.div`
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50px;
-  background-color: chartreuse;
-`
-const SliderRailThumbDivLeft = styled(SliderRailThumbDiv)`
-  transform: translateX(-10px);
-  background-color: lime;
-`
-const SliderRailThumbDivRight = styled(SliderRailThumbDiv)`
-  transform: translateX(10px);
-  background-color: red;
-`
-
 interface SliderActionsMouseMove {
   type: "DIRECT_UPDATE"
   isMinThumb: boolean
@@ -60,64 +23,60 @@ interface SliderState {
 
 const sliderReducer = produce(
   (draft: Draft<SliderState>, action: SliderActions) => {
+    const { currentMax, currentMin, min, max } = draft
+    function increaseCurrent(
+      amount: number,
+      toUpdate: number,
+      noMoreThan: number
+    ) {
+      return toUpdate + amount >= noMoreThan ? noMoreThan : toUpdate + amount
+    }
+    function decreaseCurrent(
+      amount: number,
+      toUpdate: number,
+      noLessThan: number
+    ) {
+      return toUpdate - amount <= noLessThan ? noLessThan : toUpdate - amount
+    }
+    function constrainValue(value: number, min: number, max: number) {
+      if (value <= min) return min
+      if (value >= max) return max
+      return value
+    }
     switch (action.type) {
       case "KEY_DOWN": {
         switch (action.key) {
           case "ArrowRight":
           case "ArrowUp": {
             if (action.isMinThumb) {
-              draft.currentMin =
-                draft.currentMin + 1 >= draft.currentMax
-                  ? draft.currentMax
-                  : draft.currentMin + 1
+              draft.currentMin = increaseCurrent(1, currentMin, currentMax)
             } else {
-              draft.currentMax =
-                draft.currentMax + 1 >= draft.max
-                  ? draft.max
-                  : draft.currentMax + 1
+              draft.currentMax = increaseCurrent(1, currentMax, max)
             }
             break
           }
           case "ArrowLeft":
           case "ArrowDown": {
             if (action.isMinThumb) {
-              draft.currentMin =
-                draft.currentMin - 1 <= draft.min
-                  ? draft.min
-                  : draft.currentMin - 1
+              draft.currentMin = decreaseCurrent(1, currentMin, min)
             } else {
-              draft.currentMax =
-                draft.currentMax - 1 <= draft.currentMin
-                  ? draft.currentMin
-                  : draft.currentMax - 1
+              draft.currentMax = decreaseCurrent(1, currentMax, currentMin)
             }
             break
           }
           case "PageUp": {
             if (action.isMinThumb) {
-              draft.currentMin =
-                draft.currentMin + 5 >= draft.currentMax
-                  ? draft.currentMax
-                  : draft.currentMin + 5
+              draft.currentMin = increaseCurrent(5, currentMin, currentMax)
             } else {
-              draft.currentMax =
-                draft.currentMax + 5 >= draft.max
-                  ? draft.max
-                  : draft.currentMax + 5
+              draft.currentMax = increaseCurrent(5, currentMax, max)
             }
             break
           }
           case "PageDown": {
             if (action.isMinThumb) {
-              draft.currentMin =
-                draft.currentMin - 5 <= draft.min
-                  ? draft.min
-                  : draft.currentMin - 5
+              draft.currentMin = decreaseCurrent(5, currentMin, min)
             } else {
-              draft.currentMax =
-                draft.currentMax - 5 <= draft.currentMin
-                  ? draft.currentMin
-                  : draft.currentMax - 5
+              draft.currentMax = decreaseCurrent(5, currentMax, currentMin)
             }
             break
           }
@@ -142,19 +101,9 @@ const sliderReducer = produce(
       }
       case "DIRECT_UPDATE": {
         if (action.isMinThumb) {
-          const valueAboveMin =
-            action.newValue <= draft.min ? draft.min : action.newValue
-          const valueAboveMinAndBelowMax =
-            valueAboveMin >= draft.currentMax ? draft.currentMax : valueAboveMin
-          draft.currentMin = valueAboveMinAndBelowMax
+          draft.currentMin = constrainValue(action.newValue, min, currentMax)
         } else {
-          const valueAboveMin =
-            action.newValue <= draft.currentMin
-              ? draft.currentMin
-              : action.newValue
-          const valueAboveMinAndBelowMax =
-            valueAboveMin >= draft.max ? draft.max : valueAboveMin
-          draft.currentMax = valueAboveMinAndBelowMax
+          draft.currentMax = constrainValue(action.newValue, currentMin, max)
         }
       }
     }
@@ -202,30 +151,130 @@ const handlePointerDrag = ({
     event.stopPropagation()
   }
 
-  function handelPointerUp() {
+  function handelCleanUp() {
     rail.removeEventListener("touchmove", handleTouchMove)
     document.removeEventListener("pointermove", handlePointerMove)
-    document.removeEventListener("pointerup", handelPointerUp)
-    document.removeEventListener("pointercancel", handlePointerCancel)
-  }
-
-  function handlePointerCancel() {
-    rail.removeEventListener("touchmove", handleTouchMove)
-    document.removeEventListener("pointermove", handlePointerMove)
-    document.removeEventListener("pointerup", handelPointerUp)
-    document.removeEventListener("pointercancel", handlePointerCancel)
+    document.removeEventListener("pointerup", handelCleanUp)
+    document.removeEventListener("pointercancel", handelCleanUp)
   }
 
   rail.addEventListener("touchmove", handleTouchMove)
   document.addEventListener("pointermove", handlePointerMove)
-  document.addEventListener("pointerup", handelPointerUp)
-  document.addEventListener("pointercancel", handlePointerCancel)
+  document.addEventListener("pointerup", handelCleanUp)
+  document.addEventListener("pointercancel", handelCleanUp)
 
   event.preventDefault()
   event.stopPropagation()
 
   event.currentTarget.focus()
 }
+
+const SliderWrappingDiv = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 10fr 1fr;
+  grid-gap: 10px;
+`
+
+const SliderValueDiv = styled.div`
+  width: 100%;
+  font-size: 30px;
+  font-weight: bold;
+`
+const SliderRailDiv = styled.div`
+  display: flex;
+  align-items: center;
+  height: 10px;
+  width: 100%;
+  margin: 0 10px;
+  background-color: rebeccapurple;
+  align-self: center;
+  position: relative;
+`
+
+interface SliderRailThumbProps {
+  className?: string
+  sliderDispatch: React.Dispatch<SliderActions>
+  railDimensions: sliderRailDimensionsState
+  isMinThumb: boolean
+  sliderRailRef: { current: HTMLDivElement | null }
+  sliderState: SliderState
+  label: string
+}
+
+const SliderRailThumb: React.FC<SliderRailThumbProps> = ({
+  className,
+  sliderDispatch,
+  railDimensions,
+  sliderRailRef,
+  label,
+  sliderState,
+  isMinThumb,
+}) => {
+  const railRef = sliderRailRef.current as HTMLDivElement
+  const { currentMin, min, max, currentMax } = sliderState
+  const style = {} as { left?: string; right?: string }
+  if (isMinThumb) {
+    style.left = `calc(${(sliderState.currentMin / max) * 100}% - 10px)`
+  } else {
+    style.right = `calc(${100 - (sliderState.currentMax / max) * 100}% - 10px)`
+  }
+  return (
+    <div
+      className={className}
+      onKeyDown={(event) => {
+        sliderDispatch({
+          type: "KEY_DOWN",
+          isMinThumb,
+          key: event.key,
+        })
+      }}
+      onPointerDown={(event) => {
+        handlePointerDrag({
+          event,
+          railDimensions,
+          min,
+          max,
+          dispatch: sliderDispatch,
+          railRef,
+          isMinThumb,
+        })
+      }}
+      onFocus={(event) => {
+        event.currentTarget.classList.add("focus")
+        railRef.classList.add("focus")
+      }}
+      onBlur={(event) => {
+        event.currentTarget.classList.remove("focus")
+        railRef.classList.remove("focus")
+      }}
+      style={style}
+      id="minPriceHotel"
+      role="slider"
+      tabIndex={0}
+      aria-valuemin={min}
+      aria-valuenow={isMinThumb ? currentMin : currentMax}
+      aria-valuetext={`${isMinThumb ? currentMin : currentMax}`}
+      aria-valuemax={max}
+      aria-label={`${label} ${isMinThumb ? "Minimum" : "Maximum"}`}
+    />
+  )
+}
+
+const SliderRailThumbDiv = styled(SliderRailThumb)`
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50px;
+  background-color: chartreuse;
+`
+const SliderRailThumbDivMin = styled(SliderRailThumbDiv)`
+  transform: translateX(-10px);
+  background-color: lime;
+`
+const SliderRailThumbDivMax = styled(SliderRailThumbDiv)`
+  transform: translateX(10px);
+  background-color: red;
+`
 
 interface MultiSliderProps {
   label: string
@@ -246,16 +295,17 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
   min,
   max,
 }) => {
-  const initialState: SliderState = {
+  const initialSliderState: SliderState = {
     currentMin: startingMin,
     currentMax: startingMax,
     max: max,
     min: min,
   }
-  const [sliderState, sliderDispatch] = useReducer(sliderReducer, initialState)
-  const [railDimensions, setRailDimensions] = useState<
-    sliderRailDimensionsState
-  >({
+  const [sliderState, sliderDispatch] = useReducer(
+    sliderReducer,
+    initialSliderState
+  )
+  const [railDimensions, setRailDimensions] = useState({
     offsetWidth: 0,
     offsetLeft: 0,
   })
@@ -275,89 +325,21 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
         <span>Min {sliderState.currentMin}</span>
       </SliderValueDiv>
       <SliderRailDiv ref={sliderRailRef}>
-        <SliderRailThumbDivLeft
-          onKeyDown={(event) => {
-            sliderDispatch({
-              type: "KEY_DOWN",
-              isMinThumb: true,
-              key: event.key,
-            })
-          }}
-          onPointerDown={(event) => {
-            handlePointerDrag({
-              event,
-              railDimensions,
-              min,
-              max,
-              dispatch: sliderDispatch,
-              railRef: sliderRailRef.current,
-              isMinThumb: true,
-            })
-          }}
-          onFocus={(event) => {
-            event.currentTarget.classList.add("focus")
-            if (sliderRailRef.current)
-              sliderRailRef.current.classList.add("focus")
-          }}
-          onBlur={(event) => {
-            event.currentTarget.classList.remove("focus")
-            if (sliderRailRef.current)
-              sliderRailRef.current.classList.remove("focus")
-          }}
-          style={{
-            left: `calc(${(sliderState.currentMin / max) * 100}% - 10px)`,
-          }}
-          id="minPriceHotel"
-          role="slider"
-          tabIndex={0}
-          aria-valuemin={min}
-          aria-valuenow={sliderState.currentMin}
-          aria-valuetext={`${sliderState.currentMin}`}
-          aria-valuemax={max - 1}
-          aria-label={`${label} Minimum`}
+        <SliderRailThumbDivMin
+          sliderDispatch={sliderDispatch}
+          railDimensions={railDimensions}
+          isMinThumb={true}
+          sliderRailRef={sliderRailRef}
+          sliderState={sliderState}
+          label={label}
         />
-        <SliderRailThumbDivRight
-          onKeyDown={(event) => {
-            sliderDispatch({
-              type: "KEY_DOWN",
-              isMinThumb: false,
-              key: event.key,
-            })
-          }}
-          onPointerDown={(event) => {
-            handlePointerDrag({
-              event,
-              railDimensions,
-              min,
-              max,
-              dispatch: sliderDispatch,
-              railRef: sliderRailRef.current,
-              isMinThumb: false,
-            })
-          }}
-          onFocus={(event) => {
-            event.currentTarget.classList.add("focus")
-            if (sliderRailRef.current)
-              sliderRailRef.current.classList.add("focus")
-          }}
-          onBlur={(event) => {
-            event.currentTarget.classList.remove("focus")
-            if (sliderRailRef.current)
-              sliderRailRef.current.classList.remove("focus")
-          }}
-          style={{
-            right: `calc(${
-              100 - (sliderState.currentMax / max) * 100
-            }% - 10px)`,
-          }}
-          id="maxPriceHotel"
-          role="slider"
-          tabIndex={0}
-          aria-valuemin={min + 1}
-          aria-valuenow={sliderState.currentMax}
-          aria-valuetext={`${sliderState.currentMax}`}
-          aria-valuemax={max}
-          aria-label={`${label} Maximum`}
+        <SliderRailThumbDivMax
+          sliderDispatch={sliderDispatch}
+          railDimensions={railDimensions}
+          isMinThumb={false}
+          sliderRailRef={sliderRailRef}
+          sliderState={sliderState}
+          label={label}
         />
       </SliderRailDiv>
       <SliderValueDiv>
