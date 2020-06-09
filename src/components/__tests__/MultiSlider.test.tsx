@@ -293,9 +293,30 @@ describe("MultiSlider Component", () => {
 
       expect(updatedValue).toEqual("90")
     })
-    it.todo("should update value when dragged")
-    it.todo("should not be able to drag past other thumbs value")
-    it.todo("should not be able to increase past max thumbs value")
+    it("should update value when dragged", () => {
+      const { getByLabelText } = render(
+        <MultiSlider
+          id="testing-component"
+          label="Testing Component"
+          min={0}
+          max={100}
+          startingMin={10}
+          startingMax={90}
+        />
+      )
+      const minThumb = getByLabelText("Testing Component Minimum")
+      const startingValue = minThumb.getAttribute("aria-valuenow")
+
+      expect(startingValue).toEqual("10")
+
+      fireEvent.mouseDown(minThumb)
+      fireEvent.mouseMove(document, { clientX: -1 })
+      fireEvent.mouseUp(document)
+
+      const updatedValue = minThumb.getAttribute("aria-valuenow")
+
+      expect(updatedValue).toEqual("0")
+    })
   })
   describe("Max Thumb", () => {
     it("should increase in value when right arrow is pressed", () => {
@@ -309,14 +330,14 @@ describe("MultiSlider Component", () => {
           startingMax={90}
         />
       )
-      const minThumb = getByLabelText("Testing Component Maximum")
-      const startingValue = minThumb.getAttribute("aria-valuenow")
+      const maxThumb = getByLabelText("Testing Component Maximum")
+      const startingValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(startingValue).toEqual("90")
 
-      fireEvent.keyDown(minThumb, { key: "ArrowRight", code: "ArrowRight" })
+      fireEvent.keyDown(maxThumb, { key: "ArrowRight", code: "ArrowRight" })
 
-      const updatedValue = minThumb.getAttribute("aria-valuenow")
+      const updatedValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("91")
     })
@@ -331,14 +352,14 @@ describe("MultiSlider Component", () => {
           startingMax={90}
         />
       )
-      const minThumb = getByLabelText("Testing Component Maximum")
-      const startingValue = minThumb.getAttribute("aria-valuenow")
+      const maxThumb = getByLabelText("Testing Component Maximum")
+      const startingValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(startingValue).toEqual("90")
 
-      fireEvent.keyDown(minThumb, { key: "ArrowUp", code: "ArrowUp" })
+      fireEvent.keyDown(maxThumb, { key: "ArrowUp", code: "ArrowUp" })
 
-      const updatedValue = minThumb.getAttribute("aria-valuenow")
+      const updatedValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("91")
     })
@@ -353,14 +374,14 @@ describe("MultiSlider Component", () => {
           startingMax={90}
         />
       )
-      const minThumb = getByLabelText("Testing Component Maximum")
-      const startingValue = minThumb.getAttribute("aria-valuenow")
+      const maxThumb = getByLabelText("Testing Component Maximum")
+      const startingValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(startingValue).toEqual("90")
 
-      fireEvent.keyDown(minThumb, { key: "ArrowLeft", code: "ArrowLeft" })
+      fireEvent.keyDown(maxThumb, { key: "ArrowLeft", code: "ArrowLeft" })
 
-      const updatedValue = minThumb.getAttribute("aria-valuenow")
+      const updatedValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("89")
     })
@@ -375,14 +396,14 @@ describe("MultiSlider Component", () => {
           startingMax={90}
         />
       )
-      const minThumb = getByLabelText("Testing Component Maximum")
-      const startingValue = minThumb.getAttribute("aria-valuenow")
+      const maxThumb = getByLabelText("Testing Component Maximum")
+      const startingValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(startingValue).toEqual("90")
 
-      fireEvent.keyDown(minThumb, { key: "ArrowDown", code: "ArrowDown" })
+      fireEvent.keyDown(maxThumb, { key: "ArrowDown", code: "ArrowDown" })
 
-      const updatedValue = minThumb.getAttribute("aria-valuenow")
+      const updatedValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("89")
     })
@@ -397,15 +418,15 @@ describe("MultiSlider Component", () => {
           startingMax={90}
         />
       )
-      const minThumb = getByLabelText("Testing Component Maximum")
-      const startingValue = minThumb.getAttribute("aria-valuenow")
+      const maxThumb = getByLabelText("Testing Component Maximum")
+      const startingValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(startingValue).toEqual("90")
 
-      fireEvent.keyDown(minThumb, { key: "ArrowDown", code: "ArrowDown" })
-      fireEvent.keyDown(minThumb, { key: "ArrowDown", code: "ArrowDown" })
+      fireEvent.keyDown(maxThumb, { key: "ArrowDown", code: "ArrowDown" })
+      fireEvent.keyDown(maxThumb, { key: "ArrowDown", code: "ArrowDown" })
 
-      const updatedValue = minThumb.getAttribute("aria-valuenow")
+      const updatedValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("89")
     })
@@ -420,15 +441,15 @@ describe("MultiSlider Component", () => {
           startingMax={99}
         />
       )
-      const minThumb = getByLabelText("Testing Component Maximum")
-      const startingValue = minThumb.getAttribute("aria-valuenow")
+      const maxThumb = getByLabelText("Testing Component Maximum")
+      const startingValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(startingValue).toEqual("99")
 
-      fireEvent.keyDown(minThumb, { key: "ArrowUp", code: "ArrowUp" })
-      fireEvent.keyDown(minThumb, { key: "ArrowUp", code: "ArrowUp" })
+      fireEvent.keyDown(maxThumb, { key: "ArrowUp", code: "ArrowUp" })
+      fireEvent.keyDown(maxThumb, { key: "ArrowUp", code: "ArrowUp" })
 
-      const updatedValue = minThumb.getAttribute("aria-valuenow")
+      const updatedValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("100")
     })
@@ -443,14 +464,14 @@ describe("MultiSlider Component", () => {
           startingMax={90}
         />
       )
-      const minThumb = getByLabelText("Testing Component Maximum")
-      const startingValue = minThumb.getAttribute("aria-valuenow")
+      const maxThumb = getByLabelText("Testing Component Maximum")
+      const startingValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(startingValue).toEqual("90")
 
-      fireEvent.keyDown(minThumb, { key: "PageUp", code: "PageUp" })
+      fireEvent.keyDown(maxThumb, { key: "PageUp", code: "PageUp" })
 
-      const updatedValue = minThumb.getAttribute("aria-valuenow")
+      const updatedValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("95")
     })
@@ -465,15 +486,15 @@ describe("MultiSlider Component", () => {
           startingMax={94}
         />
       )
-      const minThumb = getByLabelText("Testing Component Maximum")
-      const startingValue = minThumb.getAttribute("aria-valuenow")
+      const maxThumb = getByLabelText("Testing Component Maximum")
+      const startingValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(startingValue).toEqual("94")
 
-      fireEvent.keyDown(minThumb, { key: "PageUp", code: "PageUp" })
-      fireEvent.keyDown(minThumb, { key: "PageUp", code: "PageUp" })
+      fireEvent.keyDown(maxThumb, { key: "PageUp", code: "PageUp" })
+      fireEvent.keyDown(maxThumb, { key: "PageUp", code: "PageUp" })
 
-      const updatedValue = minThumb.getAttribute("aria-valuenow")
+      const updatedValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("100")
     })
@@ -488,14 +509,14 @@ describe("MultiSlider Component", () => {
           startingMax={90}
         />
       )
-      const minThumb = getByLabelText("Testing Component Maximum")
-      const startingValue = minThumb.getAttribute("aria-valuenow")
+      const maxThumb = getByLabelText("Testing Component Maximum")
+      const startingValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(startingValue).toEqual("90")
 
-      fireEvent.keyDown(minThumb, { key: "PageDown", code: "PageDown" })
+      fireEvent.keyDown(maxThumb, { key: "PageDown", code: "PageDown" })
 
-      const updatedValue = minThumb.getAttribute("aria-valuenow")
+      const updatedValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("85")
     })
@@ -510,15 +531,15 @@ describe("MultiSlider Component", () => {
           startingMax={90}
         />
       )
-      const minThumb = getByLabelText("Testing Component Maximum")
-      const startingValue = minThumb.getAttribute("aria-valuenow")
+      const maxThumb = getByLabelText("Testing Component Maximum")
+      const startingValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(startingValue).toEqual("90")
 
-      fireEvent.keyDown(minThumb, { key: "PageDown", code: "PageDown" })
-      fireEvent.keyDown(minThumb, { key: "PageDown", code: "PageDown" })
+      fireEvent.keyDown(maxThumb, { key: "PageDown", code: "PageDown" })
+      fireEvent.keyDown(maxThumb, { key: "PageDown", code: "PageDown" })
 
-      const updatedValue = minThumb.getAttribute("aria-valuenow")
+      const updatedValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("85")
     })
@@ -533,14 +554,14 @@ describe("MultiSlider Component", () => {
           startingMax={90}
         />
       )
-      const minThumb = getByLabelText("Testing Component Maximum")
-      const startingValue = minThumb.getAttribute("aria-valuenow")
+      const maxThumb = getByLabelText("Testing Component Maximum")
+      const startingValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(startingValue).toEqual("90")
 
-      fireEvent.keyDown(minThumb, { key: "Home", code: "Home" })
+      fireEvent.keyDown(maxThumb, { key: "Home", code: "Home" })
 
-      const updatedValue = minThumb.getAttribute("aria-valuenow")
+      const updatedValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("10")
     })
@@ -555,19 +576,40 @@ describe("MultiSlider Component", () => {
           startingMax={90}
         />
       )
-      const minThumb = getByLabelText("Testing Component Maximum")
-      const startingValue = minThumb.getAttribute("aria-valuenow")
+      const maxThumb = getByLabelText("Testing Component Maximum")
+      const startingValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(startingValue).toEqual("90")
 
-      fireEvent.keyDown(minThumb, { key: "End", code: "End" })
+      fireEvent.keyDown(maxThumb, { key: "End", code: "End" })
 
-      const updatedValue = minThumb.getAttribute("aria-valuenow")
+      const updatedValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("100")
     })
-    it.todo("should update value when dragged")
-    it.todo("should not be able to drag past other thumbs value")
-    it.todo("should not be able to decrease past min thumbs value")
+    it("should update value when dragged", () => {
+      const { getByLabelText } = render(
+        <MultiSlider
+          id="testing-component"
+          label="Testing Component"
+          min={0}
+          max={200}
+          startingMin={10}
+          startingMax={90}
+        />
+      )
+      const maxThumb = getByLabelText("Testing Component Maximum")
+      const startingValue = maxThumb.getAttribute("aria-valuenow")
+
+      expect(startingValue).toEqual("90")
+
+      fireEvent.mouseDown(maxThumb)
+      fireEvent.mouseMove(document, { clientX: 1 })
+      fireEvent.mouseUp(document)
+
+      const updatedValue = maxThumb.getAttribute("aria-valuenow")
+
+      expect(updatedValue).toEqual("200")
+    })
   })
 })

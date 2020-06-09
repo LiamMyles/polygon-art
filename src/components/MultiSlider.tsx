@@ -48,86 +48,123 @@ const SliderRailThumbDivRight = styled(SliderRailThumbDiv)`
   background-color: red;
 `
 
-interface KeyDownActions {
+interface SliderActionsMouseMove {
+  type: "MOUSE_MOVE"
+  isMinThumb: boolean
+  newValue: number
+}
+interface SliderActionsKeyDown {
+  type: "KEY_DOWN"
   isMinThumb: boolean
   key: string
 }
+type SliderActions = SliderActionsKeyDown | SliderActionsMouseMove
 
-interface KeyDownState {
+interface SliderState {
   currentMin: number
   currentMax: number
   max: number
   min: number
 }
 
-const keyDownReducer = produce(
-  (draft: Draft<KeyDownState>, action: KeyDownActions) => {
-    switch (action.key) {
-      case "ArrowRight":
-      case "ArrowUp": {
-        if (action.isMinThumb) {
-          draft.currentMin =
-            draft.currentMin + 1 >= draft.currentMax
-              ? draft.currentMax
-              : draft.currentMin + 1
-        } else {
-          draft.currentMax =
-            draft.currentMax + 1 >= draft.max ? draft.max : draft.currentMax + 1
+const sliderReducer = produce(
+  (draft: Draft<SliderState>, action: SliderActions) => {
+    switch (action.type) {
+      case "KEY_DOWN": {
+        switch (action.key) {
+          case "ArrowRight":
+          case "ArrowUp": {
+            if (action.isMinThumb) {
+              draft.currentMin =
+                draft.currentMin + 1 >= draft.currentMax
+                  ? draft.currentMax
+                  : draft.currentMin + 1
+            } else {
+              draft.currentMax =
+                draft.currentMax + 1 >= draft.max
+                  ? draft.max
+                  : draft.currentMax + 1
+            }
+            break
+          }
+          case "ArrowLeft":
+          case "ArrowDown": {
+            if (action.isMinThumb) {
+              draft.currentMin =
+                draft.currentMin - 1 <= draft.min
+                  ? draft.min
+                  : draft.currentMin - 1
+            } else {
+              draft.currentMax =
+                draft.currentMax - 1 <= draft.currentMin
+                  ? draft.currentMin
+                  : draft.currentMax - 1
+            }
+            break
+          }
+          case "PageUp": {
+            if (action.isMinThumb) {
+              draft.currentMin =
+                draft.currentMin + 5 >= draft.currentMax
+                  ? draft.currentMax
+                  : draft.currentMin + 5
+            } else {
+              draft.currentMax =
+                draft.currentMax + 5 >= draft.max
+                  ? draft.max
+                  : draft.currentMax + 5
+            }
+            break
+          }
+          case "PageDown": {
+            if (action.isMinThumb) {
+              draft.currentMin =
+                draft.currentMin - 5 <= draft.min
+                  ? draft.min
+                  : draft.currentMin - 5
+            } else {
+              draft.currentMax =
+                draft.currentMax - 5 <= draft.currentMin
+                  ? draft.currentMin
+                  : draft.currentMax - 5
+            }
+            break
+          }
+          case "Home": {
+            if (action.isMinThumb) {
+              draft.currentMin = draft.min
+            } else {
+              draft.currentMax = draft.currentMin
+            }
+            break
+          }
+          case "End": {
+            if (action.isMinThumb) {
+              draft.currentMin = draft.currentMax
+            } else {
+              draft.currentMax = draft.max
+            }
+            break
+          }
         }
         break
       }
-      case "ArrowLeft":
-      case "ArrowDown": {
+      case "MOUSE_MOVE": {
         if (action.isMinThumb) {
-          draft.currentMin =
-            draft.currentMin - 1 <= draft.min ? draft.min : draft.currentMin - 1
+          const valueAboveMin =
+            action.newValue <= draft.min ? draft.min : action.newValue
+          const valueAboveMinAndBelowMax =
+            valueAboveMin >= draft.currentMax ? draft.currentMax : valueAboveMin
+          draft.currentMin = valueAboveMinAndBelowMax
         } else {
-          draft.currentMax =
-            draft.currentMax - 1 <= draft.currentMin
+          const valueAboveMin =
+            action.newValue <= draft.currentMin
               ? draft.currentMin
-              : draft.currentMax - 1
+              : action.newValue
+          const valueAboveMinAndBelowMax =
+            valueAboveMin >= draft.max ? draft.max : valueAboveMin
+          draft.currentMax = valueAboveMinAndBelowMax
         }
-        break
-      }
-      case "PageUp": {
-        if (action.isMinThumb) {
-          draft.currentMin =
-            draft.currentMin + 5 >= draft.currentMax
-              ? draft.currentMax
-              : draft.currentMin + 5
-        } else {
-          draft.currentMax =
-            draft.currentMax + 5 >= draft.max ? draft.max : draft.currentMax + 5
-        }
-        break
-      }
-      case "PageDown": {
-        if (action.isMinThumb) {
-          draft.currentMin =
-            draft.currentMin - 5 <= draft.min ? draft.min : draft.currentMin - 5
-        } else {
-          draft.currentMax =
-            draft.currentMax - 5 <= draft.currentMin
-              ? draft.currentMin
-              : draft.currentMax - 5
-        }
-        break
-      }
-      case "Home": {
-        if (action.isMinThumb) {
-          draft.currentMin = draft.min
-        } else {
-          draft.currentMax = draft.currentMin
-        }
-        break
-      }
-      case "End": {
-        if (action.isMinThumb) {
-          draft.currentMin = draft.currentMax
-        } else {
-          draft.currentMax = draft.max
-        }
-        break
       }
     }
   }
@@ -138,19 +175,32 @@ interface mouseDownOptions {
   railDimensions: sliderRailDimensionsState
   max: number
   min: number
-  dispatch: React.Dispatch<KeyDownActions>
+  dispatch: React.Dispatch<SliderActions>
+  railRef: HTMLDivElement | null
+  isMinThumb: boolean
 }
-const mouseDown = ({ event, railDimensions }: mouseDownOptions) => {
-  const handleMouseMove = (event: MouseEvent) => {
-    const diffX = event.pageX - railDimensions.offsetLeft
-    console.log(diffX)
-    console.log(0 + ((100 - 0) * diffX) / railDimensions.offsetWidth)
+const mouseDown = ({
+  event,
+  railDimensions,
+  min,
+  max,
+  railRef,
+  isMinThumb,
+  dispatch,
+}: mouseDownOptions) => {
+  function handleMouseMove(event: MouseEvent) {
+    const diffX = (event.pageX | event.clientX) - railDimensions.offsetLeft
+    const newValue = Math.round(
+      min + ((max - min) * diffX) / railDimensions.offsetWidth
+    )
+
+    dispatch({ type: "MOUSE_MOVE", isMinThumb, newValue })
 
     event.preventDefault()
     event.stopPropagation()
   }
 
-  var handleMouseUp = function (event: MouseEvent) {
+  function handleMouseUp() {
     document.removeEventListener("mousemove", handleMouseMove)
     document.removeEventListener("mouseup", handleMouseUp)
   }
@@ -161,8 +211,10 @@ const mouseDown = ({ event, railDimensions }: mouseDownOptions) => {
   event.preventDefault()
   event.stopPropagation()
 
-  // Set focus to the clicked handle
-  // this.domNode.focus();
+  if (railRef) {
+    //Need to handle focus and blur
+    railRef.focus()
+  }
 }
 
 interface MultiSliderProps {
@@ -186,14 +238,14 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
   min,
   max,
 }) => {
-  const initialState: KeyDownState = {
+  const initialState: SliderState = {
     currentMin: startingMin,
     currentMax: startingMax,
     max: max,
     min: min,
   }
-  const [state, dispatchKeydown] = useReducer(keyDownReducer, initialState)
-  const [railDimensions, setSliderRailDimensions] = useState<
+  const [sliderState, sliderDispatch] = useReducer(sliderReducer, initialState)
+  const [railDimensions, setRailDimensions] = useState<
     sliderRailDimensionsState
   >({
     offsetWidth: 0,
@@ -203,12 +255,12 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
 
   useEffect(() => {
     if (sliderRail.current) {
-      setSliderRailDimensions({
+      setRailDimensions({
         offsetLeft: sliderRail.current.offsetLeft,
         offsetWidth: sliderRail.current.offsetWidth,
       })
     }
-  }, [sliderRail, setSliderRailDimensions])
+  }, [sliderRail, setRailDimensions])
   return (
     <SliderWrappingDiv>
       <SliderValueLabel htmlFor={`${id}-min-input`}>
@@ -226,33 +278,64 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
       <SliderRailDiv ref={sliderRail}>
         <SliderRailThumbDivLeft
           onKeyDown={(event) => {
-            dispatchKeydown({ isMinThumb: true, key: event.key })
+            sliderDispatch({
+              type: "KEY_DOWN",
+              isMinThumb: true,
+              key: event.key,
+            })
           }}
           onMouseDown={(event) => {
-            mouseDown({ event, railDimensions })
+            mouseDown({
+              event,
+              railDimensions,
+              min,
+              max,
+              dispatch: sliderDispatch,
+              railRef: sliderRail.current,
+              isMinThumb: true,
+            })
           }}
-          style={{ left: `calc(${(state.currentMin / max) * 100}% - 10px)` }}
+          style={{
+            left: `calc(${(sliderState.currentMin / max) * 100}% - 10px)`,
+          }}
           id="minPriceHotel"
           role="slider"
           tabIndex={0}
           aria-valuemin={min}
-          aria-valuenow={state.currentMin}
+          aria-valuenow={sliderState.currentMin}
           aria-valuetext={`${startingMin}`}
           aria-valuemax={max - 1}
           aria-label={`${label} Minimum`}
         />
         <SliderRailThumbDivRight
           onKeyDown={(event) => {
-            dispatchKeydown({ isMinThumb: false, key: event.key })
+            sliderDispatch({
+              type: "KEY_DOWN",
+              isMinThumb: false,
+              key: event.key,
+            })
+          }}
+          onMouseDown={(event) => {
+            mouseDown({
+              event,
+              railDimensions,
+              min,
+              max,
+              dispatch: sliderDispatch,
+              railRef: sliderRail.current,
+              isMinThumb: false,
+            })
           }}
           style={{
-            right: `calc(${100 - (state.currentMax / max) * 100}% - 10px)`,
+            right: `calc(${
+              100 - (sliderState.currentMax / max) * 100
+            }% - 10px)`,
           }}
           id="maxPriceHotel"
           role="slider"
           tabIndex={0}
           aria-valuemin={min + 1}
-          aria-valuenow={state.currentMax}
+          aria-valuenow={sliderState.currentMax}
           aria-valuetext={`${startingMax}`}
           aria-valuemax={max}
           aria-label={`${label} Maximum`}
