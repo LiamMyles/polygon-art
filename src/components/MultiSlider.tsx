@@ -18,6 +18,7 @@ const SliderRailDiv = styled.div`
   align-items: center;
   height: 10px;
   width: 100%;
+  margin: 0 10px;
   background-color: rebeccapurple;
   align-self: center;
   position: relative;
@@ -30,9 +31,11 @@ const SliderRailThumbDiv = styled.div`
   background-color: chartreuse;
 `
 const SliderRailThumbDivLeft = styled(SliderRailThumbDiv)`
+  transform: translateX(-10px);
   background-color: lime;
 `
 const SliderRailThumbDivRight = styled(SliderRailThumbDiv)`
+  transform: translateX(10px);
   background-color: red;
 `
 
@@ -158,7 +161,7 @@ const sliderReducer = produce(
   }
 )
 
-interface mouseDownOptions {
+interface handlePointerDragOptions {
   event: React.MouseEvent<HTMLDivElement, PointerEvent>
   railDimensions: sliderRailDimensionsState
   max: number
@@ -175,14 +178,13 @@ const handlePointerDrag = ({
   railRef,
   isMinThumb,
   dispatch,
-}: mouseDownOptions) => {
+}: handlePointerDragOptions) => {
   const rail = railRef as HTMLDivElement
 
   function dispatchChange(diffX: number) {
     const newValue = Math.round(
       min + ((max - min) * diffX) / railDimensions.offsetWidth
     )
-
     dispatch({ type: "DIRECT_UPDATE", isMinThumb, newValue })
   }
 
@@ -227,7 +229,6 @@ const handlePointerDrag = ({
 
 interface MultiSliderProps {
   label: string
-  id: string
   startingMin: number
   startingMax: number
   min: number
@@ -240,7 +241,6 @@ interface sliderRailDimensionsState {
 }
 export const MultiSlider: React.FC<MultiSliderProps> = ({
   label,
-  id,
   startingMax,
   startingMin,
   min,

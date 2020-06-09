@@ -37,7 +37,6 @@ const App: React.FC = () => {
       <Screens currentScreen={navigationState.currentScreen}>
         <CenterDiv>
           <MultiSlider
-            id="testing-component"
             label="Testing Component"
             min={0}
             max={100}
