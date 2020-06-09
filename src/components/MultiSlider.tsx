@@ -224,7 +224,7 @@ const handlePointerDrag = ({
   event.preventDefault()
   event.stopPropagation()
 
-  rail.focus()
+  event.currentTarget.focus()
 }
 
 interface MultiSliderProps {
@@ -259,22 +259,22 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
     offsetWidth: 0,
     offsetLeft: 0,
   })
-  const sliderRail = useRef<HTMLDivElement>(null)
+  const sliderRailRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (sliderRail.current) {
+    if (sliderRailRef.current) {
       setRailDimensions({
-        offsetLeft: sliderRail.current.offsetLeft,
-        offsetWidth: sliderRail.current.offsetWidth,
+        offsetLeft: sliderRailRef.current.offsetLeft,
+        offsetWidth: sliderRailRef.current.offsetWidth,
       })
     }
-  }, [sliderRail, setRailDimensions])
+  }, [sliderRailRef, setRailDimensions])
   return (
     <SliderWrappingDiv>
       <SliderValueDiv>
         <span>Min {sliderState.currentMin}</span>
       </SliderValueDiv>
-      <SliderRailDiv ref={sliderRail}>
+      <SliderRailDiv ref={sliderRailRef}>
         <SliderRailThumbDivLeft
           onKeyDown={(event) => {
             sliderDispatch({
@@ -290,9 +290,19 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
               min,
               max,
               dispatch: sliderDispatch,
-              railRef: sliderRail.current,
+              railRef: sliderRailRef.current,
               isMinThumb: true,
             })
+          }}
+          onFocus={(event) => {
+            event.currentTarget.classList.add("focus")
+            if (sliderRailRef.current)
+              sliderRailRef.current.classList.add("focus")
+          }}
+          onBlur={(event) => {
+            event.currentTarget.classList.remove("focus")
+            if (sliderRailRef.current)
+              sliderRailRef.current.classList.remove("focus")
           }}
           style={{
             left: `calc(${(sliderState.currentMin / max) * 100}% - 10px)`,
@@ -321,9 +331,19 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
               min,
               max,
               dispatch: sliderDispatch,
-              railRef: sliderRail.current,
+              railRef: sliderRailRef.current,
               isMinThumb: false,
             })
+          }}
+          onFocus={(event) => {
+            event.currentTarget.classList.add("focus")
+            if (sliderRailRef.current)
+              sliderRailRef.current.classList.add("focus")
+          }}
+          onBlur={(event) => {
+            event.currentTarget.classList.remove("focus")
+            if (sliderRailRef.current)
+              sliderRailRef.current.classList.remove("focus")
           }}
           style={{
             right: `calc(${

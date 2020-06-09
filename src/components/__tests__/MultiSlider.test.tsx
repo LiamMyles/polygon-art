@@ -4,7 +4,7 @@ import { MultiSlider } from "components/MultiSlider"
 
 describe("MultiSlider Component", () => {
   it("should render", () => {
-    const { getByLabelText, queryByLabelText } = render(
+    const { getByLabelText } = render(
       <MultiSlider
         label="Testing Component"
         min={0}
@@ -16,13 +16,7 @@ describe("MultiSlider Component", () => {
 
     expect(getByLabelText("Testing Component Minimum")).toBeInTheDocument()
     expect(getByLabelText("Testing Component Maximum")).toBeInTheDocument()
-    expect(
-      queryByLabelText(/Min\sTesting\sComponent\sInput/)
-    ).toBeInTheDocument()
-    expect(getByLabelText(/Max\sTesting\sComponent\sInput/)).toBeInTheDocument()
   })
-  it.todo("should be able to update min input")
-  it.todo("should be able to update max input")
   describe("Min Thumb", () => {
     it("should increase in value when right arrow is pressed", () => {
       const { getByLabelText } = render(
@@ -279,6 +273,25 @@ describe("MultiSlider Component", () => {
       const updatedValue = minThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("90")
+    })
+    it("should add focus class on focus", () => {
+      const { getByLabelText } = render(
+        <MultiSlider
+          label="Testing Component"
+          min={0}
+          max={100}
+          startingMin={10}
+          startingMax={90}
+        />
+      )
+      const minThumb = getByLabelText("Testing Component Minimum")
+      expect(minThumb).not.toHaveClass("focus")
+      fireEvent.focus(minThumb)
+      expect(minThumb).toHaveClass("focus")
+      fireEvent.blur(minThumb)
+      expect(minThumb).not.toHaveClass("focus")
+      fireEvent.pointerDown(minThumb)
+      expect(minThumb).toHaveClass("focus")
     })
   })
   describe("Max Thumb", () => {
@@ -537,6 +550,25 @@ describe("MultiSlider Component", () => {
       const updatedValue = maxThumb.getAttribute("aria-valuenow")
 
       expect(updatedValue).toEqual("100")
+    })
+    it("should add focus class on focus", () => {
+      const { getByLabelText } = render(
+        <MultiSlider
+          label="Testing Component"
+          min={0}
+          max={100}
+          startingMin={10}
+          startingMax={90}
+        />
+      )
+      const maxThumb = getByLabelText("Testing Component Maximum")
+      expect(maxThumb).not.toHaveClass("focus")
+      fireEvent.focus(maxThumb)
+      expect(maxThumb).toHaveClass("focus")
+      fireEvent.blur(maxThumb)
+      expect(maxThumb).not.toHaveClass("focus")
+      fireEvent.pointerDown(maxThumb)
+      expect(maxThumb).toHaveClass("focus")
     })
   })
 })
