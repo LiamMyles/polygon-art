@@ -171,12 +171,12 @@ const handlePointerDrag = ({
 
 const SliderWrappingDiv = styled.div`
   display: grid;
-  grid-template-columns: 1fr 10fr 1fr;
+  grid-template-columns: 120px 400px 120px;
+  justify-items: center;
   grid-gap: 10px;
 `
 
 const SliderValueDiv = styled.div`
-  width: 100%;
   font-size: 30px;
   font-weight: bold;
 `
@@ -184,11 +184,24 @@ const SliderRailDiv = styled.div`
   display: flex;
   align-items: center;
   height: 10px;
-  width: 100%;
-  margin: 0 10px;
-  background-color: rebeccapurple;
+  width: calc(100% - 60px);
+  margin: 0 35px;
+  border-radius: 20px;
+  background-color: lightgrey;
   align-self: center;
   position: relative;
+  &.focus {
+    outline: none;
+    background: linear-gradient(
+      225deg,
+      rgb(63, 63, 63) 0%,
+      rgb(141, 141, 141) 25%,
+      rgb(255, 255, 255) 50%,
+      rgb(141, 141, 141) 75%,
+      rgb(63, 63, 63) 100%
+    );
+    border: solid grey 2px;
+  }
 `
 
 interface SliderRailThumbProps {
@@ -214,9 +227,9 @@ const SliderRailThumb: React.FC<SliderRailThumbProps> = ({
   const { currentMin, min, max, currentMax } = sliderState
   const style = {} as { left?: string; right?: string }
   if (isMinThumb) {
-    style.left = `calc(${(sliderState.currentMin / max) * 100}% - 10px)`
+    style.left = `calc(${(sliderState.currentMin / max) * 100}% - 20px)`
   } else {
-    style.right = `calc(${100 - (sliderState.currentMax / max) * 100}% - 10px)`
+    style.right = `calc(${100 - (sliderState.currentMax / max) * 100}% - 20px)`
   }
   return (
     <div
@@ -262,18 +275,27 @@ const SliderRailThumb: React.FC<SliderRailThumbProps> = ({
 
 const SliderRailThumbDiv = styled(SliderRailThumb)`
   position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50px;
-  background-color: chartreuse;
+  width: 30px;
+  height: 30px;
+  border: solid darkgrey 2px;
+  background: darkgray;
+  border-radius: 50% 50% 100% 0% / 100% 50% 50% 0%;
+  &.focus {
+    background: linear-gradient(
+      225deg,
+      rgb(63, 63, 63) 0%,
+      rgb(141, 141, 141) 34%,
+      rgb(255, 255, 255) 100%
+    );
+    outline: none;
+    border: solid grey 2px;
+  }
 `
 const SliderRailThumbDivMin = styled(SliderRailThumbDiv)`
-  transform: translateX(-10px);
-  background-color: lime;
+  transform: translateX(-20px) rotate(225deg);
 `
 const SliderRailThumbDivMax = styled(SliderRailThumbDiv)`
-  transform: translateX(10px);
-  background-color: red;
+  transform: translateX(20px) rotate(45deg);
 `
 
 interface MultiSliderProps {
