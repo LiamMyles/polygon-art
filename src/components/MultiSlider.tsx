@@ -226,10 +226,24 @@ const SliderRailThumb: React.FC<SliderRailThumbProps> = ({
   const railRef = sliderRailRef.current as HTMLDivElement
   const { currentMin, min, max, currentMax } = sliderState
   const style = {} as { left?: string; right?: string }
+
+  // Convert min/max range to 0 -> 100 range
+  const maxOldValue = currentMax
+  const minOldValue = currentMin
+  const oldMin = min
+  const oldMax = max
+  const newMin = 0
+  const newMax = 100
+
+  const minNewValue =
+    ((minOldValue - oldMin) * (newMax - newMin)) / (oldMax - oldMin) + newMin
+  const maxNewValue =
+    ((maxOldValue - oldMin) * (newMax - newMin)) / (oldMax - oldMin) + newMin
+
   if (isMinThumb) {
-    style.left = `calc(${(sliderState.currentMin / max) * 100}% - 20px)`
+    style.left = `calc(${minNewValue}% - 20px)`
   } else {
-    style.right = `calc(${100 - (sliderState.currentMax / max) * 100}% - 20px)`
+    style.right = `calc(${100 - maxNewValue}% - 20px)`
   }
   return (
     <div
