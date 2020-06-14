@@ -12,7 +12,7 @@ import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
 import { GroupsDisplay } from "components/GroupsDisplay"
 import { PolygonDisplay } from "components/PolygonDisplay"
-import { MultiSlider } from "components/MultiSlider"
+import { Slider } from "components/Slider"
 
 const Main = styled.main`
   display: grid;
@@ -37,12 +37,12 @@ const App: React.FC = () => {
     <Main>
       <Screens currentScreen={navigationState.currentScreen}>
         <CenterDiv>
-          <MultiSlider
-            label="Testing Component"
-            min={0}
+          <Slider
+            label="Normal"
+            id={"testing-comp"}
+            min={-100}
             max={100}
-            startingMin={10}
-            startingMax={90}
+            startingValue={0}
           />
         </CenterDiv>
         <MainCanvas />
