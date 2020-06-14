@@ -25,6 +25,7 @@ const CenterDiv = styled.div`
   justify-content: center;
   align-items: center;
   height: 90vh;
+  width: 100%;
 `
 
 const App: React.FC = () => {

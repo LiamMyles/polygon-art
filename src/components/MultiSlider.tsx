@@ -171,9 +171,10 @@ const handlePointerDrag = ({
 
 const SliderWrappingDiv = styled.div`
   display: grid;
-  grid-template-columns: 120px 400px 120px;
+  grid-template-columns: 120px minmax(0%, 100%) 120px;
   justify-items: center;
   grid-gap: 10px;
+  width: 100%;
 `
 
 const SliderValueDiv = styled.div`
@@ -348,13 +349,29 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
   const sliderRailRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (sliderRailRef.current) {
-      setRailDimensions({
-        offsetLeft: sliderRailRef.current.offsetLeft,
-        offsetWidth: sliderRailRef.current.offsetWidth,
-      })
+    function updateDimensions() {
+      if (sliderRailRef.current) {
+        setRailDimensions({
+          offsetLeft: sliderRailRef.current.offsetLeft,
+          offsetWidth: sliderRailRef.current.offsetWidth,
+        })
+      }
+    }
+    // Do once on render
+    updateDimensions()
+
+    let timeoutId: number
+    const throttledWindowUpdate = () => {
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(() => updateDimensions(), 250)
+    }
+
+    window.addEventListener("resize", throttledWindowUpdate)
+    return () => {
+      window.removeEventListener("resize", throttledWindowUpdate)
     }
   }, [sliderRailRef, setRailDimensions])
+
   return (
     <SliderWrappingDiv>
       <SliderValueDiv>
