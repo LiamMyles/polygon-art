@@ -276,7 +276,6 @@ const SliderRailThumb: React.FC<SliderRailThumbProps> = ({
         railRef.classList.remove("focus")
       }}
       style={style}
-      id="minPriceHotel"
       role="slider"
       tabIndex={0}
       aria-valuemin={min}
