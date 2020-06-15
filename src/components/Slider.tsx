@@ -1,12 +1,17 @@
-import React, { useState } from "react"
+import React from "react"
 import styled, { StyledComponent } from "styled-components"
+
+export type SliderHandlerFunction = React.EventHandler<
+  React.ChangeEvent<HTMLInputElement>
+>
 
 interface SliderProps {
   label: string
   id: string
   min: number
   max: number
-  startingValue: number
+  handler: SliderHandlerFunction
+  currentValue: number
   vertical?: boolean
   simpleThumb?: boolean
 }
@@ -142,14 +147,13 @@ const SliderInputRange = styled.input`
 export const Slider: React.FC<SliderProps> = ({
   min,
   max,
-  startingValue,
+  currentValue,
   id,
   label,
   vertical,
   simpleThumb,
+  handler,
 }) => {
-  const [currentValue, setCurrentValue] = useState(startingValue)
-
   return (
     <>
       <label htmlFor={id}>{label}</label>
@@ -161,12 +165,7 @@ export const Slider: React.FC<SliderProps> = ({
         max={max}
         value={currentValue}
         orient={vertical ? "vertical" : "horizontal"}
-        onChange={({ currentTarget: { value } }) => {
-          const convertedValue = Number.parseInt(value)
-          if (!Number.isNaN(convertedValue)) {
-            setCurrentValue(convertedValue)
-          }
-        }}
+        onChange={handler}
       />
     </>
   )
