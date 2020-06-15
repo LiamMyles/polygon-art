@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { Slider, SliderHandlerFunction } from "./Slider"
 import styled from "styled-components"
 
@@ -74,6 +74,12 @@ const CoordinateThumbDiv = styled.div`
   top: 0%;
   right: 0%;
   transform: translate(50%, -50%);
+  &.moving {
+    background: darkgrey;
+    border: solid 2px grey;
+    width: 18px;
+    height: 18px;
+  }
 `
 
 interface getNewValueForRangeOptions {
@@ -91,7 +97,7 @@ function getNewValueForRange({
   newMin,
   newMax,
 }: getNewValueForRangeOptions): number {
-  return ((oldValue - oldMin) * (newMax - newMin)) / (oldMax - oldMin) + newMin
+  return ((oldValue - oldMin) * (newMin - newMax)) / (oldMax - oldMin) + newMax
 }
 
 export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
@@ -132,9 +138,43 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
     newMax: 100,
   })
   const positionStyles = {
-    right: `${yToTopPosition}%`,
-    top: `${xToTopPosition}%`,
+    top: `${yToTopPosition}%`,
+    right: `${xToTopPosition}%`,
   }
+
+  const [coordinateDimensions, setCoordinateDimensions] = useState({
+    offsetWidth: 0,
+    offsetLeft: 0,
+    offsetTop: 0,
+    offsetHeight: 0,
+  })
+  const coordinatePanel = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function updateDimensions() {
+      if (coordinatePanel.current) {
+        setCoordinateDimensions({
+          offsetLeft: coordinatePanel.current.offsetLeft,
+          offsetTop: coordinatePanel.current.offsetTop,
+          offsetWidth: coordinatePanel.current.offsetWidth,
+          offsetHeight: coordinatePanel.current.offsetHeight,
+        })
+      }
+    }
+    // Do once on render
+    updateDimensions()
+
+    let timeoutId: number
+    const throttledWindowUpdate = () => {
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(() => updateDimensions(), 250)
+    }
+
+    window.addEventListener("resize", throttledWindowUpdate)
+    return () => {
+      window.removeEventListener("resize", throttledWindowUpdate)
+    }
+  }, [coordinatePanel, setCoordinateDimensions])
   return (
     <CoordinatePickerWrappingDiv>
       <YSliderWrappingDiv>
@@ -153,8 +193,53 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
         <p>X:{xCord}</p>
         <p>Y:{yCord}</p>
       </CoordinatePositionsDiv>
-      <CoordinatePanelDiv>
-        <CoordinateThumbDiv style={positionStyles}></CoordinateThumbDiv>
+      <CoordinatePanelDiv ref={coordinatePanel}>
+        <CoordinateThumbDiv
+          style={positionStyles}
+          onPointerDown={(event) => {
+            event.preventDefault()
+            event.stopPropagation()
+
+            const elementClassList = event.currentTarget.classList
+            elementClassList.add("moving")
+
+            function pointerMove(event: PointerEvent) {
+              const diffX =
+                (event.pageX | event.clientX) - coordinateDimensions.offsetLeft
+              const newX = Math.round(
+                -100 + ((100 - -100) * diffX) / coordinateDimensions.offsetWidth
+              )
+              if (newX >= -100 && newX <= 100) {
+                setXCord(newX)
+              } else if (newX >= -100) {
+                setXCord(100)
+              } else if (newX <= 100) {
+                setXCord(-100)
+              }
+              const diffY =
+                (event.pageY | event.clientY) - coordinateDimensions.offsetTop
+              const newY = Math.round(
+                100 + ((-100 - 100) * diffY) / coordinateDimensions.offsetHeight
+              )
+              if (newY >= -100 && newY <= 100) {
+                setYCord(newY)
+              } else if (newY >= -100) {
+                setYCord(100)
+              } else if (newY <= 100) {
+                setYCord(-100)
+              }
+            }
+
+            function pointerUp() {
+              elementClassList.remove("moving")
+              document.removeEventListener("pointerup", pointerUp)
+              document.removeEventListener("pointermove", pointerMove)
+            }
+
+            document.addEventListener("pointerup", pointerUp)
+            document.addEventListener("pointermove", pointerMove)
+          }}
+        />
       </CoordinatePanelDiv>
       <XSliderWrappingDiv>
         <Slider
