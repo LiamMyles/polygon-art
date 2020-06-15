@@ -12,7 +12,7 @@ import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
 import { GroupsDisplay } from "components/GroupsDisplay"
 import { PolygonDisplay } from "components/PolygonDisplay"
-import { Slider } from "components/Slider"
+import { CoordinatePicker } from "components/CoordinatePicker"
 
 const Main = styled.main`
   display: grid;
@@ -37,13 +37,7 @@ const App: React.FC = () => {
     <Main>
       <Screens currentScreen={navigationState.currentScreen}>
         <CenterDiv>
-          <Slider
-            label="Normal"
-            id={"testing-comp"}
-            min={-100}
-            max={100}
-            startingValue={0}
-          />
+          <CoordinatePicker initialX={0} initialY={0} />
         </CenterDiv>
         <MainCanvas />
         <GroupsDisplay />
