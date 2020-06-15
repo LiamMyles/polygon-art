@@ -37,7 +37,7 @@ const App: React.FC = () => {
     <Main>
       <Screens currentScreen={navigationState.currentScreen}>
         <CenterDiv>
-          <CoordinatePicker initialX={-100} initialY={100} />
+          <CoordinatePicker initialX={0} initialY={0} />
         </CenterDiv>
         <MainCanvas />
         <GroupsDisplay />
