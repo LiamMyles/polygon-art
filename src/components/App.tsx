@@ -12,7 +12,7 @@ import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
 import { GroupsDisplay } from "components/GroupsDisplay"
 import { PolygonDisplay } from "components/PolygonDisplay"
-import { CoordinatePicker } from "components/CoordinatePicker"
+import { ColourPicker } from "components/ColourPicker"
 
 const Main = styled.main`
   display: grid;
@@ -37,7 +37,21 @@ const App: React.FC = () => {
     <Main>
       <Screens currentScreen={navigationState.currentScreen}>
         <CenterDiv>
-          <CoordinatePicker initialX={0} initialY={0} />
+          <ColourPicker
+            initialColours={[
+              "#78d7c8",
+              "#83d952",
+              "#da67c3",
+              "#da4c53",
+              "#d360ba",
+              "#ba29d8",
+              "#44ca8c",
+              "#ced159",
+              "#d84cd1",
+              "#96df4f",
+            ]}
+            maxColours={12}
+          />
         </CenterDiv>
         <MainCanvas />
         <GroupsDisplay />
