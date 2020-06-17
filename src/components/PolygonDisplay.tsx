@@ -62,6 +62,7 @@ export function PolygonDisplay() {
           />
         </PolygonCanvasDiv>
         <PolygonRandomizeButton
+          type="button"
           onClick={() => {
             polygonGroupsDispatch({
               type: "RANDOMIZE_POLYGON",

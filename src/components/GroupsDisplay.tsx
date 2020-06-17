@@ -107,6 +107,7 @@ export function GroupsDisplay() {
             />
             {isLastPolygonGroup && (
               <AddGroupButton
+                type="button"
                 onClick={() => {
                   polygonGroupsDispatch({ type: "CREATE_POLYGON_GROUP" })
                 }}
@@ -187,6 +188,7 @@ const PolygonRingsDisplay: React.FC<{
                 />
               </RingCanvasDiv>
               <RingRandomizeButton
+                type="button"
                 onClick={() => {
                   polygonGroupsDispatch({
                     type: "RANDOMIZE_POLYGON",
@@ -198,6 +200,7 @@ const PolygonRingsDisplay: React.FC<{
                 Randomize
               </RingRandomizeButton>
               <RingDeleteButton
+                type="button"
                 disabled={totalPolygons === 1}
                 onClick={() => {
                   polygonGroupsDispatch({
@@ -213,6 +216,7 @@ const PolygonRingsDisplay: React.FC<{
             {isLastPolygon && (
               <RingsLi>
                 <AddRingButton
+                  type="button"
                   onClick={() => {
                     polygonGroupsDispatch({
                       type: "CREATE_POLYGON",

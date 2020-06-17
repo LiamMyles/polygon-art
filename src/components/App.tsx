@@ -60,6 +60,7 @@ const App: React.FC = () => {
       <div>
         <h1>Hello</h1>
         <button
+          type="button"
           onClick={() => {
             navigationDispatch({ type: "PREV_SCREEN" })
           }}
@@ -67,6 +68,7 @@ const App: React.FC = () => {
           Previous
         </button>
         <button
+          type="button"
           onClick={() => {
             navigationDispatch({ type: "NEXT_SCREEN" })
           }}
@@ -75,6 +77,7 @@ const App: React.FC = () => {
         </button>
         <br />
         <button
+          type="button"
           onClick={() => {
             polygonGroupsDispatch({ type: "RANDOMIZE_POLYGON_RINGS", group: 0 })
           }}
@@ -82,6 +85,7 @@ const App: React.FC = () => {
           Randomize!
         </button>
         <button
+          type="button"
           onClick={() => {
             polygonGroupsDispatch({ type: "CREATE_POLYGON_GROUP" })
           }}
