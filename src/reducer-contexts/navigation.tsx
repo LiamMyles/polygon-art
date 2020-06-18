@@ -4,6 +4,8 @@ import produce, { Draft } from "immer"
 interface NavigationState {
   currentScreen: number
   totalScreens: number
+  currentGroup: number
+  currentPolygon: number
 }
 
 interface NextScreen {
@@ -41,7 +43,12 @@ export const navigationReducer = produce(
   }
 )
 
-export const navigationInitialState = { currentScreen: 3, totalScreens: 3 }
+export const navigationInitialState = {
+  currentScreen: 3,
+  totalScreens: 3,
+  currentGroup: 0,
+  currentPolygon: 0,
+}
 
 export const NavigationContextWrapper: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(

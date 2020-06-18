@@ -1,10 +1,11 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useState, useEffect } from "react"
 import styled from "styled-components"
 
 import {
   polygonGroupsStateContext,
   polygonGroupsDispatchContext,
 } from "reducer-contexts/polygon-groups"
+import { navigationStateContext } from "reducer-contexts/navigation"
 import { generatePolygonRingSketch } from "polygon-logic/polygon-p5-draw"
 
 import { P5Canvas } from "components/P5Canvas"
@@ -40,18 +41,20 @@ const PolygonOptionsOverflowDiv = styled.div`
 export const PolygonDisplay = () => {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
+  const navigationState = useContext(navigationStateContext)
 
-  //TODO - Put these values into the navigation
-  const currentRing = 0
-  const currentGroup = 0
-  const polygonToDisplay = polygonGroupsState[currentGroup].rings[currentRing]
+  const polygonToDisplay =
+    polygonGroupsState[navigationState.currentGroup].rings[
+      navigationState.currentPolygon
+    ]
 
-  generatePolygonRingSketch(polygonToDisplay, { width: 200, height: 200 })
-
+  const { rotation } = polygonToDisplay
   return (
     <PolygonPageWrappingDiv>
       <PolygonCanvasWrappingDiv>
-        <PolygonCanvasDiv aria-label={`Ring ${currentRing} Canvas`}>
+        <PolygonCanvasDiv
+          aria-label={`Ring ${navigationState.currentPolygon} Canvas`}
+        >
           <P5Canvas
             sketch={generatePolygonRingSketch(
               polygonToDisplay,
@@ -68,8 +71,8 @@ export const PolygonDisplay = () => {
           onClick={() => {
             polygonGroupsDispatch({
               type: "RANDOMIZE_POLYGON",
-              group: currentGroup,
-              polygon: currentRing,
+              group: navigationState.currentGroup,
+              polygon: navigationState.currentPolygon,
             })
           }}
         >
@@ -78,28 +81,26 @@ export const PolygonDisplay = () => {
       </PolygonCanvasWrappingDiv>
       <PolygonOptionsOverflowDiv>
         <PolygonRotationControls
-          key={`${polygonToDisplay.rotation.speed}-${polygonToDisplay.rotation.enabled}-${polygonToDisplay.rotation.clockwise}`}
+          key={`${rotation.speed}-${rotation.enabled}-${rotation.clockwise}`}
         />
       </PolygonOptionsOverflowDiv>
     </PolygonPageWrappingDiv>
   )
 }
 
-interface PolygonRotationControls {}
-
-const PolygonRotationControls: React.FC<PolygonRotationControls> = () => {
+const PolygonRotationControls: React.FC = () => {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
+  const navigationState = useContext(navigationStateContext)
 
-  const [speed, setRotationSpeed] = useState(
-    polygonGroupsState[0].rings[0].rotation.speed
-  )
-  const [enabled, setEnabled] = useState(
-    polygonGroupsState[0].rings[0].rotation.enabled
-  )
-  const [clockwise, setClockwise] = useState(
-    polygonGroupsState[0].rings[0].rotation.clockwise
-  )
+  const { rotation } = polygonGroupsState[navigationState.currentGroup].rings[
+    navigationState.currentPolygon
+  ]
+
+  const [speed, setRotationSpeed] = useState(rotation.speed)
+  const [enabled, setEnabled] = useState(rotation.enabled)
+  const [clockwise, setClockwise] = useState(rotation.clockwise)
+  const [canUpdate, setCanUpdate] = useState(false)
 
   const toggleHandler = (
     setFunction: React.Dispatch<React.SetStateAction<boolean>>
@@ -116,6 +117,16 @@ const PolygonRotationControls: React.FC<PolygonRotationControls> = () => {
       setRotationSpeed(convertedValue)
     }
   }
+
+  useEffect(() => {
+    if (
+      rotation.speed !== speed ||
+      rotation.enabled !== enabled ||
+      rotation.clockwise !== clockwise
+    ) {
+      setCanUpdate(true)
+    }
+  }, [speed, enabled, clockwise, rotation])
 
   return (
     <div>
@@ -141,11 +152,12 @@ const PolygonRotationControls: React.FC<PolygonRotationControls> = () => {
         handler={sliderSpeedHandler}
       />
       <button
+        disabled={!canUpdate}
         onClick={() => {
           polygonGroupsDispatch({
             type: "UPDATE_POLYGON_ROTATION",
-            group: 0,
-            polygon: 0,
+            group: navigationState.currentGroup,
+            polygon: navigationState.currentPolygon,
             rotation: { clockwise, enabled, speed },
           })
         }}
@@ -156,8 +168,8 @@ const PolygonRotationControls: React.FC<PolygonRotationControls> = () => {
         onClick={() => {
           polygonGroupsDispatch({
             type: "RANDOMIZE_POLYGON_ROTATION",
-            group: 0,
-            polygon: 0,
+            group: navigationState.currentGroup,
+            polygon: navigationState.currentPolygon,
           })
         }}
       >
