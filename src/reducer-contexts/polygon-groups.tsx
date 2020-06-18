@@ -260,18 +260,28 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
   return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)]
 }
 
-function getRandomRGB(): string {
+function getRandomRGB(): [number, number, number] {
   const h = getRandomArbitrary(0, 1)
   const s = getRandomArbitrary(0.5, 0.7)
   const l = getRandomArbitrary(0.5, 0.7)
   const [r, g, b] = hslToRgb(h, s, l)
-  return `rgb(${r},${g},${b})`
+  return [r, g, b]
+}
+
+// https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+function componentToHex(c: number) {
+  var hex = c.toString(16)
+  return hex.length === 1 ? "0" + hex : hex
+}
+
+function rgbToHex(r: number, g: number, b: number): string {
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b)
 }
 
 function getRandomColoursForPolygon(amountOfSides: number): string[] {
   const amountOfColours = getRandomIntInclusive(1, amountOfSides)
 
-  return [...Array(amountOfColours)].map(() => getRandomRGB())
+  return [...Array(amountOfColours)].map(() => rgbToHex(...getRandomRGB()))
 }
 
 function getRandomSides(): PolygonRingSides {

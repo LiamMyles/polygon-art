@@ -12,7 +12,7 @@ import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
 import { GroupsDisplay } from "components/GroupsDisplay"
 import { PolygonDisplay } from "components/PolygonDisplay"
-import { CoordinatePicker } from "components/CoordinatePicker"
+import { ColourPicker } from "components/ColourPicker"
 
 const Main = styled.main`
   display: grid;
@@ -37,7 +37,21 @@ const App: React.FC = () => {
     <Main>
       <Screens currentScreen={navigationState.currentScreen}>
         <CenterDiv>
-          <CoordinatePicker initialX={0} initialY={0} />
+          <ColourPicker
+            initialColours={[
+              "#78d7c8",
+              "#83d952",
+              "#da67c3",
+              "#da4c53",
+              "#d360ba",
+              "#ba29d8",
+              "#44ca8c",
+              "#ced159",
+              "#d84cd1",
+              "#96df4f",
+            ]}
+            maxColours={12}
+          />
         </CenterDiv>
         <MainCanvas />
         <GroupsDisplay />
@@ -46,6 +60,7 @@ const App: React.FC = () => {
       <div>
         <h1>Hello</h1>
         <button
+          type="button"
           onClick={() => {
             navigationDispatch({ type: "PREV_SCREEN" })
           }}
@@ -53,6 +68,7 @@ const App: React.FC = () => {
           Previous
         </button>
         <button
+          type="button"
           onClick={() => {
             navigationDispatch({ type: "NEXT_SCREEN" })
           }}
@@ -61,6 +77,7 @@ const App: React.FC = () => {
         </button>
         <br />
         <button
+          type="button"
           onClick={() => {
             polygonGroupsDispatch({ type: "RANDOMIZE_POLYGON_RINGS", group: 0 })
           }}
@@ -68,6 +85,7 @@ const App: React.FC = () => {
           Randomize!
         </button>
         <button
+          type="button"
           onClick={() => {
             polygonGroupsDispatch({ type: "CREATE_POLYGON_GROUP" })
           }}
