@@ -12,20 +12,11 @@ import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
 import { GroupsDisplay } from "components/GroupsDisplay"
 import { PolygonDisplay } from "components/PolygonDisplay"
-import { ColourPicker } from "components/ColourPicker"
 
 const Main = styled.main`
   display: grid;
   grid-template-rows: minmax(90%, 90vh) minmax(10vh, 10px);
   overflow: hidden;
-`
-
-const CenterDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 90vh;
-  width: 100%;
 `
 
 const App: React.FC = () => {
@@ -36,23 +27,6 @@ const App: React.FC = () => {
   return (
     <Main>
       <Screens currentScreen={navigationState.currentScreen}>
-        <CenterDiv>
-          <ColourPicker
-            initialColours={[
-              "#78d7c8",
-              "#83d952",
-              "#da67c3",
-              "#da4c53",
-              "#d360ba",
-              "#ba29d8",
-              "#44ca8c",
-              "#ced159",
-              "#d84cd1",
-              "#96df4f",
-            ]}
-            maxColours={12}
-          />
-        </CenterDiv>
         <MainCanvas />
         <GroupsDisplay />
         <PolygonDisplay />
