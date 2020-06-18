@@ -88,7 +88,7 @@ export const PolygonDisplay = () => {
   )
 }
 
-const PolygonRotationControls: React.FC = () => {
+export const PolygonRotationControls: React.FC = () => {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
   const navigationState = useContext(navigationStateContext)
