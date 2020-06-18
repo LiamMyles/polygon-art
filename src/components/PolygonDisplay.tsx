@@ -11,6 +11,7 @@ import { generatePolygonRingSketch } from "polygon-logic/polygon-p5-draw"
 import { P5Canvas } from "components/P5Canvas"
 import { ToggleSwitch, ToggleSwitchHandler } from "components/ToggleSwitch"
 import { Slider, SliderHandlerFunction } from "components/Slider"
+import { MultiSlider } from "./MultiSlider"
 
 const PolygonPageWrappingDiv = styled.div`
   display: grid;
@@ -47,8 +48,7 @@ export const PolygonDisplay = () => {
     polygonGroupsState[navigationState.currentGroup].rings[
       navigationState.currentPolygon
     ]
-
-  const { rotation } = polygonToDisplay
+  const { scale, rotation } = polygonToDisplay
   return (
     <PolygonPageWrappingDiv>
       <PolygonCanvasWrappingDiv>
@@ -82,6 +82,9 @@ export const PolygonDisplay = () => {
       <PolygonOptionsOverflowDiv>
         <PolygonRotationControls
           key={`${rotation.speed}-${rotation.enabled}-${rotation.clockwise}`}
+        />
+        <PolygonScaleControls
+          key={`${scale.enabled}-${scale.range.min}-${scale.range.max}-${scale.speed}-${scale.speed}-${scale.startingSize}`}
         />
       </PolygonOptionsOverflowDiv>
     </PolygonPageWrappingDiv>
@@ -168,6 +171,97 @@ export const PolygonRotationControls: React.FC = () => {
         onClick={() => {
           polygonGroupsDispatch({
             type: "RANDOMIZE_POLYGON_ROTATION",
+            group: navigationState.currentGroup,
+            polygon: navigationState.currentPolygon,
+          })
+        }}
+      >
+        Randomize
+      </button>
+    </div>
+  )
+}
+
+export const PolygonScaleControls: React.FC = () => {
+  const polygonGroupsState = useContext(polygonGroupsStateContext)
+  const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
+  const navigationState = useContext(navigationStateContext)
+
+  const { scale } = polygonGroupsState[navigationState.currentGroup].rings[
+    navigationState.currentPolygon
+  ]
+
+  const [canUpdate, setCanUpdate] = useState(false)
+  const [enabled, setEnabled] = useState(scale.enabled)
+  const [speed, setSpeed] = useState(scale.speed)
+  const [range, setRange] = useState(scale.range)
+
+  const toggleHandler = (
+    setFunction: React.Dispatch<React.SetStateAction<boolean>>
+  ): ToggleSwitchHandler => {
+    return ({ currentTarget: { checked } }) => {
+      setFunction(checked)
+    }
+  }
+
+  const sliderSpeedHandler: SliderHandlerFunction = ({
+    currentTarget: { value },
+  }) => {
+    const convertedValue = Number.parseInt(value)
+    if (!Number.isNaN(convertedValue)) {
+      setSpeed(convertedValue)
+    }
+  }
+  useEffect(() => {
+    if (
+      scale.speed !== speed ||
+      scale.enabled !== enabled ||
+      scale.range !== range
+    ) {
+      setCanUpdate(true)
+    }
+  }, [speed, enabled, range, scale])
+  return (
+    <div>
+      <h2>Scale</h2>
+      <ToggleSwitch
+        label="Enable"
+        id="scale-enabled"
+        checked={enabled}
+        handler={toggleHandler(setEnabled)}
+      />
+      <Slider
+        label="Speed"
+        id="scale-speed"
+        max={20}
+        min={0}
+        currentValue={speed}
+        handler={sliderSpeedHandler}
+      />
+      <MultiSlider
+        label="scale-range"
+        min={0}
+        max={500}
+        startingMax={range.max}
+        startingMin={range.min}
+      />
+      <button
+        disabled={!canUpdate}
+        onClick={() => {
+          polygonGroupsDispatch({
+            type: "UPDATE_POLYGON_SCALE",
+            group: navigationState.currentGroup,
+            polygon: navigationState.currentPolygon,
+            scale: { enabled, range, speed },
+          })
+        }}
+      >
+        Update
+      </button>
+      <button
+        onClick={() => {
+          polygonGroupsDispatch({
+            type: "RANDOMIZE_POLYGON_SCALE",
             group: navigationState.currentGroup,
             polygon: navigationState.currentPolygon,
           })
