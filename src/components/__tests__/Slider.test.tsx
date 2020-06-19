@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { render, fireEvent } from "@testing-library/react"
-import { Slider } from "components/Slider"
+import { Slider, sliderHandlerGenerator } from "components/Slider"
 
 describe("Slider component", () => {
   const WrappedSliderComponent = () => {
@@ -12,12 +12,7 @@ describe("Slider component", () => {
         max={0}
         min={100}
         currentValue={sliderValue}
-        handler={({ currentTarget: { value } }) => {
-          const convertedValue = Number.parseInt(value)
-          if (!Number.isNaN(convertedValue)) {
-            setSliderValue(convertedValue)
-          }
-        }}
+        handler={sliderHandlerGenerator(setSliderValue)}
       />
     )
   }

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react"
-import { Slider, SliderHandlerFunction } from "./Slider"
+import { Slider, sliderHandlerGenerator } from "./Slider"
 import styled from "styled-components"
 
 interface CoordinatePickerProps {
@@ -107,22 +107,6 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
   const [xCord, setXCord] = useState(initialX)
   const [yCord, setYCord] = useState(initialY)
 
-  const xInputHandler: SliderHandlerFunction = ({
-    currentTarget: { value },
-  }) => {
-    const convertedValue = Number.parseInt(value)
-    if (!Number.isNaN(convertedValue)) {
-      setXCord(convertedValue)
-    }
-  }
-  const yInputHandler: SliderHandlerFunction = ({
-    currentTarget: { value },
-  }) => {
-    const convertedValue = Number.parseInt(value)
-    if (!Number.isNaN(convertedValue)) {
-      setYCord(convertedValue)
-    }
-  }
   const yToTopPosition = getNewValueForRange({
     oldValue: yCord,
     oldMin: -100,
@@ -186,7 +170,7 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
           id="y"
           simpleThumb={true}
           vertical={true}
-          handler={yInputHandler}
+          handler={sliderHandlerGenerator(setYCord)}
         />
       </YSliderWrappingDiv>
       <CoordinatePositionsDiv>
@@ -249,7 +233,7 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
           label="X"
           id="x"
           simpleThumb={true}
-          handler={xInputHandler}
+          handler={sliderHandlerGenerator(setXCord)}
         />
       </XSliderWrappingDiv>
     </CoordinatePickerWrappingDiv>

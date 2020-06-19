@@ -9,8 +9,11 @@ import { navigationStateContext } from "reducer-contexts/navigation"
 import { generatePolygonRingSketch } from "polygon-logic/polygon-p5-draw"
 
 import { P5Canvas } from "components/P5Canvas"
-import { ToggleSwitch, ToggleSwitchHandler } from "components/ToggleSwitch"
-import { Slider, SliderHandlerFunction } from "components/Slider"
+import {
+  ToggleSwitch,
+  toggleSwitchHandlerGenerator,
+} from "components/ToggleSwitch"
+import { Slider, sliderHandlerGenerator } from "components/Slider"
 import { MultiSlider, sliderReducer } from "components/MultiSlider"
 
 const PolygonPageWrappingDiv = styled.div`
@@ -105,22 +108,6 @@ export const PolygonRotationControls: React.FC = () => {
   const [clockwise, setClockwise] = useState(rotation.clockwise)
   const [canUpdate, setCanUpdate] = useState(false)
 
-  const toggleHandler = (
-    setFunction: React.Dispatch<React.SetStateAction<boolean>>
-  ): ToggleSwitchHandler => {
-    return ({ currentTarget: { checked } }) => {
-      setFunction(checked)
-    }
-  }
-  const sliderSpeedHandler: SliderHandlerFunction = ({
-    currentTarget: { value },
-  }) => {
-    const convertedValue = Number.parseInt(value)
-    if (!Number.isNaN(convertedValue)) {
-      setRotationSpeed(convertedValue)
-    }
-  }
-
   useEffect(() => {
     if (
       rotation.speed !== speed ||
@@ -138,13 +125,13 @@ export const PolygonRotationControls: React.FC = () => {
         label="Enable"
         id="rotation-enabled"
         checked={enabled}
-        handler={toggleHandler(setEnabled)}
+        handler={toggleSwitchHandlerGenerator(setEnabled)}
       />
       <ToggleSwitch
         label="Clockwise"
         id="rotation-clockwise"
         checked={clockwise}
-        handler={toggleHandler(setClockwise)}
+        handler={toggleSwitchHandlerGenerator(setClockwise)}
       />
       <Slider
         label="Speed"
@@ -152,7 +139,7 @@ export const PolygonRotationControls: React.FC = () => {
         max={20}
         min={0}
         currentValue={speed}
-        handler={sliderSpeedHandler}
+        handler={sliderHandlerGenerator(setRotationSpeed)}
       />
       <button
         disabled={!canUpdate}
@@ -205,23 +192,6 @@ export const PolygonScaleControls: React.FC = () => {
     sliderReducer,
     rangeInitialState
   )
-
-  const toggleHandler = (
-    setFunction: React.Dispatch<React.SetStateAction<boolean>>
-  ): ToggleSwitchHandler => {
-    return ({ currentTarget: { checked } }) => {
-      setFunction(checked)
-    }
-  }
-
-  const sliderSpeedHandler: SliderHandlerFunction = ({
-    currentTarget: { value },
-  }) => {
-    const convertedValue = Number.parseInt(value)
-    if (!Number.isNaN(convertedValue)) {
-      setSpeed(convertedValue)
-    }
-  }
   useEffect(() => {
     if (
       scale.speed !== speed ||
@@ -239,7 +209,7 @@ export const PolygonScaleControls: React.FC = () => {
         label="Enable"
         id="scale-enabled"
         checked={enabled}
-        handler={toggleHandler(setEnabled)}
+        handler={toggleSwitchHandlerGenerator(setEnabled)}
       />
       <Slider
         label="Speed"
@@ -247,7 +217,7 @@ export const PolygonScaleControls: React.FC = () => {
         max={20}
         min={0}
         currentValue={speed}
-        handler={sliderSpeedHandler}
+        handler={sliderHandlerGenerator(setSpeed)}
       />
       <MultiSlider
         label="scale-range"

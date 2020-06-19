@@ -1,16 +1,25 @@
 import React from "react"
 import styled, { StyledComponent } from "styled-components"
 
-export type SliderHandlerFunction = React.EventHandler<
-  React.ChangeEvent<HTMLInputElement>
->
+type SliderHandler = React.EventHandler<React.ChangeEvent<HTMLInputElement>>
+
+export const sliderHandlerGenerator = (
+  setFunction: React.Dispatch<React.SetStateAction<number>>
+): SliderHandler => {
+  return ({ currentTarget: { value } }) => {
+    const convertedValue = Number.parseInt(value)
+    if (!Number.isNaN(convertedValue)) {
+      setFunction(convertedValue)
+    }
+  }
+}
 
 interface SliderProps {
   label: string
   id: string
   min: number
   max: number
-  handler: SliderHandlerFunction
+  handler: SliderHandler
   currentValue: number
   vertical?: boolean
   simpleThumb?: boolean

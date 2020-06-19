@@ -1,9 +1,16 @@
 import React from "react"
 import styled from "styled-components"
 
-export type ToggleSwitchHandler = React.EventHandler<
+type ToggleSwitchHandler = React.EventHandler<
   React.ChangeEvent<HTMLInputElement>
 >
+export const toggleSwitchHandlerGenerator = (
+  setFunction: React.Dispatch<React.SetStateAction<boolean>>
+): ToggleSwitchHandler => {
+  return ({ currentTarget: { checked } }) => {
+    setFunction(checked)
+  }
+}
 
 interface ToggleSwitchProps {
   label: string
