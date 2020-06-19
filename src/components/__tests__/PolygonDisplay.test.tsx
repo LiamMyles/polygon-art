@@ -95,11 +95,14 @@ describe("PolygonDisplay Component", () => {
     const TestComponent: React.FC = () => {
       const polygonGroupsState = useContext(polygonGroupsStateContext)
       const {
-        rotation: { speed, clockwise, enabled },
+        rotation: { speed, clockwise, enabled, startingRotation },
       } = polygonGroupsState[0].rings[0]
       return (
         <div key={`${speed}-${clockwise}-${enabled}`}>
-          <TestInput name="random" value={`${speed}-${clockwise}-${enabled}`} />
+          <TestInput
+            name="random"
+            value={`${speed}-${clockwise}-${enabled}-${startingRotation}`}
+          />
           <TestInput name="speed-test" value={speed} />
           <TestInput name="clockwise" value={clockwise} />
           <TestInput name="enable" value={enabled} />
@@ -261,7 +264,13 @@ describe("PolygonDisplay Component", () => {
         "enable"
       ) as HTMLInputElement
 
-      expect(enabledValue).toEqual("true")
+      // To help deal with randomness an if statement is used here.
+      if (enabledValue === "true") {
+        expect(enabledValue).toEqual("true")
+      } else {
+        expect(enabledValue).toEqual("false")
+      }
+
       expect(updateButton).toBeDisabled()
 
       fireEvent.click(getByRole("checkbox", { name: "Enable" }))
@@ -272,7 +281,11 @@ describe("PolygonDisplay Component", () => {
       const { value: updatedEnabledValue } = getByLabelText(
         "enable"
       ) as HTMLInputElement
-      expect(updatedEnabledValue).toEqual("false")
+      if (enabledValue === "true") {
+        expect(updatedEnabledValue).toEqual("false")
+      } else {
+        expect(updatedEnabledValue).toEqual("true")
+      }
     })
     it("should change speed and update", () => {
       const { getByLabelText, getByRole } = render(
@@ -293,7 +306,29 @@ describe("PolygonDisplay Component", () => {
 
       expect(getByLabelText("speed-test")).toHaveValue("20")
     })
-    it.todo("should change range and update")
+    it("should change range and update", () => {
+      const { getByLabelText, getByRole, getAllByRole } = render(
+        <PolygonGroupsContextWrapper>
+          <NavigationContextWrapper>
+            <TestComponent />
+          </NavigationContextWrapper>
+        </PolygonGroupsContextWrapper>
+      )
+      const updateButton = getByRole("button", { name: "Update" })
+      expect(updateButton).toBeDisabled()
+
+      const minSlider = getAllByRole("slider")[1]
+      const maxSlider = getAllByRole("slider")[2]
+
+      fireEvent.keyDown(minSlider, { key: "Home", code: "Home" })
+      fireEvent.keyDown(maxSlider, { key: "Home", code: "Home" })
+
+      expect(updateButton).not.toBeDisabled()
+      fireEvent.click(updateButton)
+
+      expect(getByLabelText("range-min")).toHaveValue("0")
+      expect(getByLabelText("range-max")).toHaveValue("0")
+    })
   })
   describe("Dots Controls", () => {
     it.todo("should randomize")

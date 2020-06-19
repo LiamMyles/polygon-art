@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react"
+import React, { useContext, useState, useEffect, useReducer } from "react"
 import styled from "styled-components"
 
 import {
@@ -11,7 +11,7 @@ import { generatePolygonRingSketch } from "polygon-logic/polygon-p5-draw"
 import { P5Canvas } from "components/P5Canvas"
 import { ToggleSwitch, ToggleSwitchHandler } from "components/ToggleSwitch"
 import { Slider, SliderHandlerFunction } from "components/Slider"
-import { MultiSlider } from "./MultiSlider"
+import { MultiSlider, sliderReducer } from "components/MultiSlider"
 
 const PolygonPageWrappingDiv = styled.div`
   display: grid;
@@ -194,7 +194,17 @@ export const PolygonScaleControls: React.FC = () => {
   const [canUpdate, setCanUpdate] = useState(false)
   const [enabled, setEnabled] = useState(scale.enabled)
   const [speed, setSpeed] = useState(scale.speed)
-  const [range, setRange] = useState(scale.range)
+
+  const rangeInitialState = {
+    min: 0,
+    max: 500,
+    currentMin: scale.range.min,
+    currentMax: scale.range.max,
+  }
+  const [rangeState, rangeDispatch] = useReducer(
+    sliderReducer,
+    rangeInitialState
+  )
 
   const toggleHandler = (
     setFunction: React.Dispatch<React.SetStateAction<boolean>>
@@ -216,11 +226,12 @@ export const PolygonScaleControls: React.FC = () => {
     if (
       scale.speed !== speed ||
       scale.enabled !== enabled ||
-      scale.range !== range
+      scale.range.min !== rangeState.currentMin ||
+      scale.range.max !== rangeState.currentMax
     ) {
       setCanUpdate(true)
     }
-  }, [speed, enabled, range, scale])
+  }, [speed, enabled, rangeState, scale])
   return (
     <div>
       <h2>Scale</h2>
@@ -240,10 +251,8 @@ export const PolygonScaleControls: React.FC = () => {
       />
       <MultiSlider
         label="scale-range"
-        min={0}
-        max={500}
-        startingMax={range.max}
-        startingMin={range.min}
+        sliderState={rangeState}
+        sliderReducerDispatch={rangeDispatch}
       />
       <button
         disabled={!canUpdate}
@@ -252,7 +261,11 @@ export const PolygonScaleControls: React.FC = () => {
             type: "UPDATE_POLYGON_SCALE",
             group: navigationState.currentGroup,
             polygon: navigationState.currentPolygon,
-            scale: { enabled, range, speed },
+            scale: {
+              enabled,
+              range: { min: rangeState.currentMin, max: rangeState.currentMax },
+              speed,
+            },
           })
         }}
       >
