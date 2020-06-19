@@ -1,19 +1,28 @@
-import React from "react"
+import React, { useState } from "react"
 import { render, fireEvent } from "@testing-library/react"
 import { ToggleSwitch } from "components/ToggleSwitch"
 
 describe("ToggleSwitch component", () => {
-  it("should render", () => {
-    const { getByLabelText } = render(
-      <ToggleSwitch label={"Hello World"} id="123" />
+  const WrappedToggleSwitch = () => {
+    const [checkedValue, setCheckedValue] = useState(false)
+    return (
+      <ToggleSwitch
+        label={"Hello World"}
+        id="123"
+        checked={checkedValue}
+        handler={({ currentTarget: { checked } }) => {
+          setCheckedValue(checked)
+        }}
+      />
     )
+  }
+  it("should render", () => {
+    const { getByLabelText } = render(<WrappedToggleSwitch />)
 
     expect(getByLabelText("Hello World")).toBeInTheDocument()
   })
   it("should update when clicked", () => {
-    const { getByLabelText } = render(
-      <ToggleSwitch label={"Hello World"} id="123" />
-    )
+    const { getByLabelText } = render(<WrappedToggleSwitch />)
 
     expect(getByLabelText("Hello World")).toBeInTheDocument()
 
@@ -21,6 +30,4 @@ describe("ToggleSwitch component", () => {
 
     expect(getByLabelText("Hello World")).toBeChecked()
   })
-
-  it.todo("should handel a function to trigger on update")
 })

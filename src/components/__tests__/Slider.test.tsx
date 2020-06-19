@@ -1,19 +1,33 @@
-import React from "react"
-import { render } from "@testing-library/react"
+import React, { useState } from "react"
+import { render, fireEvent } from "@testing-library/react"
 import { Slider } from "components/Slider"
 
 describe("Slider component", () => {
-  it("should render", () => {
-    const { getByLabelText } = render(
+  const WrappedSliderComponent = () => {
+    const [sliderValue, setSliderValue] = useState(0)
+    return (
       <Slider
         label={"Hello World"}
         id="123"
         max={0}
         min={100}
-        startingValue={0}
+        currentValue={sliderValue}
+        handler={({ currentTarget: { value } }) => {
+          const convertedValue = Number.parseInt(value)
+          if (!Number.isNaN(convertedValue)) {
+            setSliderValue(convertedValue)
+          }
+        }}
       />
     )
+  }
+  it("should render", () => {
+    const { getByLabelText } = render(<WrappedSliderComponent />)
+    const slider = getByLabelText("Hello World")
+    expect(slider).toHaveValue("0")
 
-    expect(getByLabelText("Hello World")).toBeInTheDocument()
+    fireEvent.change(slider, { target: { value: 100 } })
+
+    expect(slider).toHaveValue("100")
   })
 })
