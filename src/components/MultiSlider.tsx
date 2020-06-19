@@ -21,7 +21,7 @@ interface SliderState {
   min: number
 }
 
-const sliderReducer = produce(
+export const sliderReducer: React.Reducer<SliderState, SliderActions> = produce(
   (draft: Draft<SliderState>, action: SliderActions) => {
     const { currentMax, currentMin, min, max } = draft
     function increaseCurrent(
@@ -314,10 +314,8 @@ const SliderRailThumbDivMax = styled(SliderRailThumbDiv)`
 
 interface MultiSliderProps {
   label: string
-  startingMin: number
-  startingMax: number
-  min: number
-  max: number
+  sliderState: SliderState
+  sliderReducerDispatch: React.Dispatch<SliderActions>
 }
 
 interface sliderRailDimensionsState {
@@ -326,21 +324,9 @@ interface sliderRailDimensionsState {
 }
 export const MultiSlider: React.FC<MultiSliderProps> = ({
   label,
-  startingMax,
-  startingMin,
-  min,
-  max,
+  sliderState,
+  sliderReducerDispatch,
 }) => {
-  const initialSliderState: SliderState = {
-    currentMin: startingMin,
-    currentMax: startingMax,
-    max: max,
-    min: min,
-  }
-  const [sliderState, sliderDispatch] = useReducer(
-    sliderReducer,
-    initialSliderState
-  )
   const [railDimensions, setRailDimensions] = useState({
     offsetWidth: 0,
     offsetLeft: 0,
@@ -378,7 +364,7 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
       </SliderValueDiv>
       <SliderRailDiv ref={sliderRailRef}>
         <SliderRailThumbDivMin
-          sliderDispatch={sliderDispatch}
+          sliderDispatch={sliderReducerDispatch}
           railDimensions={railDimensions}
           isMinThumb={true}
           sliderRailRef={sliderRailRef}
@@ -386,7 +372,7 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
           label={label}
         />
         <SliderRailThumbDivMax
-          sliderDispatch={sliderDispatch}
+          sliderDispatch={sliderReducerDispatch}
           railDimensions={railDimensions}
           isMinThumb={false}
           sliderRailRef={sliderRailRef}
