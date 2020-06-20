@@ -1,10 +1,12 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef } from "react"
 import { Slider } from "./Slider"
 import styled from "styled-components"
 
 interface CoordinatePickerProps {
-  initialX: number
-  initialY: number
+  currentY: number
+  currentX: number
+  setYFunction: React.Dispatch<React.SetStateAction<number>>
+  setXFunction: React.Dispatch<React.SetStateAction<number>>
   scrollingParentRef?: React.RefObject<HTMLDivElement>
 }
 
@@ -102,22 +104,21 @@ function getNewValueForRange({
 }
 
 export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
-  initialX,
-  initialY,
+  currentY,
+  setYFunction,
+  currentX,
+  setXFunction,
   scrollingParentRef,
 }) => {
-  const [xCord, setXCord] = useState(initialX)
-  const [yCord, setYCord] = useState(initialY)
-
   const yToTopPosition = getNewValueForRange({
-    oldValue: yCord,
+    oldValue: currentY,
     oldMin: -100,
     oldMax: 100,
     newMin: 0,
     newMax: 100,
   })
   const xToTopPosition = getNewValueForRange({
-    oldValue: xCord,
+    oldValue: currentX,
     oldMin: -100,
     oldMax: 100,
     newMin: 0,
@@ -136,17 +137,17 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
         <Slider
           max={100}
           min={-100}
-          currentValue={yCord}
+          currentValue={currentY}
           label="Y"
           id="y"
           simpleThumb={true}
           vertical={true}
-          setFunction={setYCord}
+          setFunction={setYFunction}
         />
       </YSliderWrappingDiv>
       <CoordinatePositionsDiv>
-        <p>X:{xCord}</p>
-        <p>Y:{yCord}</p>
+        <p>X:{currentX}</p>
+        <p>Y:{currentY}</p>
       </CoordinatePositionsDiv>
       <CoordinatePanelDiv ref={coordinatePanel}>
         <CoordinateThumbDiv
@@ -168,11 +169,11 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
                   ((100 - -100) * diffX) / coordinatePanel.current.offsetWidth
               )
               if (newX >= -100 && newX <= 100) {
-                setXCord(newX)
+                setXFunction(newX)
               } else if (newX >= -100) {
-                setXCord(100)
+                setXFunction(100)
               } else if (newX <= 100) {
-                setXCord(-100)
+                setXFunction(-100)
               }
               let diffY =
                 (event.pageY | event.clientY) -
@@ -187,11 +188,11 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
                   ((-100 - 100) * diffY) / coordinatePanel.current.offsetHeight
               )
               if (newY >= -100 && newY <= 100) {
-                setYCord(newY)
+                setYFunction(newY)
               } else if (newY >= -100) {
-                setYCord(100)
+                setYFunction(100)
               } else if (newY <= 100) {
-                setYCord(-100)
+                setYFunction(-100)
               }
             }
 
@@ -210,11 +211,11 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
         <Slider
           max={100}
           min={-100}
-          currentValue={xCord}
+          currentValue={currentX}
           label="X"
           id="x"
           simpleThumb={true}
-          setFunction={setXCord}
+          setFunction={setXFunction}
         />
       </XSliderWrappingDiv>
     </CoordinatePickerWrappingDiv>
