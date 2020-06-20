@@ -1,9 +1,6 @@
 import React, { useState } from "react"
 import { render, fireEvent } from "@testing-library/react"
-import {
-  ToggleSwitch,
-  toggleSwitchHandlerGenerator,
-} from "components/ToggleSwitch"
+import { ToggleSwitch } from "components/ToggleSwitch"
 
 describe("ToggleSwitch component", () => {
   const WrappedToggleSwitch = () => {
@@ -13,7 +10,7 @@ describe("ToggleSwitch component", () => {
         label={"Hello World"}
         id="123"
         checked={checkedValue}
-        handler={toggleSwitchHandlerGenerator(setCheckedValue)}
+        setFunction={setCheckedValue}
       />
     )
   }

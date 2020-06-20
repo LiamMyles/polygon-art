@@ -9,11 +9,8 @@ import { navigationStateContext } from "reducer-contexts/navigation"
 import { generatePolygonRingSketch } from "polygon-logic/polygon-p5-draw"
 
 import { P5Canvas } from "components/P5Canvas"
-import {
-  ToggleSwitch,
-  toggleSwitchHandlerGenerator,
-} from "components/ToggleSwitch"
-import { Slider, sliderHandlerGenerator } from "components/Slider"
+import { ToggleSwitch } from "components/ToggleSwitch"
+import { Slider } from "components/Slider"
 import { MultiSlider, sliderReducer } from "components/MultiSlider"
 import { ColourPicker } from "components/ColourPicker"
 
@@ -130,13 +127,13 @@ export const PolygonRotationControls: React.FC = () => {
         label="Enable"
         id="rotation-enabled"
         checked={enabled}
-        handler={toggleSwitchHandlerGenerator(setEnabled)}
+        setFunction={setEnabled}
       />
       <ToggleSwitch
         label="Clockwise"
         id="rotation-clockwise"
         checked={clockwise}
-        handler={toggleSwitchHandlerGenerator(setClockwise)}
+        setFunction={setClockwise}
       />
       <Slider
         label="Speed"
@@ -144,7 +141,7 @@ export const PolygonRotationControls: React.FC = () => {
         max={20}
         min={0}
         currentValue={speed}
-        handler={sliderHandlerGenerator(setRotationSpeed)}
+        setFunction={setRotationSpeed}
       />
       <button
         disabled={!canUpdate}
@@ -213,7 +210,7 @@ export const PolygonScaleControls: React.FC = () => {
         label="Enable"
         id="scale-enabled"
         checked={enabled}
-        handler={toggleSwitchHandlerGenerator(setEnabled)}
+        setFunction={setEnabled}
       />
       <Slider
         label="Speed"
@@ -221,7 +218,7 @@ export const PolygonScaleControls: React.FC = () => {
         max={20}
         min={0}
         currentValue={speed}
-        handler={sliderHandlerGenerator(setSpeed)}
+        setFunction={setSpeed}
       />
       <MultiSlider
         label="scale-range"
@@ -293,7 +290,7 @@ export const PolygonDotsControls: React.FC = () => {
         label="Enable"
         id="dots-enabled"
         checked={enabled}
-        handler={toggleSwitchHandlerGenerator(setEnabled)}
+        setFunction={setEnabled}
       />
       <Slider
         label="Size"
@@ -301,7 +298,7 @@ export const PolygonDotsControls: React.FC = () => {
         max={20}
         min={0}
         currentValue={size}
-        handler={sliderHandlerGenerator(setSize)}
+        setFunction={setSize}
       />
       <ColourPicker
         label="Fill Colour"
@@ -316,7 +313,7 @@ export const PolygonDotsControls: React.FC = () => {
         max={20}
         min={0}
         currentValue={strokeWidth}
-        handler={sliderHandlerGenerator(setStrokeWidth)}
+        setFunction={setStrokeWidth}
       />
       <ColourPicker
         label="Stroke Colours"

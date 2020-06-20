@@ -1,22 +1,11 @@
 import React from "react"
 import styled from "styled-components"
 
-type ToggleSwitchHandler = React.EventHandler<
-  React.ChangeEvent<HTMLInputElement>
->
-export const toggleSwitchHandlerGenerator = (
-  setFunction: React.Dispatch<React.SetStateAction<boolean>>
-): ToggleSwitchHandler => {
-  return ({ currentTarget: { checked } }) => {
-    setFunction(checked)
-  }
-}
-
 interface ToggleSwitchProps {
   label: string
   id: string
   checked: boolean
-  handler: ToggleSwitchHandler
+  setFunction: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const CheckboxLabel = styled.label`
@@ -105,7 +94,7 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   label,
   id,
   checked,
-  handler,
+  setFunction,
 }) => {
   return (
     <>
@@ -113,7 +102,9 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
         type="checkbox"
         id={id}
         checked={checked}
-        onChange={handler}
+        onChange={({ currentTarget: { checked } }) => {
+          setFunction(checked)
+        }}
       />
       <CheckboxLabel htmlFor={id}>{label}</CheckboxLabel>
     </>

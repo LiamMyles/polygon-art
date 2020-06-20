@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react"
-import { Slider, sliderHandlerGenerator } from "./Slider"
+import { Slider } from "./Slider"
 import styled from "styled-components"
 
 interface CoordinatePickerProps {
@@ -170,7 +170,7 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
           id="y"
           simpleThumb={true}
           vertical={true}
-          handler={sliderHandlerGenerator(setYCord)}
+          setFunction={setYCord}
         />
       </YSliderWrappingDiv>
       <CoordinatePositionsDiv>
@@ -233,7 +233,7 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
           label="X"
           id="x"
           simpleThumb={true}
-          handler={sliderHandlerGenerator(setXCord)}
+          setFunction={setXCord}
         />
       </XSliderWrappingDiv>
     </CoordinatePickerWrappingDiv>
