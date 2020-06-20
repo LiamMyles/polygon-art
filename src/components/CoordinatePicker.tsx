@@ -5,6 +5,7 @@ import styled from "styled-components"
 interface CoordinatePickerProps {
   initialX: number
   initialY: number
+  scrollingParentRef?: React.RefObject<HTMLDivElement>
 }
 
 const CoordinatePickerWrappingDiv = styled.div`
@@ -103,6 +104,7 @@ function getNewValueForRange({
 export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
   initialX,
   initialY,
+  scrollingParentRef,
 }) => {
   const [xCord, setXCord] = useState(initialX)
   const [yCord, setYCord] = useState(initialY)
@@ -126,39 +128,8 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
     right: `${xToTopPosition}%`,
   }
 
-  const [coordinateDimensions, setCoordinateDimensions] = useState({
-    offsetWidth: 0,
-    offsetLeft: 0,
-    offsetTop: 0,
-    offsetHeight: 0,
-  })
   const coordinatePanel = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    function updateDimensions() {
-      if (coordinatePanel.current) {
-        setCoordinateDimensions({
-          offsetLeft: coordinatePanel.current.offsetLeft,
-          offsetTop: coordinatePanel.current.offsetTop,
-          offsetWidth: coordinatePanel.current.offsetWidth,
-          offsetHeight: coordinatePanel.current.offsetHeight,
-        })
-      }
-    }
-    // Do once on render
-    updateDimensions()
-
-    let timeoutId: number
-    const throttledWindowUpdate = () => {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(() => updateDimensions(), 250)
-    }
-
-    window.addEventListener("resize", throttledWindowUpdate)
-    return () => {
-      window.removeEventListener("resize", throttledWindowUpdate)
-    }
-  }, [coordinatePanel, setCoordinateDimensions])
   return (
     <CoordinatePickerWrappingDiv>
       <YSliderWrappingDiv>
@@ -188,10 +159,13 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
             elementClassList.add("moving")
 
             function pointerMove(event: PointerEvent) {
+              if (coordinatePanel.current === null) return
               const diffX =
-                (event.pageX | event.clientX) - coordinateDimensions.offsetLeft
+                (event.pageX | event.clientX) -
+                coordinatePanel.current.offsetLeft
               const newX = Math.round(
-                -100 + ((100 - -100) * diffX) / coordinateDimensions.offsetWidth
+                -100 +
+                  ((100 - -100) * diffX) / coordinatePanel.current.offsetWidth
               )
               if (newX >= -100 && newX <= 100) {
                 setXCord(newX)
@@ -200,10 +174,17 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
               } else if (newX <= 100) {
                 setXCord(-100)
               }
-              const diffY =
-                (event.pageY | event.clientY) - coordinateDimensions.offsetTop
+              let diffY =
+                (event.pageY | event.clientY) -
+                coordinatePanel.current.offsetTop
+
+              if (scrollingParentRef?.current?.scrollTop) {
+                diffY = diffY + scrollingParentRef.current.scrollTop
+              }
+
               const newY = Math.round(
-                100 + ((-100 - 100) * diffY) / coordinateDimensions.offsetHeight
+                100 +
+                  ((-100 - 100) * diffY) / coordinatePanel.current.offsetHeight
               )
               if (newY >= -100 && newY <= 100) {
                 setYCord(newY)
