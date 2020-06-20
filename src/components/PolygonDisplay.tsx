@@ -49,7 +49,7 @@ export const PolygonDisplay = () => {
     polygonGroupsState[navigationState.currentGroup].rings[
       navigationState.currentPolygon
     ]
-  const { scale, rotation, dots } = polygonToDisplay
+  const { scale, rotation, dots, sides } = polygonToDisplay
   return (
     <PolygonPageWrappingDiv>
       <PolygonCanvasWrappingDiv>
@@ -91,6 +91,11 @@ export const PolygonDisplay = () => {
           key={`${dots.enabled}-${dots.size}-${
             dots.strokeWidth
           }-${dots.strokeColours.join("")}-${dots.fillColours.join("")}`}
+        />
+        <PolygonSidesControls
+          key={`${sides.enabled}-${sides.amount}-${
+            sides.strokeWidth
+          }-${sides.colours.join("")}`}
         />
       </PolygonOptionsOverflowDiv>
     </PolygonPageWrappingDiv>
@@ -339,6 +344,90 @@ export const PolygonDotsControls: React.FC = () => {
         onClick={() => {
           polygonGroupsDispatch({
             type: "RANDOMIZE_POLYGON_DOTS",
+            group: navigationState.currentGroup,
+            polygon: navigationState.currentPolygon,
+          })
+        }}
+      >
+        Randomize
+      </button>
+    </div>
+  )
+}
+export const PolygonSidesControls: React.FC = () => {
+  const polygonGroupsState = useContext(polygonGroupsStateContext)
+  const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
+  const navigationState = useContext(navigationStateContext)
+
+  const { sides } = polygonGroupsState[navigationState.currentGroup].rings[
+    navigationState.currentPolygon
+  ]
+
+  const [canUpdate, setCanUpdate] = useState(false)
+  const [enabled, setEnabled] = useState(sides.enabled)
+  const [amount, setAmount] = useState(sides.amount)
+  const [strokeWidth, setStrokeWidth] = useState(sides.strokeWidth)
+  const [colours, setColours] = useState(sides.colours)
+
+  useEffect(() => {
+    if (
+      sides.enabled !== enabled ||
+      sides.amount !== amount ||
+      sides.strokeWidth !== strokeWidth ||
+      sides.colours.join("") !== colours.join("")
+    ) {
+      setCanUpdate(true)
+    }
+  }, [enabled, amount, strokeWidth, sides, colours])
+  return (
+    <div>
+      <h2>Sides</h2>
+      <ToggleSwitch
+        label="Enable"
+        id="sides-enabled"
+        checked={enabled}
+        setFunction={setEnabled}
+      />
+      <Slider
+        label="Amount"
+        id="sides-amount"
+        max={20}
+        min={0}
+        currentValue={amount}
+        setFunction={setAmount}
+      />
+      <Slider
+        label="Stroke Width"
+        id="sides-stroke-width"
+        max={20}
+        min={0}
+        currentValue={strokeWidth}
+        setFunction={setStrokeWidth}
+      />
+      <ColourPicker
+        label="Colours"
+        id="sides-colours"
+        maxColours={sides.amount}
+        colours={colours}
+        setFunction={setColours}
+      />
+      <button
+        disabled={!canUpdate}
+        onClick={() => {
+          polygonGroupsDispatch({
+            type: "UPDATE_POLYGON_SIDES",
+            group: navigationState.currentGroup,
+            polygon: navigationState.currentPolygon,
+            sides: { amount, colours, enabled, strokeWidth },
+          })
+        }}
+      >
+        Update
+      </button>
+      <button
+        onClick={() => {
+          polygonGroupsDispatch({
+            type: "RANDOMIZE_POLYGON_SIDES",
             group: navigationState.currentGroup,
             polygon: navigationState.currentPolygon,
           })

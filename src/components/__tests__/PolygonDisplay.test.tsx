@@ -13,6 +13,7 @@ import {
   PolygonRotationControls,
   PolygonScaleControls,
   PolygonDotsControls,
+  PolygonSidesControls,
 } from "components/PolygonDisplay"
 
 const mockP5RemoveFunction = jest.fn()
@@ -510,11 +511,146 @@ describe("PolygonDisplay Component", () => {
     })
   })
   describe("Sides Controls", () => {
-    it.todo("should randomize")
-    it.todo("should enable and update")
-    it.todo("should change amount and update")
-    it.todo("should change stroke width and update")
-    it.todo("should change colour and update")
+    const TestComponent: React.FC = () => {
+      const polygonGroupsState = useContext(polygonGroupsStateContext)
+      const {
+        sides: { enabled, colours, amount, strokeWidth },
+      } = polygonGroupsState[0].rings[0]
+      return (
+        <div key={`${enabled}-${strokeWidth}-${amount}-${colours.join("")}`}>
+          <TestInput
+            name="random"
+            value={`${enabled}-${strokeWidth}-${amount}-${colours.join("")}`}
+          />
+          <TestInput name="enable" value={enabled} />
+          <TestInput name="colours" value={colours.join("")} />
+          <TestInput name="stroke-width" value={strokeWidth} />
+          <TestInput name="amount" value={amount} />
+          <PolygonSidesControls />
+        </div>
+      )
+    }
+    it("should randomize", () => {
+      const { getByLabelText, getByRole } = render(
+        <PolygonGroupsContextWrapper>
+          <NavigationContextWrapper>
+            <TestComponent />
+          </NavigationContextWrapper>
+        </PolygonGroupsContextWrapper>
+      )
+      const startingRandom = getByLabelText("random") as HTMLInputElement
+      const startingValue = startingRandom.value
+
+      const randomizeButton = getByRole("button", { name: "Randomize" })
+      fireEvent.click(randomizeButton)
+
+      const finishingRandom = getByLabelText("random") as HTMLInputElement
+      const finishingValue = finishingRandom.value
+
+      expect(startingValue).not.toEqual(finishingValue)
+    })
+    it("should enable and update", () => {
+      const { getByLabelText, getByRole } = render(
+        <PolygonGroupsContextWrapper>
+          <NavigationContextWrapper>
+            <TestComponent />
+          </NavigationContextWrapper>
+        </PolygonGroupsContextWrapper>
+      )
+      const updateButton = getByRole("button", { name: "Update" })
+      const { value: enabledValue } = getByLabelText(
+        "enable"
+      ) as HTMLInputElement
+
+      // To help deal with randomness an if statement is used here.
+      if (enabledValue === "true") {
+        expect(enabledValue).toEqual("true")
+      } else {
+        expect(enabledValue).toEqual("false")
+      }
+
+      expect(updateButton).toBeDisabled()
+
+      fireEvent.click(getByRole("checkbox", { name: "Enable" }))
+
+      expect(updateButton).not.toBeDisabled()
+      fireEvent.click(updateButton)
+
+      const { value: updatedEnabledValue } = getByLabelText(
+        "enable"
+      ) as HTMLInputElement
+      if (enabledValue === "true") {
+        expect(updatedEnabledValue).toEqual("false")
+      } else {
+        expect(updatedEnabledValue).toEqual("true")
+      }
+    })
+    it("should change amount and update", () => {
+      const { getByLabelText, getByRole } = render(
+        <PolygonGroupsContextWrapper>
+          <NavigationContextWrapper>
+            <TestComponent />
+          </NavigationContextWrapper>
+        </PolygonGroupsContextWrapper>
+      )
+      const updateButton = getByRole("button", { name: "Update" })
+
+      expect(updateButton).toBeDisabled()
+
+      fireEvent.change(getByLabelText("Amount"), { target: { value: 20 } })
+
+      expect(updateButton).not.toBeDisabled()
+      fireEvent.click(updateButton)
+
+      expect(getByLabelText("amount")).toHaveValue("20")
+    })
+    it("should change stroke width and update", () => {
+      const { getByLabelText, getByRole } = render(
+        <PolygonGroupsContextWrapper>
+          <NavigationContextWrapper>
+            <TestComponent />
+          </NavigationContextWrapper>
+        </PolygonGroupsContextWrapper>
+      )
+      const updateButton = getByRole("button", { name: "Update" })
+
+      expect(updateButton).toBeDisabled()
+
+      fireEvent.change(getByLabelText("Stroke Width"), {
+        target: { value: 20 },
+      })
+
+      expect(updateButton).not.toBeDisabled()
+      fireEvent.click(updateButton)
+
+      expect(getByLabelText("stroke-width")).toHaveValue("20")
+    })
+    it("should change colour and update", () => {
+      const { getByLabelText, getByRole } = render(
+        <PolygonGroupsContextWrapper>
+          <NavigationContextWrapper>
+            <TestComponent />
+          </NavigationContextWrapper>
+        </PolygonGroupsContextWrapper>
+      )
+      const updateButton = getByRole("button", { name: "Update" })
+
+      expect(updateButton).toBeDisabled()
+
+      const colourPicker = getByRole("list", { name: "Colours" })
+      const colourInput = within(colourPicker).getByLabelText(/Colour\s1/)
+
+      fireEvent.blur(colourInput, {
+        target: { value: "#f13399" },
+      })
+
+      expect(updateButton).not.toBeDisabled()
+      fireEvent.click(updateButton)
+
+      const fillColours = getByLabelText("colours") as HTMLInputElement
+
+      expect(fillColours.value).toEqual(expect.stringContaining("#f13399"))
+    })
   })
   describe("Coordinates Controls", () => {
     it.todo("should randomize")
