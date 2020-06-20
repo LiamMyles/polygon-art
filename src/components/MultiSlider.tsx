@@ -1,4 +1,4 @@
-import React, { useReducer, useRef, useEffect, useState } from "react"
+import React, { useRef } from "react"
 import styled from "styled-components"
 import produce, { Draft } from "immer"
 
@@ -112,53 +112,60 @@ export const sliderReducer: React.Reducer<SliderState, SliderActions> = produce(
 
 interface handlePointerDragOptions {
   event: React.MouseEvent<HTMLDivElement, PointerEvent>
-  railDimensions: sliderRailDimensionsState
   max: number
   min: number
   dispatch: React.Dispatch<SliderActions>
-  railRef: HTMLDivElement | null
+  sliderRailRef: React.RefObject<HTMLDivElement>
   isMinThumb: boolean
 }
 const handlePointerDrag = ({
   event,
-  railDimensions,
   min,
   max,
-  railRef,
+  sliderRailRef,
   isMinThumb,
   dispatch,
 }: handlePointerDragOptions) => {
-  const rail = railRef as HTMLDivElement
-
   function dispatchChange(diffX: number) {
-    const newValue = Math.round(
-      min + ((max - min) * diffX) / railDimensions.offsetWidth
-    )
+    const offsetWidth = sliderRailRef?.current?.offsetWidth
+      ? sliderRailRef.current.offsetWidth
+      : 0
+    const newValue = Math.round(min + ((max - min) * diffX) / offsetWidth)
     dispatch({ type: "DIRECT_UPDATE", isMinThumb, newValue })
   }
 
   function handlePointerMove(event: PointerEvent) {
     if (event.pointerType === "touch") return
-    const diffX = (event.pageX | event.clientX) - railDimensions.offsetLeft
+    const offsetLeft = sliderRailRef?.current?.offsetLeft
+      ? sliderRailRef.current.offsetLeft
+      : 0
+    const diffX = (event.pageX | event.clientX) - offsetLeft
     dispatchChange(diffX)
     event.preventDefault()
     event.stopPropagation()
   }
   function handleTouchMove(event: TouchEvent) {
-    const diffX = event.touches[0].pageX - railDimensions.offsetLeft
+    const offsetLeft = sliderRailRef?.current?.offsetLeft
+      ? sliderRailRef.current.offsetLeft
+      : 0
+    const diffX = event.touches[0].pageX - offsetLeft
     dispatchChange(diffX)
     event.preventDefault()
     event.stopPropagation()
   }
 
   function handelCleanUp() {
-    rail.removeEventListener("touchmove", handleTouchMove)
+    if (sliderRailRef?.current) {
+      sliderRailRef.current.removeEventListener("touchmove", handleTouchMove)
+    }
+
     document.removeEventListener("pointermove", handlePointerMove)
     document.removeEventListener("pointerup", handelCleanUp)
     document.removeEventListener("pointercancel", handelCleanUp)
   }
-
-  rail.addEventListener("touchmove", handleTouchMove)
+  if (sliderRailRef?.current) {
+    sliderRailRef.current.addEventListener("touchmove", handleTouchMove)
+  }
   document.addEventListener("pointermove", handlePointerMove)
   document.addEventListener("pointerup", handelCleanUp)
   document.addEventListener("pointercancel", handelCleanUp)
@@ -208,9 +215,8 @@ const SliderRailDiv = styled.div`
 interface SliderRailThumbProps {
   className?: string
   sliderDispatch: React.Dispatch<SliderActions>
-  railDimensions: sliderRailDimensionsState
   isMinThumb: boolean
-  sliderRailRef: { current: HTMLDivElement | null }
+  sliderRailRef: React.RefObject<HTMLDivElement>
   sliderState: SliderState
   label: string
 }
@@ -218,13 +224,11 @@ interface SliderRailThumbProps {
 const SliderRailThumb: React.FC<SliderRailThumbProps> = ({
   className,
   sliderDispatch,
-  railDimensions,
   sliderRailRef,
   label,
   sliderState,
   isMinThumb,
 }) => {
-  const railRef = sliderRailRef.current as HTMLDivElement
   const { currentMin, min, max, currentMax } = sliderState
   const style = {} as { left?: string; right?: string }
 
@@ -259,21 +263,24 @@ const SliderRailThumb: React.FC<SliderRailThumbProps> = ({
       onPointerDown={(event) => {
         handlePointerDrag({
           event,
-          railDimensions,
           min,
           max,
           dispatch: sliderDispatch,
-          railRef,
+          sliderRailRef,
           isMinThumb,
         })
       }}
       onFocus={(event) => {
         event.currentTarget.classList.add("focus")
-        railRef.classList.add("focus")
+        if (sliderRailRef?.current) {
+          sliderRailRef.current.classList.add("focus")
+        }
       }}
       onBlur={(event) => {
         event.currentTarget.classList.remove("focus")
-        railRef.classList.remove("focus")
+        if (sliderRailRef?.current) {
+          sliderRailRef.current.classList.remove("focus")
+        }
       }}
       style={style}
       role="slider"
@@ -327,36 +334,8 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
   sliderState,
   sliderReducerDispatch,
 }) => {
-  const [railDimensions, setRailDimensions] = useState({
-    offsetWidth: 0,
-    offsetLeft: 0,
-  })
   const sliderRailRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    function updateDimensions() {
-      if (sliderRailRef.current) {
-        setRailDimensions({
-          offsetLeft: sliderRailRef.current.offsetLeft,
-          offsetWidth: sliderRailRef.current.offsetWidth,
-        })
-      }
-    }
-    // Do once on render
-    updateDimensions()
-
-    let timeoutId: number
-    const throttledWindowUpdate = () => {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(() => updateDimensions(), 250)
-    }
-
-    window.addEventListener("resize", throttledWindowUpdate)
-    return () => {
-      window.removeEventListener("resize", throttledWindowUpdate)
-    }
-  }, [sliderRailRef, setRailDimensions])
-
+  // TODO refactor to just pass the useRef to the thumbs and remove this use effect
   return (
     <SliderWrappingDiv>
       <SliderValueDiv>
@@ -365,7 +344,6 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
       <SliderRailDiv ref={sliderRailRef}>
         <SliderRailThumbDivMin
           sliderDispatch={sliderReducerDispatch}
-          railDimensions={railDimensions}
           isMinThumb={true}
           sliderRailRef={sliderRailRef}
           sliderState={sliderState}
@@ -373,7 +351,6 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
         />
         <SliderRailThumbDivMax
           sliderDispatch={sliderReducerDispatch}
-          railDimensions={railDimensions}
           isMinThumb={false}
           sliderRailRef={sliderRailRef}
           sliderState={sliderState}
