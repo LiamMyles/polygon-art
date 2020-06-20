@@ -1,4 +1,10 @@
-import React, { useContext, useState, useEffect, useReducer } from "react"
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useReducer,
+  useRef,
+} from "react"
 import styled from "styled-components"
 
 import {
@@ -13,6 +19,7 @@ import { ToggleSwitch } from "components/ToggleSwitch"
 import { Slider } from "components/Slider"
 import { MultiSlider, sliderReducer } from "components/MultiSlider"
 import { ColourPicker } from "components/ColourPicker"
+import { CoordinatePicker } from "components/CoordinatePicker"
 
 const PolygonPageWrappingDiv = styled.div`
   display: grid;
@@ -44,12 +51,13 @@ export const PolygonDisplay = () => {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
   const navigationState = useContext(navigationStateContext)
+  const scrollingElementRef = useRef<HTMLDivElement>(null)
 
   const polygonToDisplay =
     polygonGroupsState[navigationState.currentGroup].rings[
       navigationState.currentPolygon
     ]
-  const { scale, rotation, dots, sides } = polygonToDisplay
+  const { scale, rotation, dots, sides, position } = polygonToDisplay
   return (
     <PolygonPageWrappingDiv>
       <PolygonCanvasWrappingDiv>
@@ -63,7 +71,7 @@ export const PolygonDisplay = () => {
                 width: 200,
                 height: 200,
               },
-              0.2
+              0.3
             )}
           />
         </PolygonCanvasDiv>
@@ -80,7 +88,7 @@ export const PolygonDisplay = () => {
           Randomize
         </PolygonRandomizeButton>
       </PolygonCanvasWrappingDiv>
-      <PolygonOptionsOverflowDiv>
+      <PolygonOptionsOverflowDiv ref={scrollingElementRef}>
         <PolygonRotationControls
           key={`${rotation.speed}-${rotation.enabled}-${rotation.clockwise}`}
         />
@@ -96,6 +104,10 @@ export const PolygonDisplay = () => {
           key={`${sides.enabled}-${sides.amount}-${
             sides.strokeWidth
           }-${sides.colours.join("")}`}
+        />
+        <PolygonPositionControls
+          key={`${position.x}-${position.y}`}
+          scrollingParentRef={scrollingElementRef}
         />
       </PolygonOptionsOverflowDiv>
     </PolygonPageWrappingDiv>
@@ -151,6 +163,7 @@ export const PolygonRotationControls: React.FC = () => {
       <button
         disabled={!canUpdate}
         onClick={() => {
+          setCanUpdate(false)
           polygonGroupsDispatch({
             type: "UPDATE_POLYGON_ROTATION",
             group: navigationState.currentGroup,
@@ -233,6 +246,7 @@ export const PolygonScaleControls: React.FC = () => {
       <button
         disabled={!canUpdate}
         onClick={() => {
+          setCanUpdate(false)
           polygonGroupsDispatch({
             type: "UPDATE_POLYGON_SCALE",
             group: navigationState.currentGroup,
@@ -330,6 +344,7 @@ export const PolygonDotsControls: React.FC = () => {
       <button
         disabled={!canUpdate}
         onClick={() => {
+          setCanUpdate(false)
           polygonGroupsDispatch({
             type: "UPDATE_POLYGON_DOTS",
             group: navigationState.currentGroup,
@@ -414,6 +429,7 @@ export const PolygonSidesControls: React.FC = () => {
       <button
         disabled={!canUpdate}
         onClick={() => {
+          setCanUpdate(false)
           polygonGroupsDispatch({
             type: "UPDATE_POLYGON_SIDES",
             group: navigationState.currentGroup,
@@ -434,6 +450,53 @@ export const PolygonSidesControls: React.FC = () => {
         }}
       >
         Randomize
+      </button>
+    </div>
+  )
+}
+export const PolygonPositionControls: React.FC<{
+  scrollingParentRef?: React.RefObject<HTMLDivElement>
+}> = ({ scrollingParentRef }) => {
+  const polygonGroupsState = useContext(polygonGroupsStateContext)
+  const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
+  const navigationState = useContext(navigationStateContext)
+
+  const { position } = polygonGroupsState[navigationState.currentGroup].rings[
+    navigationState.currentPolygon
+  ]
+
+  const [canUpdate, setCanUpdate] = useState(false)
+  const [x, setX] = useState(position.x)
+  const [y, setY] = useState(position.y)
+
+  useEffect(() => {
+    if (position.x !== x || position.y !== y) {
+      setCanUpdate(true)
+    }
+  }, [position, x, y])
+  return (
+    <div>
+      <h2>Position</h2>
+      <CoordinatePicker
+        currentX={x}
+        currentY={y}
+        setYFunction={setY}
+        setXFunction={setX}
+        scrollingParentRef={scrollingParentRef}
+      />
+      <button
+        disabled={!canUpdate}
+        onClick={() => {
+          setCanUpdate(false)
+          polygonGroupsDispatch({
+            type: "UPDATE_POLYGON_POSITION",
+            group: navigationState.currentGroup,
+            polygon: navigationState.currentPolygon,
+            position: { x, y },
+          })
+        }}
+      >
+        Update
       </button>
     </div>
   )

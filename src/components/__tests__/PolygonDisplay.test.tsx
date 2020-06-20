@@ -14,6 +14,7 @@ import {
   PolygonScaleControls,
   PolygonDotsControls,
   PolygonSidesControls,
+  PolygonPositionControls,
 } from "components/PolygonDisplay"
 
 const mockP5RemoveFunction = jest.fn()
@@ -470,7 +471,7 @@ describe("PolygonDisplay Component", () => {
       expect(updateButton).toBeDisabled()
 
       const colourPicker = getByRole("list", { name: "Fill Colour" })
-      const colourInput = within(colourPicker).getByLabelText(/Colour\s1/)
+      const colourInput = within(colourPicker).getByLabelText(/Colour\s2/)
 
       fireEvent.blur(colourInput, {
         target: { value: "#f13399" },
@@ -496,7 +497,7 @@ describe("PolygonDisplay Component", () => {
       expect(updateButton).toBeDisabled()
 
       const colourPicker = getByRole("list", { name: "Stroke Colours" })
-      const colourInput = within(colourPicker).getByLabelText(/Colour\s1/)
+      const colourInput = within(colourPicker).getByLabelText(/Colour\s2/)
 
       fireEvent.blur(colourInput, {
         target: { value: "#f13399" },
@@ -638,7 +639,7 @@ describe("PolygonDisplay Component", () => {
       expect(updateButton).toBeDisabled()
 
       const colourPicker = getByRole("list", { name: "Colours" })
-      const colourInput = within(colourPicker).getByLabelText(/Colour\s1/)
+      const colourInput = within(colourPicker).getByLabelText(/Colour\s2/)
 
       fireEvent.blur(colourInput, {
         target: { value: "#f13399" },
@@ -653,7 +654,43 @@ describe("PolygonDisplay Component", () => {
     })
   })
   describe("Coordinates Controls", () => {
-    it.todo("should randomize")
-    it.todo("should change x, y and update")
+    const TestComponent: React.FC = () => {
+      const polygonGroupsState = useContext(polygonGroupsStateContext)
+      const {
+        position: { x, y },
+      } = polygonGroupsState[0].rings[0]
+      return (
+        <div key={`${x}-${y}`}>
+          <TestInput name="x" value={x} />
+          <TestInput name="y" value={y} />
+          <PolygonPositionControls />
+        </div>
+      )
+    }
+    it("should change x, y and update", () => {
+      const { getByLabelText, getByRole } = render(
+        <PolygonGroupsContextWrapper>
+          <NavigationContextWrapper>
+            <TestComponent />
+          </NavigationContextWrapper>
+        </PolygonGroupsContextWrapper>
+      )
+      const updateButton = getByRole("button", { name: "Update" })
+
+      expect(updateButton).toBeDisabled()
+
+      fireEvent.change(getByLabelText("Y"), {
+        target: { value: 20 },
+      })
+      fireEvent.change(getByLabelText("X"), {
+        target: { value: 20 },
+      })
+      expect(updateButton).not.toBeDisabled()
+
+      fireEvent.click(updateButton)
+
+      expect(getByLabelText("x")).toHaveValue("20")
+      expect(getByLabelText("y")).toHaveValue("20")
+    })
   })
 })
