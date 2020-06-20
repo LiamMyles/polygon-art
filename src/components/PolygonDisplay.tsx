@@ -15,6 +15,7 @@ import {
 } from "components/ToggleSwitch"
 import { Slider, sliderHandlerGenerator } from "components/Slider"
 import { MultiSlider, sliderReducer } from "components/MultiSlider"
+import { ColourPicker } from "components/ColourPicker"
 
 const PolygonPageWrappingDiv = styled.div`
   display: grid;
@@ -51,7 +52,7 @@ export const PolygonDisplay = () => {
     polygonGroupsState[navigationState.currentGroup].rings[
       navigationState.currentPolygon
     ]
-  const { scale, rotation } = polygonToDisplay
+  const { scale, rotation, dots } = polygonToDisplay
   return (
     <PolygonPageWrappingDiv>
       <PolygonCanvasWrappingDiv>
@@ -89,11 +90,15 @@ export const PolygonDisplay = () => {
         <PolygonScaleControls
           key={`${scale.enabled}-${scale.range.min}-${scale.range.max}-${scale.speed}-${scale.speed}-${scale.startingSize}`}
         />
+        <PolygonDotsControls
+          key={`${dots.enabled}-${dots.size}-${
+            dots.strokeWidth
+          }-${dots.strokeColours.join("")}-${dots.fillColours.join("")}`}
+        />
       </PolygonOptionsOverflowDiv>
     </PolygonPageWrappingDiv>
   )
 }
-
 export const PolygonRotationControls: React.FC = () => {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
@@ -168,7 +173,6 @@ export const PolygonRotationControls: React.FC = () => {
     </div>
   )
 }
-
 export const PolygonScaleControls: React.FC = () => {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
@@ -245,6 +249,99 @@ export const PolygonScaleControls: React.FC = () => {
         onClick={() => {
           polygonGroupsDispatch({
             type: "RANDOMIZE_POLYGON_SCALE",
+            group: navigationState.currentGroup,
+            polygon: navigationState.currentPolygon,
+          })
+        }}
+      >
+        Randomize
+      </button>
+    </div>
+  )
+}
+export const PolygonDotsControls: React.FC = () => {
+  const polygonGroupsState = useContext(polygonGroupsStateContext)
+  const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
+  const navigationState = useContext(navigationStateContext)
+
+  const { dots, sides } = polygonGroupsState[
+    navigationState.currentGroup
+  ].rings[navigationState.currentPolygon]
+
+  const [canUpdate, setCanUpdate] = useState(false)
+  const [enabled, setEnabled] = useState(dots.enabled)
+  const [size, setSize] = useState(dots.size)
+  const [strokeWidth, setStrokeWidth] = useState(dots.strokeWidth)
+  const [fillColours, setFillColours] = useState(dots.fillColours)
+  const [strokeColours, setStrokeColours] = useState(dots.strokeColours)
+
+  useEffect(() => {
+    if (
+      dots.enabled !== enabled ||
+      dots.size !== size ||
+      dots.strokeWidth !== strokeWidth ||
+      dots.fillColours.join("") !== fillColours.join("") ||
+      dots.strokeColours.join("") !== strokeColours.join("")
+    ) {
+      setCanUpdate(true)
+    }
+  }, [enabled, size, strokeWidth, dots, fillColours, strokeColours])
+  return (
+    <div>
+      <h2>Dots</h2>
+      <ToggleSwitch
+        label="Enable"
+        id="dots-enabled"
+        checked={enabled}
+        handler={toggleSwitchHandlerGenerator(setEnabled)}
+      />
+      <Slider
+        label="Size"
+        id="dots-size"
+        max={20}
+        min={0}
+        currentValue={size}
+        handler={sliderHandlerGenerator(setSize)}
+      />
+      <ColourPicker
+        label="Fill Colour"
+        id="fill-colour"
+        maxColours={sides.amount}
+        colours={fillColours}
+        setFunction={setFillColours}
+      />
+      <Slider
+        label="Stroke Width"
+        id="dots-stroke-width"
+        max={20}
+        min={0}
+        currentValue={strokeWidth}
+        handler={sliderHandlerGenerator(setStrokeWidth)}
+      />
+      <ColourPicker
+        label="Stroke Colours"
+        id="stroke-colour"
+        maxColours={sides.amount}
+        colours={strokeColours}
+        setFunction={setStrokeColours}
+      />
+      <button
+        disabled={!canUpdate}
+        onClick={() => {
+          polygonGroupsDispatch({
+            type: "UPDATE_POLYGON_DOTS",
+            group: navigationState.currentGroup,
+            polygon: navigationState.currentPolygon,
+            dots: { enabled, fillColours, size, strokeColours, strokeWidth },
+          })
+        }}
+      >
+        Update
+      </button>
+      <button
+        onClick={() => {
+          polygonGroupsDispatch({
+            type: "RANDOMIZE_POLYGON_DOTS",
             group: navigationState.currentGroup,
             polygon: navigationState.currentPolygon,
           })
