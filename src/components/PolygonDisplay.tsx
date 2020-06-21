@@ -45,6 +45,9 @@ const PolygonRandomizeButton = styled.button`
 
 const PolygonOptionsOverflowDiv = styled.div`
   overflow-y: scroll;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 `
 
 export const PolygonDisplay = () => {
@@ -113,6 +116,66 @@ export const PolygonDisplay = () => {
     </PolygonPageWrappingDiv>
   )
 }
+
+const PolygonCardDiv = styled.div`
+  border: 1px solid grey;
+  display: grid;
+  grid-auto-rows: min-content;
+  grid-gap: 10px;
+  padding: 10px;
+`
+
+const PolygonCardH2 = styled.h2`
+  font-size: 20px;
+  font-weight: bold;
+`
+const PolygonCardButtonContainingDiv = styled.div`
+  display: grid;
+  grid-gap: 10px;
+  grid-auto-flow: column;
+`
+
+const PolygonCardButton = styled.button`
+  height: 50px;
+  border-radius: 5px;
+`
+const PolygonCardUpdateButton = styled(PolygonCardButton)``
+
+const PolygonCardRandomizeButton = styled(PolygonCardButton)``
+
+export const PolygonControlsWrapper: React.FC<{
+  title: string
+  updateDispatch: Function
+  randomizeDispatch?: Function
+  canUpdate: boolean
+}> = ({ children, title, updateDispatch, randomizeDispatch, canUpdate }) => {
+  return (
+    <PolygonCardDiv>
+      <PolygonCardH2>{title}</PolygonCardH2>
+      {children}
+      <PolygonCardButtonContainingDiv>
+        <PolygonCardUpdateButton
+          disabled={!canUpdate}
+          onClick={() => {
+            updateDispatch()
+          }}
+        >
+          Update
+        </PolygonCardUpdateButton>
+        {randomizeDispatch && (
+          <PolygonCardRandomizeButton
+            onClick={() => {
+              randomizeDispatch()
+            }}
+          >
+            Randomize
+          </PolygonCardRandomizeButton>
+        )}
+      </PolygonCardButtonContainingDiv>
+    </PolygonCardDiv>
+  )
+}
+
 export const PolygonRotationControls: React.FC = () => {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
@@ -259,7 +322,7 @@ export const PolygonScaleControls: React.FC = () => {
         setFunction={setSpeed}
       />
       <MultiSlider
-        label="scale-range"
+        label="Size"
         sliderState={rangeState}
         sliderReducerDispatch={rangeDispatch}
       />
@@ -484,36 +547,5 @@ export const PolygonPositionControls: React.FC<{
         scrollingParentRef={scrollingParentRef}
       />
     </PolygonControlsWrapper>
-  )
-}
-
-export const PolygonControlsWrapper: React.FC<{
-  title: string
-  updateDispatch: Function
-  randomizeDispatch?: Function
-  canUpdate: boolean
-}> = ({ children, title, updateDispatch, randomizeDispatch, canUpdate }) => {
-  return (
-    <div>
-      <h2>{title}</h2>
-      {children}
-      <button
-        disabled={!canUpdate}
-        onClick={() => {
-          updateDispatch()
-        }}
-      >
-        Update
-      </button>
-      {randomizeDispatch && (
-        <button
-          onClick={() => {
-            randomizeDispatch()
-          }}
-        >
-          Randomize
-        </button>
-      )}
-    </div>
   )
 }

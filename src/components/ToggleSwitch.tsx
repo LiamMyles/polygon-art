@@ -9,9 +9,12 @@ interface ToggleSwitchProps {
 }
 
 const CheckboxLabel = styled.label`
+  display: block;
   box-sizing: border-box;
   padding-right: 120px;
   position: relative;
+  height: 60px;
+  width: 200px;
 
   &::before,
   &::after {
@@ -44,7 +47,9 @@ const CheckboxLabel = styled.label`
 const CheckboxInput = styled.input`
   height: 0px;
   width: 0px;
-  margin: 0;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  position: absolute !important;
 
   &:checked + ${CheckboxLabel} {
     &::before {
@@ -97,7 +102,7 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   setFunction,
 }) => {
   return (
-    <>
+    <div>
       <CheckboxInput
         type="checkbox"
         id={id}
@@ -107,6 +112,6 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
         }}
       />
       <CheckboxLabel htmlFor={id}>{label}</CheckboxLabel>
-    </>
+    </div>
   )
 }

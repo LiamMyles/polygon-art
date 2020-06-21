@@ -151,7 +151,7 @@ export const Slider: React.FC<SliderProps> = ({
   setFunction,
 }) => {
   return (
-    <>
+    <div>
       <label htmlFor={id}>{label}</label>
       <SliderInputRange
         className={simpleThumb ? "simpleThumb" : ""}
@@ -168,6 +168,6 @@ export const Slider: React.FC<SliderProps> = ({
           }
         }}
       />
-    </>
+    </div>
   )
 }

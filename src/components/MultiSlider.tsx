@@ -178,18 +178,28 @@ const handlePointerDrag = ({
 
 const SliderWrappingDiv = styled.div`
   display: grid;
-  grid-template-columns: 120px minmax(0%, 100%) 120px;
+  grid-template-areas:
+    "label . . ."
+    "bar bar bar bar"
+    "min min max max";
   justify-items: center;
   grid-gap: 10px;
   width: 100%;
 `
 
-const SliderValueDiv = styled.div`
-  font-size: 30px;
+const SliderValueDiv = styled.div<{ area: string }>`
+  font-size: 16px;
   font-weight: bold;
+  grid-area: ${({ area }) => area};
+`
+
+const SliderLabelH3 = styled.h3`
+  grid-area: label;
+  justify-self: left;
 `
 const SliderRailDiv = styled.div`
   display: flex;
+  grid-area: bar;
   align-items: center;
   height: 10px;
   width: calc(100% - 60px);
@@ -325,22 +335,15 @@ interface MultiSliderProps {
   sliderReducerDispatch: React.Dispatch<SliderActions>
 }
 
-interface sliderRailDimensionsState {
-  offsetWidth: number
-  offsetLeft: number
-}
 export const MultiSlider: React.FC<MultiSliderProps> = ({
   label,
   sliderState,
   sliderReducerDispatch,
 }) => {
   const sliderRailRef = useRef<HTMLDivElement>(null)
-  // TODO refactor to just pass the useRef to the thumbs and remove this use effect
   return (
     <SliderWrappingDiv>
-      <SliderValueDiv>
-        <span>Min {sliderState.currentMin}</span>
-      </SliderValueDiv>
+      <SliderLabelH3>{label}</SliderLabelH3>
       <SliderRailDiv ref={sliderRailRef}>
         <SliderRailThumbDivMin
           sliderDispatch={sliderReducerDispatch}
@@ -357,7 +360,10 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
           label={label}
         />
       </SliderRailDiv>
-      <SliderValueDiv>
+      <SliderValueDiv area="min">
+        <span>Min {sliderState.currentMin}</span>
+      </SliderValueDiv>
+      <SliderValueDiv area="max">
         <span>Max {sliderState.currentMax}</span>
       </SliderValueDiv>
     </SliderWrappingDiv>
