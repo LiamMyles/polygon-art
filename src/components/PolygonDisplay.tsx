@@ -93,7 +93,7 @@ export const PolygonDisplay = () => {
           key={`${rotation.speed}-${rotation.enabled}-${rotation.clockwise}`}
         />
         <PolygonScaleControls
-          key={`${scale.enabled}-${scale.range.min}-${scale.range.max}-${scale.speed}-${scale.speed}-${scale.startingSize}`}
+          key={`${scale.enabled}-${scale.range.min}-${scale.range.max}-${scale.speed}`}
         />
         <PolygonDotsControls
           key={`${dots.enabled}-${dots.size}-${
@@ -137,9 +137,29 @@ export const PolygonRotationControls: React.FC = () => {
     }
   }, [speed, enabled, clockwise, rotation])
 
+  const updateDispatch = () => {
+    setCanUpdate(false)
+    polygonGroupsDispatch({
+      type: "UPDATE_POLYGON_ROTATION",
+      group: navigationState.currentGroup,
+      polygon: navigationState.currentPolygon,
+      rotation: { clockwise, enabled, speed },
+    })
+  }
+  const randomizeDispatch = () => {
+    polygonGroupsDispatch({
+      type: "RANDOMIZE_POLYGON_ROTATION",
+      group: navigationState.currentGroup,
+      polygon: navigationState.currentPolygon,
+    })
+  }
   return (
-    <div>
-      <h2>Rotation</h2>
+    <PolygonControlsWrapper
+      updateDispatch={updateDispatch}
+      randomizeDispatch={randomizeDispatch}
+      canUpdate={canUpdate}
+      title="Rotation"
+    >
       <ToggleSwitch
         label="Enable"
         id="rotation-enabled"
@@ -160,32 +180,7 @@ export const PolygonRotationControls: React.FC = () => {
         currentValue={speed}
         setFunction={setRotationSpeed}
       />
-      <button
-        disabled={!canUpdate}
-        onClick={() => {
-          setCanUpdate(false)
-          polygonGroupsDispatch({
-            type: "UPDATE_POLYGON_ROTATION",
-            group: navigationState.currentGroup,
-            polygon: navigationState.currentPolygon,
-            rotation: { clockwise, enabled, speed },
-          })
-        }}
-      >
-        Update
-      </button>
-      <button
-        onClick={() => {
-          polygonGroupsDispatch({
-            type: "RANDOMIZE_POLYGON_ROTATION",
-            group: navigationState.currentGroup,
-            polygon: navigationState.currentPolygon,
-          })
-        }}
-      >
-        Randomize
-      </button>
-    </div>
+    </PolygonControlsWrapper>
   )
 }
 export const PolygonScaleControls: React.FC = () => {
@@ -221,9 +216,34 @@ export const PolygonScaleControls: React.FC = () => {
       setCanUpdate(true)
     }
   }, [speed, enabled, rangeState, scale])
+
+  const updateDispatch = () => {
+    setCanUpdate(false)
+    polygonGroupsDispatch({
+      type: "UPDATE_POLYGON_SCALE",
+      group: navigationState.currentGroup,
+      polygon: navigationState.currentPolygon,
+      scale: {
+        enabled,
+        range: { min: rangeState.currentMin, max: rangeState.currentMax },
+        speed,
+      },
+    })
+  }
+  const randomizeDispatch = () => {
+    polygonGroupsDispatch({
+      type: "RANDOMIZE_POLYGON_SCALE",
+      group: navigationState.currentGroup,
+      polygon: navigationState.currentPolygon,
+    })
+  }
   return (
-    <div>
-      <h2>Scale</h2>
+    <PolygonControlsWrapper
+      title="Scale"
+      updateDispatch={updateDispatch}
+      randomizeDispatch={randomizeDispatch}
+      canUpdate={canUpdate}
+    >
       <ToggleSwitch
         label="Enable"
         id="scale-enabled"
@@ -243,36 +263,7 @@ export const PolygonScaleControls: React.FC = () => {
         sliderState={rangeState}
         sliderReducerDispatch={rangeDispatch}
       />
-      <button
-        disabled={!canUpdate}
-        onClick={() => {
-          setCanUpdate(false)
-          polygonGroupsDispatch({
-            type: "UPDATE_POLYGON_SCALE",
-            group: navigationState.currentGroup,
-            polygon: navigationState.currentPolygon,
-            scale: {
-              enabled,
-              range: { min: rangeState.currentMin, max: rangeState.currentMax },
-              speed,
-            },
-          })
-        }}
-      >
-        Update
-      </button>
-      <button
-        onClick={() => {
-          polygonGroupsDispatch({
-            type: "RANDOMIZE_POLYGON_SCALE",
-            group: navigationState.currentGroup,
-            polygon: navigationState.currentPolygon,
-          })
-        }}
-      >
-        Randomize
-      </button>
-    </div>
+    </PolygonControlsWrapper>
   )
 }
 export const PolygonDotsControls: React.FC = () => {
@@ -302,9 +293,32 @@ export const PolygonDotsControls: React.FC = () => {
       setCanUpdate(true)
     }
   }, [enabled, size, strokeWidth, dots, fillColours, strokeColours])
+
+  const updateDispatch = () => {
+    setCanUpdate(false)
+    polygonGroupsDispatch({
+      type: "UPDATE_POLYGON_DOTS",
+      group: navigationState.currentGroup,
+      polygon: navigationState.currentPolygon,
+      dots: { enabled, fillColours, size, strokeColours, strokeWidth },
+    })
+  }
+
+  const randomizeDispatch = () => {
+    polygonGroupsDispatch({
+      type: "RANDOMIZE_POLYGON_DOTS",
+      group: navigationState.currentGroup,
+      polygon: navigationState.currentPolygon,
+    })
+  }
+
   return (
-    <div>
-      <h2>Dots</h2>
+    <PolygonControlsWrapper
+      updateDispatch={updateDispatch}
+      randomizeDispatch={randomizeDispatch}
+      title="Dots"
+      canUpdate={canUpdate}
+    >
       <ToggleSwitch
         label="Enable"
         id="dots-enabled"
@@ -341,32 +355,7 @@ export const PolygonDotsControls: React.FC = () => {
         colours={strokeColours}
         setFunction={setStrokeColours}
       />
-      <button
-        disabled={!canUpdate}
-        onClick={() => {
-          setCanUpdate(false)
-          polygonGroupsDispatch({
-            type: "UPDATE_POLYGON_DOTS",
-            group: navigationState.currentGroup,
-            polygon: navigationState.currentPolygon,
-            dots: { enabled, fillColours, size, strokeColours, strokeWidth },
-          })
-        }}
-      >
-        Update
-      </button>
-      <button
-        onClick={() => {
-          polygonGroupsDispatch({
-            type: "RANDOMIZE_POLYGON_DOTS",
-            group: navigationState.currentGroup,
-            polygon: navigationState.currentPolygon,
-          })
-        }}
-      >
-        Randomize
-      </button>
-    </div>
+    </PolygonControlsWrapper>
   )
 }
 export const PolygonSidesControls: React.FC = () => {
@@ -394,9 +383,31 @@ export const PolygonSidesControls: React.FC = () => {
       setCanUpdate(true)
     }
   }, [enabled, amount, strokeWidth, sides, colours])
+
+  const randomizeDispatch = () => {
+    polygonGroupsDispatch({
+      type: "RANDOMIZE_POLYGON_SIDES",
+      group: navigationState.currentGroup,
+      polygon: navigationState.currentPolygon,
+    })
+  }
+
+  const updateDispatch = () => {
+    setCanUpdate(false)
+    polygonGroupsDispatch({
+      type: "UPDATE_POLYGON_SIDES",
+      group: navigationState.currentGroup,
+      polygon: navigationState.currentPolygon,
+      sides: { amount, colours, enabled, strokeWidth },
+    })
+  }
   return (
-    <div>
-      <h2>Sides</h2>
+    <PolygonControlsWrapper
+      updateDispatch={updateDispatch}
+      randomizeDispatch={randomizeDispatch}
+      title={"Sides"}
+      canUpdate={canUpdate}
+    >
       <ToggleSwitch
         label="Enable"
         id="sides-enabled"
@@ -426,32 +437,7 @@ export const PolygonSidesControls: React.FC = () => {
         colours={colours}
         setFunction={setColours}
       />
-      <button
-        disabled={!canUpdate}
-        onClick={() => {
-          setCanUpdate(false)
-          polygonGroupsDispatch({
-            type: "UPDATE_POLYGON_SIDES",
-            group: navigationState.currentGroup,
-            polygon: navigationState.currentPolygon,
-            sides: { amount, colours, enabled, strokeWidth },
-          })
-        }}
-      >
-        Update
-      </button>
-      <button
-        onClick={() => {
-          polygonGroupsDispatch({
-            type: "RANDOMIZE_POLYGON_SIDES",
-            group: navigationState.currentGroup,
-            polygon: navigationState.currentPolygon,
-          })
-        }}
-      >
-        Randomize
-      </button>
-    </div>
+    </PolygonControlsWrapper>
   )
 }
 export const PolygonPositionControls: React.FC<{
@@ -474,9 +460,22 @@ export const PolygonPositionControls: React.FC<{
       setCanUpdate(true)
     }
   }, [position, x, y])
+
+  const updateDispatch = () => {
+    setCanUpdate(false)
+    polygonGroupsDispatch({
+      type: "UPDATE_POLYGON_POSITION",
+      group: navigationState.currentGroup,
+      polygon: navigationState.currentPolygon,
+      position: { x, y },
+    })
+  }
   return (
-    <div>
-      <h2>Position</h2>
+    <PolygonControlsWrapper
+      updateDispatch={updateDispatch}
+      title={"Position"}
+      canUpdate={canUpdate}
+    >
       <CoordinatePicker
         currentX={x}
         currentY={y}
@@ -484,20 +483,37 @@ export const PolygonPositionControls: React.FC<{
         setXFunction={setX}
         scrollingParentRef={scrollingParentRef}
       />
+    </PolygonControlsWrapper>
+  )
+}
+
+export const PolygonControlsWrapper: React.FC<{
+  title: string
+  updateDispatch: Function
+  randomizeDispatch?: Function
+  canUpdate: boolean
+}> = ({ children, title, updateDispatch, randomizeDispatch, canUpdate }) => {
+  return (
+    <div>
+      <h2>{title}</h2>
+      {children}
       <button
         disabled={!canUpdate}
         onClick={() => {
-          setCanUpdate(false)
-          polygonGroupsDispatch({
-            type: "UPDATE_POLYGON_POSITION",
-            group: navigationState.currentGroup,
-            polygon: navigationState.currentPolygon,
-            position: { x, y },
-          })
+          updateDispatch()
         }}
       >
         Update
       </button>
+      {randomizeDispatch && (
+        <button
+          onClick={() => {
+            randomizeDispatch()
+          }}
+        >
+          Randomize
+        </button>
+      )}
     </div>
   )
 }

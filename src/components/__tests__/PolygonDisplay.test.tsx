@@ -471,7 +471,7 @@ describe("PolygonDisplay Component", () => {
       expect(updateButton).toBeDisabled()
 
       const colourPicker = getByRole("list", { name: "Fill Colour" })
-      const colourInput = within(colourPicker).getByLabelText(/Colour\s2/)
+      const colourInput = within(colourPicker).getByLabelText(/Colour\s1$/)
 
       fireEvent.blur(colourInput, {
         target: { value: "#f13399" },
@@ -497,7 +497,7 @@ describe("PolygonDisplay Component", () => {
       expect(updateButton).toBeDisabled()
 
       const colourPicker = getByRole("list", { name: "Stroke Colours" })
-      const colourInput = within(colourPicker).getByLabelText(/Colour\s2/)
+      const colourInput = within(colourPicker).getByLabelText(/Colour\s1$/)
 
       fireEvent.blur(colourInput, {
         target: { value: "#f13399" },
@@ -639,7 +639,7 @@ describe("PolygonDisplay Component", () => {
       expect(updateButton).toBeDisabled()
 
       const colourPicker = getByRole("list", { name: "Colours" })
-      const colourInput = within(colourPicker).getByLabelText(/Colour\s2/)
+      const colourInput = within(colourPicker).getByLabelText(/Colour\s1$/)
 
       fireEvent.blur(colourInput, {
         target: { value: "#f13399" },
