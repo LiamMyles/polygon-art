@@ -21,6 +21,8 @@ import { MultiSlider, sliderReducer } from "components/MultiSlider"
 import { ColourPicker } from "components/ColourPicker"
 import { CoordinatePicker } from "components/CoordinatePicker"
 
+import rotatingDirection from "../rotating-ring.svg"
+
 const PolygonPageWrappingDiv = styled.div`
   display: grid;
   grid-template-rows: 200px calc(90vh - 200px);
@@ -74,7 +76,7 @@ export const PolygonDisplay = () => {
                 width: 200,
                 height: 200,
               },
-              0.3
+              0.2
             )}
           />
         </PolygonCanvasDiv>
@@ -228,12 +230,15 @@ export const PolygonRotationControls: React.FC = () => {
         id="rotation-enabled"
         checked={enabled}
         setFunction={setEnabled}
+        checkedText={{ checked: "OFF", unchecked: "ON" }}
       />
       <ToggleSwitch
         label="Clockwise"
         id="rotation-clockwise"
         checked={clockwise}
         setFunction={setClockwise}
+        svgBackground={rotatingDirection}
+        transformFlip={true}
       />
       <Slider
         label="Speed"
@@ -312,6 +317,7 @@ export const PolygonScaleControls: React.FC = () => {
         id="scale-enabled"
         checked={enabled}
         setFunction={setEnabled}
+        checkedText={{ checked: "OFF", unchecked: "ON" }}
       />
       <Slider
         label="Speed"
@@ -387,6 +393,7 @@ export const PolygonDotsControls: React.FC = () => {
         id="dots-enabled"
         checked={enabled}
         setFunction={setEnabled}
+        checkedText={{ checked: "OFF", unchecked: "ON" }}
       />
       <Slider
         label="Size"
@@ -476,12 +483,13 @@ export const PolygonSidesControls: React.FC = () => {
         id="sides-enabled"
         checked={enabled}
         setFunction={setEnabled}
+        checkedText={{ checked: "OFF", unchecked: "ON" }}
       />
       <Slider
         label="Amount"
         id="sides-amount"
         max={20}
-        min={0}
+        min={1}
         currentValue={amount}
         setFunction={setAmount}
       />
