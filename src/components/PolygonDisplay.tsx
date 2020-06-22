@@ -25,8 +25,9 @@ import rotatingDirection from "../rotating-ring.svg"
 
 const PolygonPageWrappingDiv = styled.div`
   display: grid;
-  grid-template-rows: 200px calc(90vh - 200px);
+  grid-template-rows: 200px calc(90vh - 210px);
   grid-template-columns: 100vw;
+  grid-gap: 10px;
   justify-content: center;
 `
 
@@ -122,6 +123,7 @@ export const PolygonDisplay = () => {
 
 const PolygonCardDiv = styled.div`
   border: 1px solid grey;
+  border-radius: 10px;
   display: grid;
   grid-auto-rows: min-content;
   grid-gap: 10px;
