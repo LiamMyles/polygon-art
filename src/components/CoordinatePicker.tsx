@@ -12,18 +12,17 @@ interface CoordinatePickerProps {
 
 const CoordinatePickerWrappingDiv = styled.div`
   display: grid;
-  grid-template-columns: 50px 1fr 1fr;
-  grid-template-rows: 1fr 1fr 50px;
-  width: 300px;
-  height: 300px;
+  grid-template-columns: 30px 1fr 1fr;
+  grid-template-rows: 1fr 1fr 30px;
+  width: 280px;
+  height: 280px;
+  margin: auto;
 `
 const YSliderWrappingDiv = styled.div`
   grid-column: 1/2;
   grid-row: 1/3;
   justify-self: center;
   align-self: center;
-  display: grid;
-  grid-template-rows: 10px 1fr;
   text-align: center;
 `
 const XSliderWrappingDiv = styled.div`
@@ -31,11 +30,18 @@ const XSliderWrappingDiv = styled.div`
   grid-row: 3/4;
   justify-self: center;
   align-self: center;
+`
+const XSlider = styled(Slider)`
   display: grid;
   grid-template-columns: 10px 1fr;
   align-items: center;
-  grid-gap: 5px;
+  grid-gap: 10px;
+  transform: translateX(-10px);
 `
+const YSlider = styled(Slider)`
+  transform: translateY(-10px);
+`
+
 const CoordinatePositionsDiv = styled.div`
   grid-column: 1/2;
   grid-row: 3/4;
@@ -134,7 +140,7 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
   return (
     <CoordinatePickerWrappingDiv>
       <YSliderWrappingDiv>
-        <Slider
+        <YSlider
           max={100}
           min={-100}
           currentValue={currentY}
@@ -208,7 +214,7 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
         />
       </CoordinatePanelDiv>
       <XSliderWrappingDiv>
-        <Slider
+        <XSlider
           max={100}
           min={-100}
           currentValue={currentX}
