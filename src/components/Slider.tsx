@@ -10,6 +10,7 @@ interface SliderProps {
   vertical?: boolean
   simpleThumb?: boolean
   setFunction: React.Dispatch<React.SetStateAction<number>>
+  className?: string
 }
 
 const SliderInputRange = styled.input`
@@ -149,9 +150,10 @@ export const Slider: React.FC<SliderProps> = ({
   vertical,
   simpleThumb,
   setFunction,
+  className,
 }) => {
   return (
-    <div>
+    <div className={className}>
       <label htmlFor={id}>{label}</label>
       <SliderInputRange
         className={simpleThumb ? "simpleThumb" : ""}

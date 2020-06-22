@@ -47,6 +47,7 @@ const PolygonRandomizeButton = styled.button`
 
 const PolygonOptionsOverflowDiv = styled.div`
   overflow-y: scroll;
+  overflow-x: hidden;
   display: grid;
   grid-gap: 10px;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

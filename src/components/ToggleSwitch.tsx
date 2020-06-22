@@ -42,8 +42,8 @@ const CheckboxInput = styled.input<CheckboxInputProps>`
 
       & + label{
         display: grid;
-        grid-template-rows: 1em 60px;
-        grid-gap: 10px;
+        grid-template-rows: 1em 50px;
+        grid-gap: 5px;
       }
 
       & + label .button {
@@ -61,8 +61,8 @@ const CheckboxInput = styled.input<CheckboxInputProps>`
         }
         &::before {
           background: lightgrey;
-          height: 60px;
-          width: 110px;
+          height: 50px;
+          width: 90px;
           border-radius: 50px;
           transition: border 100ms ease-in-out, background-color 200ms ease-in-out;
         }
@@ -77,8 +77,8 @@ const CheckboxInput = styled.input<CheckboxInputProps>`
           };
           ${svgBackground ? svgBackgroundCss : ""}
           margin: 0 5px;
-          width: 50px;
-          height: 50px;
+          width: 40px;
+          height: 40px;
           border-radius: 25px;
           transition: transform 200ms ease-in-out, background-color 300ms ease-in-out;
         }
