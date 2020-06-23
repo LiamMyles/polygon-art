@@ -32,7 +32,6 @@ const App: React.FC = () => {
         <PolygonDisplay />
       </Screens>
       <div>
-        <h1>Hello</h1>
         <button
           type="button"
           onClick={() => {
@@ -57,14 +56,6 @@ const App: React.FC = () => {
           }}
         >
           Randomize!
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            polygonGroupsDispatch({ type: "CREATE_POLYGON_GROUP" })
-          }}
-        >
-          App Group!
         </button>
       </div>
     </Main>

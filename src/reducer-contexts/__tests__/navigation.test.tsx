@@ -89,7 +89,7 @@ describe("Navigation Reducer", () => {
   })
 })
 
-describe.skip("Navigation Context", () => {
+describe("Navigation Context", () => {
   let TestComponent: React.FC
   beforeAll(() => {
     TestComponent = () => {
