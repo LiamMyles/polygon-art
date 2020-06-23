@@ -24,39 +24,62 @@ const App: React.FC = () => {
   const navigationDispatch = useContext(navigationDispatchContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
 
+  const childMapping = {
+    MAIN_SCREEN: 1,
+    GROUP_SCREEN: 2,
+    POLYGON_SCREEN: 3,
+  }
+
   return (
     <Main>
-      <Screens currentScreen={navigationState.currentScreen}>
+      <Screens currentChild={childMapping[navigationState.currentScreen]}>
         <MainCanvas />
         <GroupsDisplay />
         <PolygonDisplay />
       </Screens>
       <div>
-        <button
-          type="button"
-          onClick={() => {
-            navigationDispatch({ type: "PREV_SCREEN" })
-          }}
-        >
-          Previous
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            navigationDispatch({ type: "NEXT_SCREEN" })
-          }}
-        >
-          Next
-        </button>
-        <br />
-        <button
-          type="button"
-          onClick={() => {
-            polygonGroupsDispatch({ type: "RANDOMIZE_POLYGON_RINGS", group: 0 })
-          }}
-        >
-          Randomize!
-        </button>
+        <Screens currentChild={childMapping[navigationState.currentScreen]}>
+          <>
+            <button
+              type="button"
+              onClick={() => {
+                polygonGroupsDispatch({
+                  type: "RANDOMIZE_POLYGON_RINGS",
+                  group: 0,
+                })
+              }}
+            >
+              Randomize
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                navigationDispatch({ type: "GROUP_SCREEN" })
+              }}
+            >
+              Edit Polygon
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                console.log("TODO")
+              }}
+            >
+              Edit Background
+            </button>
+          </>
+          <>
+            <button
+              type="button"
+              onClick={() => {
+                navigationDispatch({ type: "MAIN_SCREEN" })
+              }}
+            >
+              Back
+            </button>
+          </>
+        </Screens>
       </div>
     </Main>
   )
