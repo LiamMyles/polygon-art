@@ -1,11 +1,36 @@
-import React from "react"
+import React, { useReducer } from "react"
 import { render, fireEvent } from "@testing-library/react"
-import { MultiSlider } from "components/MultiSlider"
+import { MultiSlider, sliderReducer } from "components/MultiSlider"
 
 describe("MultiSlider Component", () => {
+  const TestMultiSliderHandlerWrapper: React.FC<{
+    label: string
+    min: number
+    max: number
+    startingMin: number
+    startingMax: number
+  }> = ({ label, min, max, startingMin, startingMax }) => {
+    const initialState = {
+      min,
+      max,
+      currentMin: startingMin,
+      currentMax: startingMax,
+    }
+    const [sliderState, sliderDispatch] = useReducer(
+      sliderReducer,
+      initialState
+    )
+    return (
+      <MultiSlider
+        label={label}
+        sliderState={sliderState}
+        sliderReducerDispatch={sliderDispatch}
+      />
+    )
+  }
   it("should render", () => {
     const { getByLabelText } = render(
-      <MultiSlider
+      <TestMultiSliderHandlerWrapper
         label="Testing Component"
         min={0}
         max={100}
@@ -20,7 +45,7 @@ describe("MultiSlider Component", () => {
   describe("Min Thumb", () => {
     it("should increase in value when right arrow is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -41,7 +66,7 @@ describe("MultiSlider Component", () => {
     })
     it("should increase in value when up arrow is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -62,7 +87,7 @@ describe("MultiSlider Component", () => {
     })
     it("should decrease in value when left arrow is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -83,7 +108,7 @@ describe("MultiSlider Component", () => {
     })
     it("should decrease in value when down arrow is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -104,7 +129,7 @@ describe("MultiSlider Component", () => {
     })
     it("should not decrease in value below min", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -126,7 +151,7 @@ describe("MultiSlider Component", () => {
     })
     it("should not increase in value above current max", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -148,7 +173,7 @@ describe("MultiSlider Component", () => {
     })
     it("should increase 5 steps when page up is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -169,7 +194,7 @@ describe("MultiSlider Component", () => {
     })
     it("should not increase past current max when page up is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -191,7 +216,7 @@ describe("MultiSlider Component", () => {
     })
     it("should decrease 5 steps when page down is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -212,7 +237,7 @@ describe("MultiSlider Component", () => {
     })
     it("should not decrease past min when page down is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -234,7 +259,7 @@ describe("MultiSlider Component", () => {
     })
     it("should set to minimum when home is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -255,7 +280,7 @@ describe("MultiSlider Component", () => {
     })
     it("should set to current maximum when end is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -276,7 +301,7 @@ describe("MultiSlider Component", () => {
     })
     it("should add focus class on focus", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -297,7 +322,7 @@ describe("MultiSlider Component", () => {
   describe("Max Thumb", () => {
     it("should increase in value when right arrow is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -318,7 +343,7 @@ describe("MultiSlider Component", () => {
     })
     it("should increase in value when up arrow is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -339,7 +364,7 @@ describe("MultiSlider Component", () => {
     })
     it("should decrease in value when left arrow is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -360,7 +385,7 @@ describe("MultiSlider Component", () => {
     })
     it("should decrease in value when down arrow is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -381,7 +406,7 @@ describe("MultiSlider Component", () => {
     })
     it("should not decrease in value below current min", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -403,7 +428,7 @@ describe("MultiSlider Component", () => {
     })
     it("should not increase in value above max", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -425,7 +450,7 @@ describe("MultiSlider Component", () => {
     })
     it("should increase 5 steps when page up is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -446,7 +471,7 @@ describe("MultiSlider Component", () => {
     })
     it("should not increase past max when page up is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -468,7 +493,7 @@ describe("MultiSlider Component", () => {
     })
     it("should decrease 5 steps when page down is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -489,7 +514,7 @@ describe("MultiSlider Component", () => {
     })
     it("should not decrease past current min when page down is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -511,7 +536,7 @@ describe("MultiSlider Component", () => {
     })
     it("should set to current minimum when home is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -532,7 +557,7 @@ describe("MultiSlider Component", () => {
     })
     it("should set to maximum when end is pressed", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}
@@ -553,7 +578,7 @@ describe("MultiSlider Component", () => {
     })
     it("should add focus class on focus", () => {
       const { getByLabelText } = render(
-        <MultiSlider
+        <TestMultiSliderHandlerWrapper
           label="Testing Component"
           min={0}
           max={100}

@@ -12,20 +12,31 @@ function getSizeConstrainedCords(
   cords: { x: number; y: number }
 ): { x: number; y: number } {
   const x = Math.floor((size.width * (cords.x / 100)) / 2)
-  const y = Math.floor((size.height * (cords.y / 100)) / 2)
+  let y = Math.floor((size.height * (cords.y / 100)) / 2)
+  //Flip the y axis to have +100 at the top and -100 at the bottom
+  if (y < 0) {
+    y = y / -1
+  } else {
+    y = y / -1
+  }
+
   return { x, y }
 }
 
 function singlePolygonDraw(
   polygonAnimation: PolygonAnimation,
   size: { width: number; height: number },
-  p5: P5
+  p5: P5,
+  scale?: number
 ) {
   const { currentRotation, dots, sides, position } = polygonAnimation
   const { x, y } = getSizeConstrainedCords(size, position)
 
   p5.push()
   p5.translate(x, y)
+  if (scale) {
+    p5.scale(scale)
+  }
   p5.rotate(currentRotation)
   if (sides.enabled) {
     sides.positions.forEach((cords, index) => {
@@ -68,13 +79,11 @@ export function generatePolygonRingSketch(
       p5.angleMode("degrees")
       p5.background("rgba(255,255,255, 0.05)")
       p5.translate(windowSize.width / 2, windowSize.height / 2)
-      if (scale) {
-        p5.scale(scale)
-      }
       singlePolygonDraw(
         polygonRingInstance.getPolygonFrameAndStep(),
         windowSize,
-        p5
+        p5,
+        scale
       )
     }
   }
@@ -98,12 +107,14 @@ export function generatePolygonGroupSketch(
       p5.angleMode("degrees")
       p5.background("rgba(255,255,255, 0.05)")
       p5.translate(windowSize.width / 2, windowSize.height / 2)
-      if (scale) {
-        p5.scale(scale)
-      }
       p5.push()
       for (const polygonRing of polygonRingInstances) {
-        singlePolygonDraw(polygonRing.getPolygonFrameAndStep(), windowSize, p5)
+        singlePolygonDraw(
+          polygonRing.getPolygonFrameAndStep(),
+          windowSize,
+          p5,
+          scale
+        )
       }
       p5.pop()
     }

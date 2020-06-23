@@ -12,8 +12,18 @@ describe("Navigation Reducer", () => {
   describe("NEXT_SCREEN Action", () => {
     it("should move from screen 2 to screen 3", () => {
       const action: NavigationActions = { type: "NEXT_SCREEN" }
-      const initialState = { currentScreen: 2, totalScreens: 3 }
-      const expectedState = { currentScreen: 3, totalScreens: 3 }
+      const initialState = {
+        currentScreen: 2,
+        totalScreens: 3,
+        currentGroup: 0,
+        currentPolygon: 0,
+      }
+      const expectedState = {
+        currentScreen: 3,
+        totalScreens: 3,
+        currentGroup: 0,
+        currentPolygon: 0,
+      }
       const actualState = navigationReducer(initialState, action)
 
       expect(actualState).toEqual(expectedState)
@@ -21,8 +31,18 @@ describe("Navigation Reducer", () => {
 
     it("should move from screen 3 to screen 1", () => {
       const action: NavigationActions = { type: "NEXT_SCREEN" }
-      const initialState = { currentScreen: 3, totalScreens: 3 }
-      const expectedState = { currentScreen: 1, totalScreens: 3 }
+      const initialState = {
+        currentScreen: 3,
+        totalScreens: 3,
+        currentGroup: 0,
+        currentPolygon: 0,
+      }
+      const expectedState = {
+        currentScreen: 1,
+        totalScreens: 3,
+        currentGroup: 0,
+        currentPolygon: 0,
+      }
       const actualState = navigationReducer(initialState, action)
 
       expect(actualState).toEqual(expectedState)
@@ -31,20 +51,41 @@ describe("Navigation Reducer", () => {
   describe("PREV_SCREEN action", () => {
     it("should move from screen 2 to screen 1", () => {
       const action: NavigationActions = { type: "PREV_SCREEN" }
-      const initialState = { currentScreen: 2, totalScreens: 3 }
-      const expectedState = { currentScreen: 1, totalScreens: 3 }
+      const initialState = {
+        currentScreen: 2,
+        totalScreens: 3,
+        currentGroup: 0,
+        currentPolygon: 0,
+      }
+      const expectedState = {
+        currentScreen: 1,
+        totalScreens: 3,
+        currentGroup: 0,
+        currentPolygon: 0,
+      }
       const actualState = navigationReducer(initialState, action)
 
       expect(actualState).toEqual(expectedState)
     })
     it("should move from screen 1 to screen 3", () => {
       const action: NavigationActions = { type: "PREV_SCREEN" }
-      const initialState = { currentScreen: 1, totalScreens: 3 }
-      const expectedState = { currentScreen: 3, totalScreens: 3 }
+      const initialState = {
+        currentScreen: 1,
+        totalScreens: 3,
+        currentGroup: 0,
+        currentPolygon: 0,
+      }
+      const expectedState = {
+        currentScreen: 3,
+        totalScreens: 3,
+        currentGroup: 0,
+        currentPolygon: 0,
+      }
       const actualState = navigationReducer(initialState, action)
 
       expect(actualState).toEqual(expectedState)
     })
+    it.todo("should handel assigning currently polygon")
   })
 })
 

@@ -1,13 +1,23 @@
-import React from "react"
-import { render, fireEvent, getAllByRole } from "@testing-library/react"
+import React, { useState } from "react"
+import { render, fireEvent } from "@testing-library/react"
 
 import { ColourPicker } from "components/ColourPicker"
 
 describe("ColourPicker component", () => {
-  it("should render all colours passed", () => {
-    const { getByLabelText } = render(
-      <ColourPicker initialColours={["#ffffff", "#888888"]} maxColours={3} />
+  const TestComponent = () => {
+    const [colours, setColours] = useState(["#ffffff", "#888888"])
+    return (
+      <ColourPicker
+        maxColours={3}
+        colours={colours}
+        setFunction={setColours}
+        id="test"
+        label="test"
+      />
     )
+  }
+  it("should render all colours passed", () => {
+    const { getByLabelText } = render(<TestComponent />)
 
     const colour1 = getByLabelText("Colour 1")
     const colour2 = getByLabelText("Colour 2")
@@ -17,7 +27,7 @@ describe("ColourPicker component", () => {
   })
   it("should add until limit is hit", () => {
     const { getByRole, queryByRole, queryByLabelText } = render(
-      <ColourPicker initialColours={["#ffffff", "#888888"]} maxColours={3} />
+      <TestComponent />
     )
 
     expect(getByRole("button", { name: "Add" })).toBeInTheDocument()
@@ -34,7 +44,7 @@ describe("ColourPicker component", () => {
   })
   it("should delete all but last one", () => {
     const { getAllByRole, queryByRole, queryByLabelText } = render(
-      <ColourPicker initialColours={["#ffffff", "#888888"]} maxColours={3} />
+      <TestComponent />
     )
 
     expect(getAllByRole("button", { name: "Delete" })[0]).toBeInTheDocument()
