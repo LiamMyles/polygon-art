@@ -51,14 +51,13 @@ const App: React.FC = () => {
             >
               Randomize
             </button>
-
             <button
               type="button"
               onClick={() => {
                 navigationDispatch({ type: "GROUP_SCREEN" })
               }}
             >
-              Edit Polygon
+              Edit Polygons
             </button>
             <button
               type="button"
@@ -76,7 +75,25 @@ const App: React.FC = () => {
                 navigationDispatch({ type: "MAIN_SCREEN" })
               }}
             >
-              Back
+              Home
+            </button>
+          </>
+          <>
+            <button
+              type="button"
+              onClick={() => {
+                navigationDispatch({ type: "GROUP_SCREEN" })
+              }}
+            >
+              Edit Polygons
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                navigationDispatch({ type: "MAIN_SCREEN" })
+              }}
+            >
+              Home
             </button>
           </>
         </Screens>

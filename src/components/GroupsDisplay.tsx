@@ -7,6 +7,8 @@ import {
   PolygonRing,
 } from "reducer-contexts/polygon-groups"
 
+import { navigationDispatchContext } from "reducer-contexts/navigation"
+
 import {
   generatePolygonGroupSketch,
   generatePolygonRingSketch,
@@ -27,7 +29,7 @@ const GroupsLi = styled.li`
   background: lightgrey;
   display: grid;
   grid-gap: 10px;
-  grid-template-rows: 200px 1fr;
+  grid-auto-rows: min-content;
 `
 const AddGroupButton = styled.button`
   margin: 0 10px;
@@ -123,32 +125,50 @@ export function GroupsDisplay() {
 }
 
 const RingsUl = styled.ul`
-  display: flex;
-  width: 100%;
+  display: grid;
+  grid-gap: 10px;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
   overflow-x: scroll;
+  padding: 10px;
 `
 
 const RingsLi = styled.li`
   display: grid;
-  grid-template-columns: 80px 80px;
-  grid-template-rows: 150px 50px;
+  grid-auto-columns: 1fr;
+  grid-template-rows: 50px 150px 50px;
+  grid-template-areas:
+    "EDIT EDIT RANDOM RANDOM"
+    "CANVAS CANVAS CANVAS CANVAS"
+    ". DELETE DELETE .";
   grid-gap: 10px;
-  margin: 0 5px 10px;
+  padding: 10px;
+  border: solid 2px darkgrey;
+  border-radius: 5px;
+  &:last-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+  }
 `
 const RingCanvasDiv = styled.div`
-  grid-column: 1/3;
+  grid-area: CANVAS;
   justify-self: center;
 `
-
-const RingRandomizeButton = styled.button`
+const RingButton = styled.button`
   min-height: 50px;
   border-radius: 5px;
-  grid-row: 2/3;
 `
-const RingDeleteButton = styled.button`
-  min-height: 50px;
-  border-radius: 5px;
-  grid-row: 2/3;
+
+const RingEditButton = styled(RingButton)`
+  grid-area: EDIT;
+`
+const RingRandomizeButton = styled(RingButton)`
+  grid-area: RANDOM;
+`
+const RingDeleteButton = styled(RingButton)`
+  grid-area: DELETE;
 `
 
 const AddRingButton = styled.button`
@@ -164,6 +184,7 @@ const PolygonRingsDisplay: React.FC<{
   groupNumber: number
 }> = ({ polygonRings, groupNumber }) => {
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
+  const navigationDispatch = useContext(navigationDispatchContext)
   const totalPolygons = polygonRings.length
   return (
     <RingsUl>
@@ -175,18 +196,18 @@ const PolygonRingsDisplay: React.FC<{
             <RingsLi
               aria-label={`Group ${groupNumber}, Ring ${polygonIndex} Canvas`}
             >
-              <RingCanvasDiv>
-                <P5Canvas
-                  sketch={generatePolygonRingSketch(
-                    polygon,
-                    {
-                      height: 150,
-                      width: 150,
-                    },
-                    0.15
-                  )}
-                />
-              </RingCanvasDiv>
+              <RingEditButton
+                type="button"
+                onClick={() => {
+                  navigationDispatch({
+                    type: "POLYGON_SCREEN",
+                    currentGroup: groupNumber,
+                    currentPolygon: polygonIndex,
+                  })
+                }}
+              >
+                Edit
+              </RingEditButton>
               <RingRandomizeButton
                 type="button"
                 onClick={() => {
@@ -199,6 +220,18 @@ const PolygonRingsDisplay: React.FC<{
               >
                 Randomize
               </RingRandomizeButton>
+              <RingCanvasDiv>
+                <P5Canvas
+                  sketch={generatePolygonRingSketch(
+                    polygon,
+                    {
+                      height: 150,
+                      width: 150,
+                    },
+                    0.15
+                  )}
+                />
+              </RingCanvasDiv>
               <RingDeleteButton
                 type="button"
                 disabled={totalPolygons === 1}

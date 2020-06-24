@@ -30,4 +30,5 @@ describe("App Component", () => {
       </PolygonGroupsContextWrapper>
     )
   })
+  it.todo("should navigate across the different apps")
 })
