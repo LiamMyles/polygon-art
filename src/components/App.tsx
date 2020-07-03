@@ -15,8 +15,31 @@ import { PolygonDisplay } from "components/PolygonDisplay"
 
 const Main = styled.main`
   display: grid;
-  grid-template-rows: minmax(90%, 90vh) minmax(10vh, 10px);
+  grid-template-rows: minmax(100%, 100vh);
+  grid-template-columns: minmax(100%, 100vw);
   overflow: hidden;
+`
+
+const MainContent = styled(Screens)`
+  display: grid;
+  grid-template-rows: minmax(90%, 90vh) minmax(10%, 10vh);
+  grid-template-columns: minmax(100%, 100vw);
+  grid-row: 1;
+  grid-column: 1;
+`
+
+const Navigation = styled.nav`
+  background-color: grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  box-shadow: inset 0px 4px 9px -2px #404040;
+  button {
+    min-height: 50px;
+    border-radius: 5px;
+    margin: 5px;
+  }
 `
 
 const App: React.FC = () => {
@@ -32,14 +55,10 @@ const App: React.FC = () => {
 
   return (
     <Main>
-      <Screens currentChild={childMapping[navigationState.currentScreen]}>
-        <MainCanvas />
-        <GroupsDisplay />
-        <PolygonDisplay />
-      </Screens>
-      <div>
-        <Screens currentChild={childMapping[navigationState.currentScreen]}>
-          <>
+      <MainContent currentChild={childMapping[navigationState.currentScreen]}>
+        <>
+          <MainCanvas />
+          <Navigation>
             <button
               type="button"
               onClick={() => {
@@ -67,8 +86,11 @@ const App: React.FC = () => {
             >
               Edit Background
             </button>
-          </>
-          <>
+          </Navigation>
+        </>
+        <>
+          <GroupsDisplay />
+          <Navigation>
             <button
               type="button"
               onClick={() => {
@@ -77,8 +99,11 @@ const App: React.FC = () => {
             >
               Home
             </button>
-          </>
-          <>
+          </Navigation>
+        </>
+        <>
+          <PolygonDisplay />
+          <Navigation>
             <button
               type="button"
               onClick={() => {
@@ -95,9 +120,9 @@ const App: React.FC = () => {
             >
               Home
             </button>
-          </>
-        </Screens>
-      </div>
+          </Navigation>
+        </>
+      </MainContent>
     </Main>
   )
 }

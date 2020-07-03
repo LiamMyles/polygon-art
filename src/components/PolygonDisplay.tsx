@@ -52,6 +52,10 @@ const PolygonOptionsOverflowDiv = styled.div`
   display: grid;
   grid-gap: 10px;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  border-radius: 8px;
+  box-shadow: inset 0px 0px 9px -2px #404040;
+  margin: 10px;
+  padding: 10px;
 `
 
 export const PolygonDisplay = () => {
