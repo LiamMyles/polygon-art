@@ -44,10 +44,16 @@ const AddGroupButton = styled.button`
   width: calc(100% - 20px);
 `
 
-const GroupCanvasDiv = styled.div`
+const GroupCanvasGroupDiv = styled.div`
   display: grid;
-  grid-template-columns: 200px 100px;
-  grid-template-rows: 100px 100px;
+  grid-gap: 10px;
+  grid-template-columns: 100px 100px;
+  grid-template-rows: 200px 1fr;
+  justify-self: center;
+`
+
+const CanvasWrappingDiv = styled.div`
+  grid-column: 1/3;
   justify-self: center;
 `
 const GroupRandomizeButton = styled.button`
@@ -76,17 +82,19 @@ export function GroupsDisplay() {
         return (
           <>
             <GroupsLi key={key} aria-label={`Group ${groupIndex} Canvas`}>
-              <GroupCanvasDiv>
-                <P5Canvas
-                  sketch={generatePolygonGroupSketch(
-                    polygonGroup,
-                    {
-                      height: 200,
-                      width: 200,
-                    },
-                    0.2
-                  )}
-                />
+              <GroupCanvasGroupDiv>
+                <CanvasWrappingDiv>
+                  <P5Canvas
+                    sketch={generatePolygonGroupSketch(
+                      polygonGroup,
+                      {
+                        height: 200,
+                        width: 200,
+                      },
+                      0.2
+                    )}
+                  />
+                </CanvasWrappingDiv>
                 <GroupRandomizeButton
                   onClick={() => {
                     polygonGroupsDispatch({
@@ -108,7 +116,7 @@ export function GroupsDisplay() {
                 >
                   Delete
                 </GroupDeleteButton>
-              </GroupCanvasDiv>
+              </GroupCanvasGroupDiv>
               <PolygonRingsDisplay
                 polygonRings={polygonGroup.rings}
                 groupNumber={groupIndex}
