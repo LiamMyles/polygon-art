@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import { render, fireEvent, wait as waitFor } from "@testing-library/react"
+import { render, fireEvent } from "@testing-library/react"
 import p5 from "p5"
 
 import {
@@ -38,7 +38,7 @@ describe("App Component", () => {
       )
     }
     it("should navigate to edit polygons and home", () => {
-      const { getByRole, getByLabelText, getAllByRole } = render(
+      const { getByRole, getByLabelText } = render(
         <PolygonGroupsContextWrapper>
           <NavigationContextWrapper>
             <TestComponent>
