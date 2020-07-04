@@ -1,51 +1,45 @@
 import React, { useReducer, createContext } from "react"
 import produce, { Draft } from "immer"
 
-interface NavigationState {
-  currentScreen: number
-  totalScreens: number
+export interface NavigationState {
+  currentScreen: "MAIN_SCREEN" | "GROUP_SCREEN" | "POLYGON_SCREEN"
+  currentGroup: number
+  currentPolygon: number
+}
+interface MainScreen {
+  type: "MAIN_SCREEN"
+}
+interface GroupScreen {
+  type: "GROUP_SCREEN"
+}
+interface PolygonScreen {
+  type: "POLYGON_SCREEN"
   currentGroup: number
   currentPolygon: number
 }
 
-interface NextScreen {
-  type: "NEXT_SCREEN"
-}
-
-interface PrevScreen {
-  type: "PREV_SCREEN"
-}
-
-export type NavigationActions = PrevScreen | NextScreen
+export type NavigationActions = MainScreen | GroupScreen | PolygonScreen
 
 export const navigationReducer = produce(
   (draft: Draft<NavigationState>, action: NavigationActions) => {
     switch (action.type) {
-      case "NEXT_SCREEN": {
-        const newScreen = draft.currentScreen + 1
-        if (newScreen <= draft.totalScreens) {
-          draft.currentScreen = newScreen
-        } else {
-          draft.currentScreen = 1
-        }
+      case "MAIN_SCREEN":
+      case "GROUP_SCREEN": {
+        draft.currentScreen = action.type
         break
       }
-      case "PREV_SCREEN": {
-        const newScreen = draft.currentScreen - 1
-        if (newScreen <= 0) {
-          draft.currentScreen = draft.totalScreens
-        } else {
-          draft.currentScreen = newScreen
-        }
+      case "POLYGON_SCREEN": {
+        draft.currentScreen = action.type
+        draft.currentGroup = action.currentGroup
+        draft.currentPolygon = action.currentPolygon
         break
       }
     }
   }
 )
 
-export const navigationInitialState = {
-  currentScreen: 1,
-  totalScreens: 3,
+export const navigationInitialState: NavigationState = {
+  currentScreen: "MAIN_SCREEN",
   currentGroup: 0,
   currentPolygon: 0,
 }

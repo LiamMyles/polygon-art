@@ -25,7 +25,7 @@ describe("Screens Component", () => {
       const [screen, setScreen] = useState(currentPage)
       return (
         <>
-          <Screens currentScreen={screen}>
+          <Screens currentChild={screen}>
             <TestComponent1 />
             <TestComponent2 />
             <TestComponent3 />
@@ -44,7 +44,7 @@ describe("Screens Component", () => {
 
   it("should only render first child on load", () => {
     const { getByText, queryByText } = render(
-      <Screens currentScreen={1}>
+      <Screens currentChild={1}>
         <TestComponent1 />
         <TestComponent2 />
         <TestComponent3 />

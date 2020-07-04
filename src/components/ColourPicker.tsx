@@ -10,10 +10,13 @@ const ColourPickerWrapperUl = styled.ul`
   grid-gap: 15px;
   grid-auto-flow: column;
   grid-auto-columns: 150px;
-  width: 100%;
   max-width: 100vw;
   padding: 10px 0px;
   overflow-x: scroll;
+  margin: 5px 0 0 0;
+  padding: 10px 10px;
+  border-radius: 4px;
+  box-shadow: inset 0px 0px 9px -2px #404040;
 `
 const ColourPickerLi = styled.li`
   display: grid;

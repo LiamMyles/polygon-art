@@ -7,6 +7,8 @@ import {
   PolygonRing,
 } from "reducer-contexts/polygon-groups"
 
+import { navigationDispatchContext } from "reducer-contexts/navigation"
+
 import {
   generatePolygonGroupSketch,
   generatePolygonRingSketch,
@@ -17,17 +19,21 @@ import { P5Canvas } from "components/P5Canvas"
 const GroupsUl = styled.ul`
   display: grid;
   grid-gap: 10px;
-  background: grey;
+  background: lightgrey;
   list-style: none;
   overflow-y: scroll;
   height: 100%;
 `
 
 const GroupsLi = styled.li`
-  background: lightgrey;
+  background: white;
   display: grid;
   grid-gap: 10px;
-  grid-template-rows: 200px 1fr;
+  grid-auto-rows: min-content;
+  border: 2px solid darkgrey;
+  border-radius: 10px;
+  margin: 10px;
+  padding: 10px 0;
 `
 const AddGroupButton = styled.button`
   margin: 0 10px;
@@ -35,21 +41,28 @@ const AddGroupButton = styled.button`
   border-radius: 10px;
   height: 50px;
   margin-bottom: 10px;
+  width: calc(100% - 20px);
 `
 
-const GroupCanvas = styled.div`
+const GroupCanvasGroupDiv = styled.div`
   display: grid;
-  grid-template-columns: 200px 100px;
-  grid-template-rows: 100px 100px;
+  grid-gap: 10px;
+  grid-template-columns: 100px 100px;
+  grid-template-rows: 200px 1fr;
   justify-self: center;
 `
-const GroupRandomize = styled.button`
+
+const CanvasWrappingDiv = styled.div`
+  grid-column: 1/3;
+  justify-self: center;
+`
+const GroupRandomizeButton = styled.button`
   justify-self: center;
   align-self: center;
   min-height: 50px;
   border-radius: 5px;
 `
-const GroupDelete = styled.button`
+const GroupDeleteButton = styled.button`
   justify-self: center;
   align-self: center;
   min-height: 50px;
@@ -67,55 +80,61 @@ export function GroupsDisplay() {
         const key = `${polygonGroup.rings.length}-${polygonGroup.rings[0].rotation.startingRotation}-${groupIndex}`
         const isLastPolygonGroup = groupIndex === polygonGroupsState.length - 1
         return (
-          <GroupsLi key={key} aria-label={`Group ${groupIndex} Canvas`}>
-            <GroupCanvas>
-              <P5Canvas
-                sketch={generatePolygonGroupSketch(
-                  polygonGroup,
-                  {
-                    height: 200,
-                    width: 200,
-                  },
-                  0.2
-                )}
+          <React.Fragment key={key}>
+            <GroupsLi aria-label={`Group ${groupIndex} Canvas`}>
+              <GroupCanvasGroupDiv>
+                <CanvasWrappingDiv>
+                  <P5Canvas
+                    sketch={generatePolygonGroupSketch(
+                      polygonGroup,
+                      {
+                        height: 200,
+                        width: 200,
+                      },
+                      0.2
+                    )}
+                  />
+                </CanvasWrappingDiv>
+                <GroupRandomizeButton
+                  onClick={() => {
+                    polygonGroupsDispatch({
+                      type: "RANDOMIZE_POLYGON_RINGS",
+                      group: groupIndex,
+                    })
+                  }}
+                >
+                  Randomize
+                </GroupRandomizeButton>
+                <GroupDeleteButton
+                  disabled={totalPolygonGroups === 1}
+                  onClick={() => {
+                    polygonGroupsDispatch({
+                      type: "DELETE_POLYGON_GROUP",
+                      group: groupIndex,
+                    })
+                  }}
+                >
+                  Delete
+                </GroupDeleteButton>
+              </GroupCanvasGroupDiv>
+              <PolygonRingsDisplay
+                polygonRings={polygonGroup.rings}
+                groupNumber={groupIndex}
               />
-              <GroupRandomize
-                onClick={() => {
-                  polygonGroupsDispatch({
-                    type: "RANDOMIZE_POLYGON_RINGS",
-                    group: groupIndex,
-                  })
-                }}
-              >
-                Randomize
-              </GroupRandomize>
-              <GroupDelete
-                disabled={totalPolygonGroups === 1}
-                onClick={() => {
-                  polygonGroupsDispatch({
-                    type: "DELETE_POLYGON_GROUP",
-                    group: groupIndex,
-                  })
-                }}
-              >
-                Delete
-              </GroupDelete>
-            </GroupCanvas>
-            <PolygonRingsDisplay
-              polygonRings={polygonGroup.rings}
-              groupNumber={groupIndex}
-            />
+            </GroupsLi>
             {isLastPolygonGroup && (
-              <AddGroupButton
-                type="button"
-                onClick={() => {
-                  polygonGroupsDispatch({ type: "CREATE_POLYGON_GROUP" })
-                }}
-              >
-                Add Group
-              </AddGroupButton>
+              <li>
+                <AddGroupButton
+                  type="button"
+                  onClick={() => {
+                    polygonGroupsDispatch({ type: "CREATE_POLYGON_GROUP" })
+                  }}
+                >
+                  Add Group
+                </AddGroupButton>
+              </li>
             )}
-          </GroupsLi>
+          </React.Fragment>
         )
       })}
     </GroupsUl>
@@ -123,32 +142,53 @@ export function GroupsDisplay() {
 }
 
 const RingsUl = styled.ul`
-  display: flex;
-  width: 100%;
+  display: grid;
+  grid-gap: 10px;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
   overflow-x: scroll;
+  margin: 0 10px;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: inset 0px 0px 9px -2px #404040;
 `
 
 const RingsLi = styled.li`
   display: grid;
-  grid-template-columns: 80px 80px;
-  grid-template-rows: 150px 50px;
+  grid-auto-columns: 1fr;
+  grid-template-rows: 50px 150px 50px;
+  grid-template-areas:
+    "EDIT EDIT RANDOM RANDOM"
+    "CANVAS CANVAS CANVAS CANVAS"
+    ". DELETE DELETE .";
   grid-gap: 10px;
-  margin: 0 5px 10px;
+  padding: 10px;
+  border: solid 2px darkgrey;
+  border-radius: 5px;
+  &:last-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+  }
 `
 const RingCanvasDiv = styled.div`
-  grid-column: 1/3;
+  grid-area: CANVAS;
   justify-self: center;
 `
-
-const RingRandomizeButton = styled.button`
+const RingButton = styled.button`
   min-height: 50px;
   border-radius: 5px;
-  grid-row: 2/3;
 `
-const RingDeleteButton = styled.button`
-  min-height: 50px;
-  border-radius: 5px;
-  grid-row: 2/3;
+
+const RingEditButton = styled(RingButton)`
+  grid-area: EDIT;
+`
+const RingRandomizeButton = styled(RingButton)`
+  grid-area: RANDOM;
+`
+const RingDeleteButton = styled(RingButton)`
+  grid-area: DELETE;
 `
 
 const AddRingButton = styled.button`
@@ -164,6 +204,7 @@ const PolygonRingsDisplay: React.FC<{
   groupNumber: number
 }> = ({ polygonRings, groupNumber }) => {
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
+  const navigationDispatch = useContext(navigationDispatchContext)
   const totalPolygons = polygonRings.length
   return (
     <RingsUl>
@@ -175,18 +216,18 @@ const PolygonRingsDisplay: React.FC<{
             <RingsLi
               aria-label={`Group ${groupNumber}, Ring ${polygonIndex} Canvas`}
             >
-              <RingCanvasDiv>
-                <P5Canvas
-                  sketch={generatePolygonRingSketch(
-                    polygon,
-                    {
-                      height: 150,
-                      width: 150,
-                    },
-                    0.15
-                  )}
-                />
-              </RingCanvasDiv>
+              <RingEditButton
+                type="button"
+                onClick={() => {
+                  navigationDispatch({
+                    type: "POLYGON_SCREEN",
+                    currentGroup: groupNumber,
+                    currentPolygon: polygonIndex,
+                  })
+                }}
+              >
+                Edit
+              </RingEditButton>
               <RingRandomizeButton
                 type="button"
                 onClick={() => {
@@ -199,6 +240,18 @@ const PolygonRingsDisplay: React.FC<{
               >
                 Randomize
               </RingRandomizeButton>
+              <RingCanvasDiv>
+                <P5Canvas
+                  sketch={generatePolygonRingSketch(
+                    polygon,
+                    {
+                      height: 150,
+                      width: 150,
+                    },
+                    0.15
+                  )}
+                />
+              </RingCanvasDiv>
               <RingDeleteButton
                 type="button"
                 disabled={totalPolygons === 1}
