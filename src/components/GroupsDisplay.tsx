@@ -80,8 +80,8 @@ export function GroupsDisplay() {
         const key = `${polygonGroup.rings.length}-${polygonGroup.rings[0].rotation.startingRotation}-${groupIndex}`
         const isLastPolygonGroup = groupIndex === polygonGroupsState.length - 1
         return (
-          <>
-            <GroupsLi key={key} aria-label={`Group ${groupIndex} Canvas`}>
+          <React.Fragment key={key}>
+            <GroupsLi aria-label={`Group ${groupIndex} Canvas`}>
               <GroupCanvasGroupDiv>
                 <CanvasWrappingDiv>
                   <P5Canvas
@@ -134,7 +134,7 @@ export function GroupsDisplay() {
                 </AddGroupButton>
               </li>
             )}
-          </>
+          </React.Fragment>
         )
       })}
     </GroupsUl>
