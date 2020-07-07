@@ -12,6 +12,7 @@ import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
 import { GroupsDisplay } from "components/GroupsDisplay"
 import { PolygonDisplay } from "components/PolygonDisplay"
+import { ModalBox } from "components/ModalBox"
 
 const Main = styled.main`
   display: grid;
@@ -59,6 +60,10 @@ const App: React.FC = () => {
         <>
           <MainCanvas />
           <Navigation>
+            <ModalBox
+              buttonText="Edit Background"
+              title="Edit Background"
+            ></ModalBox>
             <button
               type="button"
               onClick={() => {
@@ -77,14 +82,6 @@ const App: React.FC = () => {
               }}
             >
               Edit Polygons
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                console.log("TODO")
-              }}
-            >
-              Edit Background
             </button>
           </Navigation>
         </>
