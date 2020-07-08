@@ -12,6 +12,7 @@ import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
 import { GroupsDisplay } from "components/GroupsDisplay"
 import { PolygonDisplay } from "components/PolygonDisplay"
+import { ModalBox } from "components/ModalBox"
 
 const Main = styled.main`
   display: grid;
@@ -35,11 +36,12 @@ const Navigation = styled.nav`
   align-items: center;
   height: 100%;
   box-shadow: inset 0px 4px 9px -2px #404040;
-  button {
-    min-height: 50px;
-    border-radius: 5px;
-    margin: 5px;
-  }
+`
+
+const NavigationButton = styled.button`
+  min-height: 50px;
+  border-radius: 5px;
+  margin: 5px;
 `
 
 const App: React.FC = () => {
@@ -59,7 +61,12 @@ const App: React.FC = () => {
         <>
           <MainCanvas />
           <Navigation>
-            <button
+            <ModalBox
+              buttonText="Edit Background"
+              title="Edit Background"
+              StyledButton={NavigationButton}
+            ></ModalBox>
+            <NavigationButton
               type="button"
               onClick={() => {
                 polygonGroupsDispatch({
@@ -69,23 +76,15 @@ const App: React.FC = () => {
               }}
             >
               Randomize
-            </button>
-            <button
+            </NavigationButton>
+            <NavigationButton
               type="button"
               onClick={() => {
                 navigationDispatch({ type: "GROUP_SCREEN" })
               }}
             >
               Edit Polygons
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                console.log("TODO")
-              }}
-            >
-              Edit Background
-            </button>
+            </NavigationButton>
           </Navigation>
         </>
         <>

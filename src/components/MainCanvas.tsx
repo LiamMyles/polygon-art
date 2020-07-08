@@ -15,7 +15,6 @@ const MainCanvasWrapper = styled.div`
   height: 100%;
   max-width: 100vw;
   text-align: center;
-  font-size: 200;
 `
 
 function generateKey(
