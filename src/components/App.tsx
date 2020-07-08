@@ -36,11 +36,12 @@ const Navigation = styled.nav`
   align-items: center;
   height: 100%;
   box-shadow: inset 0px 4px 9px -2px #404040;
-  button {
-    min-height: 50px;
-    border-radius: 5px;
-    margin: 5px;
-  }
+`
+
+const NavigationButton = styled.button`
+  min-height: 50px;
+  border-radius: 5px;
+  margin: 5px;
 `
 
 const App: React.FC = () => {
@@ -63,8 +64,9 @@ const App: React.FC = () => {
             <ModalBox
               buttonText="Edit Background"
               title="Edit Background"
+              StyledButton={NavigationButton}
             ></ModalBox>
-            <button
+            <NavigationButton
               type="button"
               onClick={() => {
                 polygonGroupsDispatch({
@@ -74,15 +76,15 @@ const App: React.FC = () => {
               }}
             >
               Randomize
-            </button>
-            <button
+            </NavigationButton>
+            <NavigationButton
               type="button"
               onClick={() => {
                 navigationDispatch({ type: "GROUP_SCREEN" })
               }}
             >
               Edit Polygons
-            </button>
+            </NavigationButton>
           </Navigation>
         </>
         <>

@@ -1,65 +1,114 @@
 import React, { useState, useEffect, useRef } from "react"
-import styled from "styled-components"
+import styled, { StyledComponent } from "styled-components"
+
+const ScreenReaderOnly = styled.span`
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+`
 
 const ModalDiv = styled.div`
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 200px;
-  height: 200px;
-  border: 1px solid black;
-  border-radius: 10px;
+  max-width: 500px;
+  width: calc(100% - 40px);
+  border: 1px solid darkgrey;
+  border-radius: 8px;
+  box-shadow: 0px 3px 7px 0px darkgrey;
   padding: 10px;
   background-color: lightgrey;
   z-index: 10;
 `
 
+const ModalTitleBarDv = styled.div`
+  display: flex;
+  padding: 10px;
+  border-radius: 4px 4px 0 0;
+  justify-content: space-between;
+  align-items: center;
+  background: grey;
+  margin: -10px -10px 10px -10px;
+  h2 {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0 10px 0 0;
+    color: whitesmoke;
+  }
+  button {
+    position: relative;
+    background: lightgrey;
+    width: 35px;
+    height: 35px;
+    border-radius: 4px;
+    border: 1px solid lightgrey;
+    box-shadow: 0 2px 2px dimgray;
+    transition: all 200ms ease-in-out;
+    &:focus,
+    &:hover {
+      box-shadow: 1px 3px 3px 2px dimgray;
+      outline: none;
+      background-color: dimgrey;
+      &::before {
+        transition: all 200ms ease-in-out;
+        text-shadow: 0 0 0 lightgrey;
+      }
+    }
+    &::before {
+      position: absolute;
+      content: "❌";
+      text-shadow: 0 0 0 dimgrey;
+      color: transparent;
+      font-size: 20px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+`
+
 const ModelBackgroundDiv = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   left: 0;
   bottom: 0;
-  background: grey;
+  background: lightgrey;
   opacity: 0.7;
   z-index: 9;
 `
 
 const focusChildInput = (first: boolean, parent: HTMLElement) => {
-  const modalElements = Array.from(parent.children) as HTMLElement[]
+  const childrenInputs = Array.from(parent.getElementsByTagName("input"))
+  const childrenButtons = Array.from(parent.getElementsByTagName("button"))
 
-  const elementsToFocus = modalElements.filter((element) => {
-    if (element.tagName === "BUTTON" || element.tagName === "INPUT") {
-      return true
-    } else {
-      return false
-    }
-  })
+  const modalElements = [...childrenButtons, ...childrenInputs]
+
   if (first) {
-    elementsToFocus[0].focus()
+    modalElements[0].focus()
   } else {
-    elementsToFocus[elementsToFocus.length - 1].focus()
+    modalElements[modalElements.length - 1].focus()
   }
 }
 
 interface ModelBoxProps {
   buttonText: string
   title: string
+  StyledButton: StyledComponent<"button", any, {}, never>
 }
 
 export const ModalBox: React.FC<ModelBoxProps> = ({
   children,
   buttonText,
   title,
+  StyledButton,
 }) => {
-  // -- Should have close button by default
-  // -- Should focus first element that can be focused
-  // - When closed Should focus trigger button on passed button ref
-  // - Focus should be trapped to modal
-  // - Modal should close on esc
-
-  const [isClosed, setIsClosed] = useState(true)
+  const [isClosed, setIsClosed] = useState(false)
   const [lastFocus, setLastFocus] = useState<Element | null>(null)
   const openButtonRef = useRef(null)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -112,14 +161,14 @@ export const ModalBox: React.FC<ModelBoxProps> = ({
 
   return (
     <>
-      <button
+      <StyledButton
         ref={openButtonRef}
         onClick={() => {
           setIsClosed(false)
         }}
       >
         {buttonText}
-      </button>
+      </StyledButton>
       <ModelBackgroundDiv hidden={isClosed} />
       <ModalDiv
         role="dialog"
@@ -128,14 +177,16 @@ export const ModalBox: React.FC<ModelBoxProps> = ({
         ref={modalRef}
         hidden={isClosed}
       >
-        <h1 id="dialog_label">{title}</h1>
-        <button
-          onClick={() => {
-            setIsClosed(true)
-          }}
-        >
-          Close
-        </button>
+        <ModalTitleBarDv>
+          <h2 id="dialog_label">{title}</h2>
+          <button
+            onClick={() => {
+              setIsClosed(true)
+            }}
+          >
+            <ScreenReaderOnly>Close</ScreenReaderOnly>
+          </button>
+        </ModalTitleBarDv>
         {children}
       </ModalDiv>
     </>
