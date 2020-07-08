@@ -90,35 +90,35 @@ const App: React.FC = () => {
         <>
           <GroupsDisplay />
           <Navigation>
-            <button
+            <NavigationButton
               type="button"
               onClick={() => {
                 navigationDispatch({ type: "MAIN_SCREEN" })
               }}
             >
               Home
-            </button>
+            </NavigationButton>
           </Navigation>
         </>
         <>
           <PolygonDisplay />
           <Navigation>
-            <button
+            <NavigationButton
               type="button"
               onClick={() => {
                 navigationDispatch({ type: "GROUP_SCREEN" })
               }}
             >
               Edit Polygons
-            </button>
-            <button
+            </NavigationButton>
+            <NavigationButton
               type="button"
               onClick={() => {
                 navigationDispatch({ type: "MAIN_SCREEN" })
               }}
             >
               Home
-            </button>
+            </NavigationButton>
           </Navigation>
         </>
       </MainContent>

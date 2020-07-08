@@ -108,7 +108,7 @@ export const ModalBox: React.FC<ModelBoxProps> = ({
   title,
   StyledButton,
 }) => {
-  const [isClosed, setIsClosed] = useState(false)
+  const [isClosed, setIsClosed] = useState(true)
   const [lastFocus, setLastFocus] = useState<Element | null>(null)
   const openButtonRef = useRef(null)
   const modalRef = useRef<HTMLDivElement>(null)
