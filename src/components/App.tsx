@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import styled from "styled-components"
 
 import {
@@ -49,6 +49,8 @@ const App: React.FC = () => {
   const navigationDispatch = useContext(navigationDispatchContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
 
+  const [editModalIsClosed, editModalSetIsClosed] = useState(true)
+
   const childMapping = {
     MAIN_SCREEN: 1,
     GROUP_SCREEN: 2,
@@ -65,6 +67,8 @@ const App: React.FC = () => {
               buttonText="Edit Background"
               title="Edit Background"
               StyledButton={NavigationButton}
+              isClosed={editModalIsClosed}
+              setIsClosed={editModalSetIsClosed}
             ></ModalBox>
             <NavigationButton
               type="button"
