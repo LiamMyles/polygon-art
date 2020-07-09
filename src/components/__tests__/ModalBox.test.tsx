@@ -1,13 +1,24 @@
-import React from "react"
+import React, { useState } from "react"
 import { render, fireEvent, act } from "@testing-library/react"
 import { ModalBox } from "components/ModalBox"
 
+import styled from "styled-components"
+
+const TestStyledButton = styled.button``
+
 describe("ModalBox component", () => {
   const TestComponent: React.FC = () => {
+    const [isClosed, setIsClosed] = useState(true)
     return (
       <div>
         <button>Above Button</button>
-        <ModalBox buttonText="Open Modal" title="Testing Modal">
+        <ModalBox
+          isClosed={isClosed}
+          setIsClosed={setIsClosed}
+          buttonText="Open Modal"
+          title="Testing Modal"
+          StyledButton={TestStyledButton}
+        >
           <label htmlFor="input">Extra Input</label>
           <input id="input" defaultValue="testing" />
         </ModalBox>

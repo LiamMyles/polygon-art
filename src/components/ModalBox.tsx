@@ -12,17 +12,13 @@ const ScreenReaderOnly = styled.span`
 `
 
 const ModalDiv = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   max-width: 500px;
   width: calc(100% - 40px);
   border: 1px solid darkgrey;
   border-radius: 8px;
   box-shadow: 0px 3px 7px 0px darkgrey;
   padding: 10px;
-  background-color: lightgrey;
+  background-color: white;
   z-index: 10;
 `
 
@@ -73,13 +69,15 @@ const ModalTitleBarDv = styled.div`
 `
 
 const ModelBackgroundDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   top: 0;
   right: 0;
   left: 0;
   bottom: 0;
-  background: lightgrey;
-  opacity: 0.7;
+  background-color: rgba(211, 211, 211, 0.7);
   z-index: 9;
 `
 
@@ -100,6 +98,8 @@ interface ModelBoxProps {
   buttonText: string
   title: string
   StyledButton: StyledComponent<"button", any, {}, never>
+  isClosed: boolean
+  setIsClosed: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const ModalBox: React.FC<ModelBoxProps> = ({
@@ -107,8 +107,9 @@ export const ModalBox: React.FC<ModelBoxProps> = ({
   buttonText,
   title,
   StyledButton,
+  isClosed,
+  setIsClosed,
 }) => {
-  const [isClosed, setIsClosed] = useState(true)
   const [lastFocus, setLastFocus] = useState<Element | null>(null)
   const openButtonRef = useRef(null)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -169,26 +170,27 @@ export const ModalBox: React.FC<ModelBoxProps> = ({
       >
         {buttonText}
       </StyledButton>
-      <ModelBackgroundDiv hidden={isClosed} />
-      <ModalDiv
-        role="dialog"
-        aria-labelledby="dialog_label"
-        aria-modal="true"
-        ref={modalRef}
-        hidden={isClosed}
-      >
-        <ModalTitleBarDv>
-          <h2 id="dialog_label">{title}</h2>
-          <button
-            onClick={() => {
-              setIsClosed(true)
-            }}
-          >
-            <ScreenReaderOnly>Close</ScreenReaderOnly>
-          </button>
-        </ModalTitleBarDv>
-        {children}
-      </ModalDiv>
+      <ModelBackgroundDiv hidden={isClosed}>
+        <ModalDiv
+          role="dialog"
+          aria-labelledby="dialog_label"
+          aria-modal="true"
+          ref={modalRef}
+          hidden={isClosed}
+        >
+          <ModalTitleBarDv>
+            <h2 id="dialog_label">{title}</h2>
+            <button
+              onClick={() => {
+                setIsClosed(true)
+              }}
+            >
+              <ScreenReaderOnly>Close</ScreenReaderOnly>
+            </button>
+          </ModalTitleBarDv>
+          {children}
+        </ModalDiv>
+      </ModelBackgroundDiv>
     </>
   )
 }
