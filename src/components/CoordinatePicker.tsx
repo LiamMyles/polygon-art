@@ -7,7 +7,7 @@ interface CoordinatePickerProps {
   currentX: number
   setYFunction: React.Dispatch<React.SetStateAction<number>>
   setXFunction: React.Dispatch<React.SetStateAction<number>>
-  scrollingParentRef?: React.RefObject<HTMLDivElement>
+  scrollingParentRef?: React.RefObject<HTMLElement>
 }
 
 const CoordinatePickerWrappingDiv = styled.div`
