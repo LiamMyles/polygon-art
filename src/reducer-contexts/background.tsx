@@ -3,6 +3,7 @@ import produce, { Draft } from "immer"
 
 export interface BackgroundState {
   opacity: number
+  hex: string
   rgb: string
   rgba: string
   shouldRedraw: boolean
@@ -35,6 +36,7 @@ export const backgroundReducer = produce(
       case "UPDATE_BACKGROUND_WITH_HEX": {
         draft.opacity = action.opacity
         draft.shouldRedraw = action.shouldRedraw
+        draft.hex = action.hexColour
         const convertedHex = hexToRgb(action.hexColour)
         if (convertedHex) {
           const { r, g, b } = convertedHex
@@ -49,6 +51,7 @@ export const backgroundReducer = produce(
 
 export const backgroundInitialState: BackgroundState = {
   opacity: 70,
+  hex: "#ffffff",
   rgb: "rgb(255,255,255)",
   rgba: "rgba(255,255,255, 0.05)",
   shouldRedraw: true,

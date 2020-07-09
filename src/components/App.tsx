@@ -1,18 +1,23 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useState, useEffect } from "react"
 import styled from "styled-components"
 
 import {
   navigationStateContext,
   navigationDispatchContext,
 } from "reducer-contexts/navigation"
-
 import { polygonGroupsDispatchContext } from "reducer-contexts/polygon-groups"
+import {
+  backgroundDispatchContext,
+  backgroundStateContext,
+} from "reducer-contexts/background"
 
 import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
 import { GroupsDisplay } from "components/GroupsDisplay"
 import { PolygonDisplay } from "components/PolygonDisplay"
 import { ModalBox } from "components/ModalBox"
+import { ToggleSwitch } from "components/ToggleSwitch"
+import { Slider } from "components/Slider"
 
 const Main = styled.main`
   display: grid;
@@ -44,12 +49,99 @@ const NavigationButton = styled.button`
   margin: 5px;
 `
 
+const ColourPickerInput = styled.input`
+  box-sizing: border-box;
+  width: 100%;
+  height: 35px;
+  padding: 5px;
+  border-radius: 5px;
+`
+
+const EditBackgroundModal: React.FC = () => {
+  const backgroundDispatch = useContext(backgroundDispatchContext)
+  const backgroundState = useContext(backgroundStateContext)
+
+  const [canUpdate, setCanUpdate] = useState(false)
+  const [editModalIsClosed, setEditModalIsClosed] = useState(true)
+  const [shouldRedrawBackground, setShouldRedrawBackground] = useState(
+    backgroundState.shouldRedraw
+  )
+  const [backgroundHex, setBackgroundHex] = useState(backgroundState.hex)
+  const [backgroundOpacity, setBackgroundOpacity] = useState(
+    backgroundState.opacity
+  )
+
+  useEffect(() => {
+    if (
+      shouldRedrawBackground !== backgroundState.shouldRedraw ||
+      backgroundHex !== backgroundState.hex ||
+      backgroundOpacity !== backgroundState.opacity
+    ) {
+    }
+    setCanUpdate(true)
+  }, [
+    backgroundState,
+    shouldRedrawBackground,
+    backgroundHex,
+    backgroundOpacity,
+  ])
+
+  return (
+    <ModalBox
+      buttonText="Edit Background"
+      title="Edit Background"
+      StyledButton={NavigationButton}
+      isClosed={editModalIsClosed}
+      setIsClosed={setEditModalIsClosed}
+    >
+      <ToggleSwitch
+        checked={shouldRedrawBackground}
+        id="redraw-background-toggle"
+        label="Redraw Background"
+        setFunction={setShouldRedrawBackground}
+        checkedText={{ checked: "Yes", unchecked: "No" }}
+      />
+      <label htmlFor="background-colour-picker">Colour</label>
+      <ColourPickerInput
+        id="background-colour-picker"
+        type="color"
+        value={backgroundHex}
+        onChange={({ currentTarget: { value } }) => {
+          setBackgroundHex(value)
+        }}
+      />
+      <Slider
+        label="Opacity"
+        id="background-opacity"
+        currentValue={backgroundOpacity}
+        max={100}
+        min={0}
+        setFunction={setBackgroundOpacity}
+      />
+      <button
+        type="button"
+        disabled={!canUpdate}
+        onClick={() => {
+          backgroundDispatch({
+            type: "UPDATE_BACKGROUND_WITH_HEX",
+            shouldRedraw: shouldRedrawBackground,
+            hexColour: backgroundHex,
+            opacity: backgroundOpacity,
+          })
+          setCanUpdate(false)
+          setEditModalIsClosed(true)
+        }}
+      >
+        Update
+      </button>
+    </ModalBox>
+  )
+}
+
 const App: React.FC = () => {
   const navigationState = useContext(navigationStateContext)
   const navigationDispatch = useContext(navigationDispatchContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
-
-  const [editModalIsClosed, editModalSetIsClosed] = useState(true)
 
   const childMapping = {
     MAIN_SCREEN: 1,
@@ -63,13 +155,7 @@ const App: React.FC = () => {
         <>
           <MainCanvas />
           <Navigation>
-            <ModalBox
-              buttonText="Edit Background"
-              title="Edit Background"
-              StyledButton={NavigationButton}
-              isClosed={editModalIsClosed}
-              setIsClosed={editModalSetIsClosed}
-            ></ModalBox>
+            <EditBackgroundModal />
             <NavigationButton
               type="button"
               onClick={() => {

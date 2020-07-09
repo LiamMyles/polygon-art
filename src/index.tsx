@@ -5,15 +5,18 @@ import * as serviceWorker from "./serviceWorker"
 import App from "components/App"
 import { NavigationContextWrapper } from "reducer-contexts/navigation"
 import { PolygonGroupsContextWrapper } from "reducer-contexts/polygon-groups"
+import { BackgroundContextWrapper } from "reducer-contexts/background"
 
 import "./reset.css"
 
 ReactDOM.render(
   <React.StrictMode>
     <PolygonGroupsContextWrapper>
-      <NavigationContextWrapper>
-        <App />
-      </NavigationContextWrapper>
+      <BackgroundContextWrapper>
+        <NavigationContextWrapper>
+          <App />
+        </NavigationContextWrapper>
+      </BackgroundContextWrapper>
     </PolygonGroupsContextWrapper>
   </React.StrictMode>,
   document.getElementById("root")

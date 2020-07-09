@@ -20,12 +20,14 @@ describe("Background Reducer", () => {
       }
       const initialState: BackgroundState = {
         opacity: 5,
+        hex: "#000000",
         rgb: "rgb(0,0,0)",
         rgba: "rgba(0,0,0,0.05)",
         shouldRedraw: false,
       }
       const expectedState: BackgroundState = {
         opacity: 80,
+        hex: "#ffffff",
         rgb: "rgb(255,255,255)",
         rgba: "rgba(255,255,255,0.8)",
         shouldRedraw: true,
