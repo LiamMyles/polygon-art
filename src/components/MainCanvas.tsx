@@ -8,6 +8,7 @@ import {
 import { generateAllPolygonRingGroupsSketch } from "polygon-logic/polygon-p5-draw"
 
 import { P5Canvas } from "components/P5Canvas"
+import { backgroundStateContext } from "reducer-contexts/background"
 
 const MainCanvasWrapper = styled.div`
   background: white;
@@ -36,6 +37,7 @@ function generateKey(
 
 export const MainCanvas: React.FC = () => {
   const polygonContext = useContext(polygonGroupsStateContext)
+  const backgroundState = useContext(backgroundStateContext)
   const [currentSize, setCurrentSize] = useState({ height: 0, width: 0 })
   const mainWrapper = useRef(
     null
@@ -84,7 +86,12 @@ export const MainCanvas: React.FC = () => {
   return (
     <MainCanvasWrapper ref={mainWrapper}>
       <P5Canvas
-        sketch={generateAllPolygonRingGroupsSketch(polygonContext, currentSize)}
+        sketch={generateAllPolygonRingGroupsSketch({
+          polygonGroups: polygonContext,
+          windowSize: currentSize,
+          backgroundColour: backgroundState.rgba,
+          shouldRedrawBackground: backgroundState.shouldRedraw,
+        })}
         key={generateKey(polygonContext, currentSize)}
       />
     </MainCanvasWrapper>

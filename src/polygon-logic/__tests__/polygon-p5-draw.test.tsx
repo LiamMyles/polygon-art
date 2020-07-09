@@ -38,9 +38,14 @@ describe("Generate p5 Sketch", () => {
       },
     }
     it("should get a sketch function", () => {
-      const actualSketch = generatePolygonRingSketch(polygonRing, {
-        height: 100,
-        width: 100,
+      const actualSketch = generatePolygonRingSketch({
+        polygonRing,
+        windowSize: {
+          height: 100,
+          width: 100,
+        },
+        backgroundColour: "rgba(0,0,0,0)",
+        shouldRedrawBackground: true,
       })
       expect(actualSketch).toEqual(expect.any(Function))
     })
@@ -82,9 +87,14 @@ describe("Generate p5 Sketch", () => {
       ],
     }
     it("should get a sketch function", () => {
-      const actualSketch = generatePolygonGroupSketch(polygonGroup, {
-        height: 100,
-        width: 100,
+      const actualSketch = generatePolygonGroupSketch({
+        polygonGroup,
+        windowSize: {
+          height: 100,
+          width: 100,
+        },
+        backgroundColour: "rgba(0,0,0,0)",
+        shouldRedrawBackground: true,
       })
       expect(actualSketch).toEqual(expect.any(Function))
     })
@@ -128,9 +138,14 @@ describe("Generate p5 Sketch", () => {
       },
     ]
     it("should get a sketch function", () => {
-      const actualSketch = generateAllPolygonRingGroupsSketch(polygonGroups, {
-        height: 100,
-        width: 100,
+      const actualSketch = generateAllPolygonRingGroupsSketch({
+        polygonGroups,
+        windowSize: {
+          height: 100,
+          width: 100,
+        },
+        backgroundColour: "rgba(0,0,0,0)",
+        shouldRedrawBackground: true,
       })
       expect(actualSketch).toEqual(expect.any(Function))
     })
