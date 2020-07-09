@@ -1,10 +1,11 @@
-import React, { useContext } from "react"
+import React, { useContext, useState, useEffect } from "react"
 import styled from "styled-components"
 
 import {
   polygonGroupsStateContext,
   polygonGroupsDispatchContext,
   PolygonRing,
+  PolygonGroup,
 } from "reducer-contexts/polygon-groups"
 
 import { navigationDispatchContext } from "reducer-contexts/navigation"
@@ -15,6 +16,8 @@ import {
 } from "polygon-logic/polygon-p5-draw"
 
 import { P5Canvas } from "components/P5Canvas"
+import { ModalBox } from "./ModalBox"
+import { CoordinatePicker } from "./CoordinatePicker"
 
 const GroupsUl = styled.ul`
   display: grid;
@@ -48,12 +51,12 @@ const GroupCanvasGroupDiv = styled.div`
   display: grid;
   grid-gap: 10px;
   grid-template-columns: 100px 100px;
-  grid-template-rows: 200px 1fr;
+  grid-template-rows: 1fr 200px 1fr;
   justify-self: center;
 `
 
 const CanvasWrappingDiv = styled.div`
-  grid-column: 1/3;
+  grid-column: 1/4;
   justify-self: center;
 `
 const GroupRandomizeButton = styled.button`
@@ -67,22 +70,97 @@ const GroupDeleteButton = styled.button`
   align-self: center;
   min-height: 50px;
   border-radius: 5px;
-  grid-column: 2/3;
+  grid-column: 1/3;
 `
+
+const UpdateCoordinateButton = styled.button`
+  display: block;
+  width: 80%;
+  height: 50px;
+  margin: 10px auto 0;
+  font-size: 18px;
+  border-radius: 5px;
+`
+
+const GroupCoordinateModal: React.FC<{
+  polygonGroup: PolygonGroup
+  groupIndex: number
+}> = ({ polygonGroup, groupIndex }) => {
+  const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
+
+  const [canUpdate, setCanUpdate] = useState(false)
+  const [isClosed, setIsClosed] = useState(true)
+  const [x, setX] = useState(polygonGroup.position.x)
+  const [y, setY] = useState(polygonGroup.position.y)
+
+  useEffect(() => {
+    if (polygonGroup.position.x !== x || polygonGroup.position.y !== y) {
+      setCanUpdate(true)
+    }
+  }, [polygonGroup, x, y])
+
+  return (
+    <ModalBox
+      isClosed={isClosed}
+      setIsClosed={setIsClosed}
+      StyledButton={GroupRandomizeButton}
+      buttonText="Edit Position"
+      title="Edit Position"
+    >
+      <CoordinatePicker
+        currentX={x}
+        currentY={y}
+        setYFunction={setY}
+        setXFunction={setX}
+      />
+      <UpdateCoordinateButton
+        type="button"
+        disabled={!canUpdate}
+        onClick={() => {
+          setCanUpdate(false)
+          polygonGroupsDispatch({
+            type: "UPDATE_POLYGON_GROUP_POSITION",
+            group: groupIndex,
+            position: { x, y },
+          })
+          setIsClosed(true)
+        }}
+      >
+        Update
+      </UpdateCoordinateButton>
+    </ModalBox>
+  )
+}
 
 export function GroupsDisplay() {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
   const totalPolygonGroups = polygonGroupsState.length
+
   return (
     <GroupsUl>
       {polygonGroupsState.map((polygonGroup, groupIndex) => {
         const key = `${polygonGroup.rings.length}-${polygonGroup.rings[0].rotation.startingRotation}-${groupIndex}`
         const isLastPolygonGroup = groupIndex === polygonGroupsState.length - 1
+
         return (
           <React.Fragment key={key}>
             <GroupsLi aria-label={`Group ${groupIndex} Canvas`}>
               <GroupCanvasGroupDiv>
+                <GroupRandomizeButton
+                  onClick={() => {
+                    polygonGroupsDispatch({
+                      type: "RANDOMIZE_POLYGON_RINGS",
+                      group: groupIndex,
+                    })
+                  }}
+                >
+                  Randomize
+                </GroupRandomizeButton>
+                <GroupCoordinateModal
+                  polygonGroup={polygonGroup}
+                  groupIndex={groupIndex}
+                />
                 <CanvasWrappingDiv>
                   <P5Canvas
                     sketch={generatePolygonGroupSketch(
@@ -95,16 +173,6 @@ export function GroupsDisplay() {
                     )}
                   />
                 </CanvasWrappingDiv>
-                <GroupRandomizeButton
-                  onClick={() => {
-                    polygonGroupsDispatch({
-                      type: "RANDOMIZE_POLYGON_RINGS",
-                      group: groupIndex,
-                    })
-                  }}
-                >
-                  Randomize
-                </GroupRandomizeButton>
                 <GroupDeleteButton
                   disabled={totalPolygonGroups === 1}
                   onClick={() => {
@@ -158,7 +226,7 @@ const RingsLi = styled.li`
   grid-auto-columns: 1fr;
   grid-template-rows: 50px 150px 50px;
   grid-template-areas:
-    "EDIT EDIT RANDOM RANDOM"
+    "RANDOM RANDOM EDIT EDIT"
     "CANVAS CANVAS CANVAS CANVAS"
     ". DELETE DELETE .";
   grid-gap: 10px;
@@ -216,18 +284,6 @@ const PolygonRingsDisplay: React.FC<{
             <RingsLi
               aria-label={`Group ${groupNumber}, Ring ${polygonIndex} Canvas`}
             >
-              <RingEditButton
-                type="button"
-                onClick={() => {
-                  navigationDispatch({
-                    type: "POLYGON_SCREEN",
-                    currentGroup: groupNumber,
-                    currentPolygon: polygonIndex,
-                  })
-                }}
-              >
-                Edit
-              </RingEditButton>
               <RingRandomizeButton
                 type="button"
                 onClick={() => {
@@ -240,6 +296,19 @@ const PolygonRingsDisplay: React.FC<{
               >
                 Randomize
               </RingRandomizeButton>
+              <RingEditButton
+                type="button"
+                onClick={() => {
+                  navigationDispatch({
+                    type: "POLYGON_SCREEN",
+                    currentGroup: groupNumber,
+                    currentPolygon: polygonIndex,
+                  })
+                }}
+              >
+                Edit
+              </RingEditButton>
+
               <RingCanvasDiv>
                 <P5Canvas
                   sketch={generatePolygonRingSketch(
