@@ -24,13 +24,8 @@ function getSizeConstrainedCords(
 }
 /**
  * Shared function used to draw the polygon
- *
- *
- * @param polygonAnimation
- * @param size
- * @param p5
- * @param scale
  */
+
 function singlePolygonDraw(
   polygonAnimation: PolygonAnimation,
   size: { width: number; height: number },
@@ -75,27 +70,35 @@ function singlePolygonDraw(
 
 /**
  * Generates everything needed to draw and setup a single polygon ring
- *
- * @param PolygonRing
- * @param windowSize
- * @param scale
  */
-export function generatePolygonRingSketch(
-  PolygonRing: Readonly<PolygonRing>,
-  windowSize: { height: number; width: number },
+
+interface PolygonRingSketchParams {
+  polygonRing: Readonly<PolygonRing>
+  windowSize: { height: number; width: number }
   scale?: number
-) {
-  const polygonRingInstance = new PolygonAnimationCalculation(PolygonRing)
+  backgroundColour: string
+  shouldRedrawBackground: boolean
+}
+export function generatePolygonRingSketch({
+  polygonRing,
+  windowSize,
+  scale,
+  backgroundColour,
+  shouldRedrawBackground,
+}: PolygonRingSketchParams) {
+  const polygonRingInstance = new PolygonAnimationCalculation(polygonRing)
 
   return (p5: P5) => {
     p5.setup = () => {
       p5.createCanvas(windowSize.width, windowSize.height)
-      p5.background("#f6f6f6")
+      p5.background(backgroundColour)
     }
     p5.draw = () => {
       polygonRingInstance.getPolygonFrameAndStep()
       p5.angleMode("degrees")
-      p5.background("rgba(255,255,255, 0.05)")
+      if (shouldRedrawBackground) {
+        p5.background(backgroundColour)
+      }
       // Set translation point to the center
       p5.translate(windowSize.width / 2, windowSize.height / 2)
       singlePolygonDraw(
@@ -110,16 +113,22 @@ export function generatePolygonRingSketch(
 
 /**
  * Generates everything needed to draw and setup a group of polygon rings
- *
- * @param polygonGroup
- * @param windowSize
- * @param scale
  */
-export function generatePolygonGroupSketch(
-  polygonGroup: Readonly<PolygonGroup>,
-  windowSize: { height: number; width: number },
+
+interface PolygonGroupSketchParams {
+  polygonGroup: Readonly<PolygonGroup>
+  windowSize: { height: number; width: number }
   scale?: number
-) {
+  backgroundColour: string
+  shouldRedrawBackground: boolean
+}
+export function generatePolygonGroupSketch({
+  polygonGroup,
+  windowSize,
+  scale,
+  backgroundColour,
+  shouldRedrawBackground,
+}: PolygonGroupSketchParams) {
   const polygonRingInstances = polygonGroup.rings.map((polygonRing) => {
     return new PolygonAnimationCalculation(polygonRing)
   })
@@ -127,11 +136,13 @@ export function generatePolygonGroupSketch(
   return (p5: P5) => {
     p5.setup = () => {
       p5.createCanvas(windowSize.width, windowSize.height)
-      p5.background("#f6f6f6")
+      p5.background(backgroundColour)
     }
     p5.draw = () => {
       p5.angleMode("degrees")
-      p5.background("rgba(255,255,255, 0.05)")
+      if (shouldRedrawBackground) {
+        p5.background(backgroundColour)
+      }
       // Set translation point to the center
       p5.translate(windowSize.width / 2, windowSize.height / 2)
       p5.push()
@@ -154,10 +165,18 @@ export function generatePolygonGroupSketch(
   }
 }
 
-export function generateAllPolygonRingGroupsSketch(
-  polygonGroups: Readonly<PolygonGroup[]>,
+interface AllPolygonRingGroupsSketchParams {
+  polygonGroups: Readonly<PolygonGroup[]>
   windowSize: { height: number; width: number }
-) {
+  backgroundColour: string
+  shouldRedrawBackground: boolean
+}
+export function generateAllPolygonRingGroupsSketch({
+  polygonGroups,
+  windowSize,
+  backgroundColour,
+  shouldRedrawBackground,
+}: AllPolygonRingGroupsSketchParams) {
   const polygonGroupInstances = polygonGroups.map(({ rings }) =>
     rings.map((polygonRing) => {
       return new PolygonAnimationCalculation(polygonRing)
@@ -167,11 +186,13 @@ export function generateAllPolygonRingGroupsSketch(
   return (p5: P5) => {
     p5.setup = () => {
       p5.createCanvas(windowSize.width, windowSize.height)
-      p5.background("#f6f6f6")
+      p5.background(backgroundColour)
     }
     p5.draw = () => {
       p5.angleMode("degrees")
-      p5.background("rgba(255,255,255, 0.05)")
+      if (shouldRedrawBackground) {
+        p5.background(backgroundColour)
+      }
       // Set translation point to the center
       p5.translate(windowSize.width / 2, windowSize.height / 2)
       polygonGroupInstances.forEach((polygonGroupRings, index) => {

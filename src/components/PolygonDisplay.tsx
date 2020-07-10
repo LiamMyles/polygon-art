@@ -11,7 +11,10 @@ import {
   polygonGroupsStateContext,
   polygonGroupsDispatchContext,
 } from "reducer-contexts/polygon-groups"
+
 import { navigationStateContext } from "reducer-contexts/navigation"
+import { backgroundStateContext } from "reducer-contexts/background"
+
 import { generatePolygonRingSketch } from "polygon-logic/polygon-p5-draw"
 
 import { P5Canvas } from "components/P5Canvas"
@@ -62,6 +65,7 @@ export const PolygonDisplay = () => {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
   const navigationState = useContext(navigationStateContext)
+  const backgroundState = useContext(backgroundStateContext)
   const scrollingElementRef = useRef<HTMLDivElement>(null)
 
   const polygonToDisplay =
@@ -76,14 +80,16 @@ export const PolygonDisplay = () => {
           aria-label={`Ring ${navigationState.currentPolygon} Canvas`}
         >
           <P5Canvas
-            sketch={generatePolygonRingSketch(
-              polygonToDisplay,
-              {
+            sketch={generatePolygonRingSketch({
+              polygonRing: polygonToDisplay,
+              windowSize: {
                 width: 200,
                 height: 200,
               },
-              0.2
-            )}
+              scale: 0.2,
+              backgroundColour: backgroundState.rgba,
+              shouldRedrawBackground: backgroundState.shouldRedraw,
+            })}
           />
         </PolygonCanvasDiv>
         <PolygonRandomizeButton

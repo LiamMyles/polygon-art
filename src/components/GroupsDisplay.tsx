@@ -18,6 +18,7 @@ import {
 import { P5Canvas } from "components/P5Canvas"
 import { ModalBox } from "./ModalBox"
 import { CoordinatePicker } from "./CoordinatePicker"
+import { backgroundStateContext } from "reducer-contexts/background"
 
 const GroupsUl = styled.ul`
   display: grid;
@@ -135,6 +136,7 @@ const GroupCoordinateModal: React.FC<{
 export function GroupsDisplay() {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
+  const backgroundState = useContext(backgroundStateContext)
   const totalPolygonGroups = polygonGroupsState.length
 
   return (
@@ -163,14 +165,16 @@ export function GroupsDisplay() {
                 />
                 <CanvasWrappingDiv>
                   <P5Canvas
-                    sketch={generatePolygonGroupSketch(
-                      polygonGroup,
-                      {
+                    sketch={generatePolygonGroupSketch({
+                      polygonGroup: polygonGroup,
+                      windowSize: {
                         height: 200,
                         width: 200,
                       },
-                      0.2
-                    )}
+                      scale: 0.2,
+                      backgroundColour: backgroundState.rgba,
+                      shouldRedrawBackground: backgroundState.shouldRedraw,
+                    })}
                   />
                 </CanvasWrappingDiv>
                 <GroupDeleteButton
@@ -273,6 +277,8 @@ const PolygonRingsDisplay: React.FC<{
 }> = ({ polygonRings, groupNumber }) => {
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
   const navigationDispatch = useContext(navigationDispatchContext)
+  const backgroundState = useContext(backgroundStateContext)
+
   const totalPolygons = polygonRings.length
   return (
     <RingsUl>
@@ -311,14 +317,16 @@ const PolygonRingsDisplay: React.FC<{
 
               <RingCanvasDiv>
                 <P5Canvas
-                  sketch={generatePolygonRingSketch(
-                    polygon,
-                    {
-                      height: 150,
+                  sketch={generatePolygonRingSketch({
+                    polygonRing: polygon,
+                    windowSize: {
                       width: 150,
+                      height: 150,
                     },
-                    0.15
-                  )}
+                    scale: 0.15,
+                    backgroundColour: backgroundState.rgba,
+                    shouldRedrawBackground: backgroundState.shouldRedraw,
+                  })}
                 />
               </RingCanvasDiv>
               <RingDeleteButton
