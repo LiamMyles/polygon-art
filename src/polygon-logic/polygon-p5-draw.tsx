@@ -168,13 +168,15 @@ export function generatePolygonGroupSketch({
 interface AllPolygonRingGroupsSketchParams {
   polygonGroups: Readonly<PolygonGroup[]>
   windowSize: { height: number; width: number }
-  backgroundColour: string
+  rgbaBackgroundColour: string
+  rgbBackgroundColour: string
   shouldRedrawBackground: boolean
 }
 export function generateAllPolygonRingGroupsSketch({
   polygonGroups,
   windowSize,
-  backgroundColour,
+  rgbaBackgroundColour,
+  rgbBackgroundColour,
   shouldRedrawBackground,
 }: AllPolygonRingGroupsSketchParams) {
   const polygonGroupInstances = polygonGroups.map(({ rings }) =>
@@ -182,16 +184,16 @@ export function generateAllPolygonRingGroupsSketch({
       return new PolygonAnimationCalculation(polygonRing)
     })
   )
-
   return (p5: P5) => {
     p5.setup = () => {
       p5.createCanvas(windowSize.width, windowSize.height)
-      p5.background(backgroundColour)
+      p5.background(rgbBackgroundColour)
+      p5.frameRate(30)
     }
     p5.draw = () => {
       p5.angleMode("degrees")
       if (shouldRedrawBackground) {
-        p5.background(backgroundColour)
+        p5.background(rgbaBackgroundColour)
       }
       // Set translation point to the center
       p5.translate(windowSize.width / 2, windowSize.height / 2)
@@ -203,6 +205,104 @@ export function generateAllPolygonRingGroupsSketch({
           polygonGroups[index].position
         )
         p5.translate(x, y)
+        for (const polygonRingInstance of polygonGroupRings) {
+          singlePolygonDraw(
+            polygonRingInstance.getPolygonFrameAndStep(),
+            windowSize,
+            p5
+          )
+        }
+        p5.pop()
+      })
+    }
+  }
+}
+
+declare class GIF {
+  constructor({}: any)
+
+  on(
+    type: "start" | "abort" | "finished" | "progress",
+    callback: Function
+  ): void
+  render(): void
+  abort(): void
+  addFrame(canvas: any, options: any): void
+}
+export function generateGifSketch({
+  polygonGroups,
+  windowSize,
+  rgbaBackgroundColour,
+  rgbBackgroundColour,
+  shouldRedrawBackground,
+}: AllPolygonRingGroupsSketchParams) {
+  const polygonGroupInstances = polygonGroups.map(({ rings }) =>
+    rings.map((polygonRing) => {
+      return new PolygonAnimationCalculation(polygonRing)
+    })
+  )
+  return (p5: P5) => {
+    let gif = new GIF({
+      workers: 2,
+      quality: 5,
+      workerScript: "playing-with-polygons/js/gif.worker.js",
+      dither: "FalseFloydSteinberg-serpentine",
+      background: "#ffffff",
+    })
+
+    let shouldDraw = true
+    p5.setup = () => {
+      const canvas = p5.createCanvas(windowSize.width, windowSize.height)
+      canvas.id("main-canvas")
+      p5.frameRate(30)
+      p5.background(rgbBackgroundColour)
+
+      console.log("started")
+      gif.on("start", () => {
+        console.log("starting")
+      })
+      gif.on("abort", () => {
+        console.log("aborting")
+      })
+      gif.on("finished", function (blob: any) {
+        console.log("finished")
+        console.log(URL.createObjectURL(blob))
+        window.open(URL.createObjectURL(blob))
+      })
+      gif.on("progress", function (blob: any) {
+        console.log(blob)
+      })
+    }
+    p5.draw = () => {
+      if (p5.frameCount === 180) {
+        gif.render()
+        shouldDraw = false
+      }
+
+      if (shouldDraw && document.getElementById("main-canvas")) {
+        gif.addFrame(document.getElementById("main-canvas"), {
+          delay: 30,
+          copy: true,
+        })
+      } else {
+        p5.remove()
+      }
+      p5.angleMode("degrees")
+      if (shouldRedrawBackground) {
+        p5.background(rgbaBackgroundColour)
+      }
+      // Set translation point to the center
+      p5.translate(windowSize.width / 2, windowSize.height / 2)
+
+      polygonGroupInstances.forEach((polygonGroupRings, index) => {
+        p5.push()
+        // Set groups translation point
+        const { x, y } = getSizeConstrainedCords(
+          windowSize,
+          polygonGroups[index].position
+        )
+        p5.translate(x, y)
+        p5.scale(0.2)
         for (const polygonRingInstance of polygonGroupRings) {
           singlePolygonDraw(
             polygonRingInstance.getPolygonFrameAndStep(),
