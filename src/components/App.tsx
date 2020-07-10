@@ -5,7 +5,10 @@ import {
   navigationStateContext,
   navigationDispatchContext,
 } from "reducer-contexts/navigation"
-import { polygonGroupsDispatchContext } from "reducer-contexts/polygon-groups"
+import {
+  polygonGroupsDispatchContext,
+  polygonGroupsStateContext,
+} from "reducer-contexts/polygon-groups"
 import {
   backgroundDispatchContext,
   backgroundStateContext,
@@ -18,6 +21,8 @@ import { PolygonDisplay } from "components/PolygonDisplay"
 import { ModalBox } from "components/ModalBox"
 import { ToggleSwitch } from "components/ToggleSwitch"
 import { Slider } from "components/Slider"
+import { P5Canvas } from "./P5Canvas"
+import { generateGifSketch } from "polygon-logic/polygon-p5-draw"
 
 const Main = styled.main`
   display: grid;
@@ -158,6 +163,69 @@ const EditBackgroundModal: React.FC = () => {
   )
 }
 
+const GifModalInternalWrappingDiv = styled.div`
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  grid-gap: 10px;
+  font-size: 20px;
+`
+const GifCanvas = styled(P5Canvas)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const GifModalUpdateButton = styled.button`
+  display: block;
+  width: 80%;
+  height: 50px;
+  margin: 10px auto 0;
+  font-size: 18px;
+  border-radius: 5px;
+`
+
+const GenerateGifModal: React.FC = () => {
+  const [editModalIsClosed, setEditModalIsClosed] = useState(true)
+  const polygonContext = useContext(polygonGroupsStateContext)
+  const backgroundState = useContext(backgroundStateContext)
+  const [canUpdate, setCanUpdate] = useState(true)
+
+  return (
+    <ModalBox
+      buttonText="Share Gif"
+      title="Share Gif"
+      StyledButton={NavigationButton}
+      isClosed={editModalIsClosed}
+      setIsClosed={setEditModalIsClosed}
+    >
+      <ModalInternalWrappingDiv>
+        {!editModalIsClosed && (
+          <GifCanvas
+            sketch={generateGifSketch({
+              polygonGroups: polygonContext,
+              windowSize: { height: 250, width: 250 },
+              rgbaBackgroundColour: backgroundState.rgba,
+              rgbBackgroundColour: backgroundState.rgb,
+              shouldRedrawBackground: backgroundState.shouldRedraw,
+            })}
+          />
+        )}
+        <ModalUpdateButton
+          type="button"
+          disabled={!canUpdate}
+          onClick={() => {
+            // setCanUpdate(false)
+            setEditModalIsClosed(true)
+          }}
+        >
+          Update
+        </ModalUpdateButton>
+      </ModalInternalWrappingDiv>
+    </ModalBox>
+  )
+}
+
 const App: React.FC = () => {
   const navigationState = useContext(navigationStateContext)
   const navigationDispatch = useContext(navigationDispatchContext)
@@ -176,6 +244,7 @@ const App: React.FC = () => {
           <MainCanvas />
           <Navigation>
             <EditBackgroundModal />
+            <GenerateGifModal />
             <NavigationButton
               type="button"
               onClick={() => {
