@@ -50,10 +50,10 @@ export const backgroundReducer = produce(
 )
 
 export const backgroundInitialState: BackgroundState = {
-  opacity: 70,
+  opacity: 10,
   hex: "#ffffff",
   rgb: "rgb(255,255,255)",
-  rgba: "rgba(255,255,255, 0.05)",
+  rgba: "rgba(255,255,255, 0.1)",
   shouldRedraw: true,
 }
 
