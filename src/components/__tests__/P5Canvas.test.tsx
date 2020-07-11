@@ -18,10 +18,11 @@ beforeEach(() => {
 })
 
 describe("P5Canvas Component", () => {
-  it("should render run sketch, and remove on unmount", () => {
+  it("should render run sketch, and remove on unmount", async () => {
     const { unmount } = render(<P5Canvas sketch={() => {}} />)
-
-    expect(p5).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(p5).toHaveBeenCalledTimes(1)
+    })
     expect(mockP5RemoveFunction).not.toHaveBeenCalled()
     unmount()
     expect(mockP5RemoveFunction).toHaveBeenCalledTimes(1)

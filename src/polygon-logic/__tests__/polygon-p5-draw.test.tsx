@@ -144,7 +144,8 @@ describe("Generate p5 Sketch", () => {
           height: 100,
           width: 100,
         },
-        backgroundColour: "rgba(0,0,0,0)",
+        rgbaBackgroundColour: "rgba(0,0,0,0)",
+        rgbBackgroundColour: "rgb(0,0,0)",
         shouldRedrawBackground: true,
       })
       expect(actualSketch).toEqual(expect.any(Function))

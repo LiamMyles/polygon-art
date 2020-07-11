@@ -89,7 +89,8 @@ export const MainCanvas: React.FC = () => {
         sketch={generateAllPolygonRingGroupsSketch({
           polygonGroups: polygonContext,
           windowSize: currentSize,
-          backgroundColour: backgroundState.rgba,
+          rgbaBackgroundColour: backgroundState.rgba,
+          rgbBackgroundColour: backgroundState.rgb,
           shouldRedrawBackground: backgroundState.shouldRedraw,
         })}
         key={generateKey(polygonContext, currentSize)}

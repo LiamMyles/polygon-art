@@ -87,7 +87,8 @@ export const PolygonDisplay = () => {
                 height: 200,
               },
               scale: 0.2,
-              backgroundColour: backgroundState.rgba,
+              rgbaBackgroundColour: backgroundState.rgba,
+              rgbBackgroundColour: backgroundState.rgb,
               shouldRedrawBackground: backgroundState.shouldRedraw,
             })}
           />
