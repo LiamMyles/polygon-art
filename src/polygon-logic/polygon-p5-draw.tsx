@@ -224,9 +224,18 @@ export function generateAllPolygonRingGroupsSketch({
 }
 
 declare class GIF {
-  constructor({}: any)
+  constructor(options: {
+    workers: number
+    quality: number
+    workerScript: string
+    dither: string
+  })
 
   on(
+    type: "start" | "abort" | "finished" | "progress",
+    callback: Function
+  ): void
+  removeListener(
     type: "start" | "abort" | "finished" | "progress",
     callback: Function
   ): void

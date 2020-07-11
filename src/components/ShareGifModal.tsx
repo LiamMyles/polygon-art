@@ -11,7 +11,12 @@ import { Slider } from "./Slider"
 import download from "downloadjs"
 
 declare class GIF {
-  constructor({}: any)
+  constructor(options: {
+    workers: number
+    quality: number
+    workerScript: string
+    dither: string
+  })
 
   on(
     type: "start" | "abort" | "finished" | "progress",
