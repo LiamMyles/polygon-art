@@ -56,7 +56,7 @@ const GifModalUpdateButton = styled.button`
 const gifOptions = {
   workers: 2,
   quality: 5,
-  workerScript: "playing-with-polygons/js/gif.worker.js",
+  workerScript: "/playing-with-polygons/js/gif.worker.js",
   dither: "FalseFloydSteinberg-serpentine",
 }
 
@@ -158,7 +158,6 @@ export const GenerateGifModal: React.FC = () => {
         )}
         {!editModalIsClosed && !renderHasStarted && startGenerating && (
           <>
-            {console.log("crap I rendered")}
             <p>Recording</p>
             <GifCanvas
               sketch={generateGifSketch({
