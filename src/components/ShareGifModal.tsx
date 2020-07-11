@@ -139,7 +139,7 @@ export const GenerateGifModal: React.FC = () => {
       <GifModalInternalWrappingDiv>
         {renderHasStarted &&
           (!renderFinished ? (
-            <p>Processing : {currentProgress}</p>
+            <p>Processing : {currentProgress}%</p>
           ) : (
             <p>Finished</p>
           ))}
