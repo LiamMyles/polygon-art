@@ -60,7 +60,7 @@ const gifOptions = {
   dither: "FalseFloydSteinberg-serpentine",
 }
 
-let gif = new GIF(gifOptions)
+let gif = typeof GIF !== "undefined" ? new GIF(gifOptions) : null
 
 export const GenerateGifModal: React.FC = () => {
   const [editModalIsClosed, setEditModalIsClosed] = useState(true)
@@ -77,6 +77,7 @@ export const GenerateGifModal: React.FC = () => {
 
   // Reset on close
   useEffect(() => {
+    if (gif === null) return
     if (editModalIsClosed) {
       console.log("reset")
       setCurrentProgress(0)
@@ -88,6 +89,7 @@ export const GenerateGifModal: React.FC = () => {
   }, [editModalIsClosed])
 
   useEffect(() => {
+    if (gif === null) return
     const progressHandler = function (progression: any) {
       console.log("progression", progression)
       const roundedProgression = Math.round(progression * 100)
@@ -119,6 +121,7 @@ export const GenerateGifModal: React.FC = () => {
       gif = new GIF(gifOptions)
     }
     return () => {
+      if (gif === null) return
       gif.removeListener("start", startHandler)
       gif.removeListener("abort", abortHandler)
       gif.removeListener("finished", finishedHandler)
@@ -127,7 +130,7 @@ export const GenerateGifModal: React.FC = () => {
       gif = new GIF(gifOptions)
     }
   }, [editModalIsClosed])
-
+  if (gif === null) return null
   return (
     <ModalBox
       buttonText="Share Gif"
