@@ -6,6 +6,9 @@ import { backgroundStateContext } from "reducer-contexts/background"
 import { ModalBox } from "./ModalBox"
 import { generateGifSketch } from "polygon-logic/polygon-p5-draw"
 import { NavigationButton } from "./App"
+import { Slider } from "./Slider"
+
+import download from "downloadjs"
 
 declare class GIF {
   constructor({}: any)
@@ -45,33 +48,59 @@ const GifModalUpdateButton = styled.button`
   border-radius: 5px;
 `
 
-let gif = new GIF({
+const gifOptions = {
   workers: 2,
   quality: 5,
   workerScript: "playing-with-polygons/js/gif.worker.js",
   dither: "FalseFloydSteinberg-serpentine",
-})
+}
+
+let gif = new GIF(gifOptions)
 
 export const GenerateGifModal: React.FC = () => {
   const [editModalIsClosed, setEditModalIsClosed] = useState(true)
   const polygonContext = useContext(polygonGroupsStateContext)
   const backgroundState = useContext(backgroundStateContext)
-  const [canUpdate, setCanUpdate] = useState(true)
+
+  const [recordingLength, setRecordingLength] = useState(5)
+  const [startGenerating, setStartGenerating] = useState(false)
+  const [gifFile, setGifFile] = useState<Blob | null>(null)
+
+  const [currentProgress, setCurrentProgress] = useState(0)
+  const [renderHasStarted, setRenderHasStarted] = useState(false)
+  const [renderFinished, setRenderFinished] = useState(false)
+
+  // Reset on close
+  useEffect(() => {
+    if (editModalIsClosed) {
+      console.log("reset")
+      setCurrentProgress(0)
+      setRenderHasStarted(false)
+      setRenderFinished(false)
+      setStartGenerating(false)
+      setGifFile(null)
+    }
+  }, [editModalIsClosed])
 
   useEffect(() => {
     const progressHandler = function (progression: any) {
       console.log("progression", progression)
+      const roundedProgression = Math.round(progression * 100)
+      setCurrentProgress(roundedProgression)
     }
     const startHandler = (starting: any) => {
       console.log("starting", starting)
+      setRenderHasStarted(true)
     }
     const abortHandler = (aborting: any) => {
       console.log("aborting", aborting)
     }
-    const finishedHandler = function (finishedBlob: any) {
+    const finishedHandler = function (finishedBlob: Blob) {
+      const gifUrlObject = URL.createObjectURL(finishedBlob)
       console.log("finished", finishedBlob)
-      console.log(URL.createObjectURL(finishedBlob))
-      window.open(URL.createObjectURL(finishedBlob))
+      console.log(gifUrlObject)
+      setRenderFinished(true)
+      setGifFile(finishedBlob)
     }
 
     gif.on("start", startHandler)
@@ -82,6 +111,7 @@ export const GenerateGifModal: React.FC = () => {
     if (editModalIsClosed) {
       console.log("try to abort")
       gif.abort()
+      gif = new GIF(gifOptions)
     }
     return () => {
       gif.removeListener("start", startHandler)
@@ -89,6 +119,7 @@ export const GenerateGifModal: React.FC = () => {
       gif.removeListener("finished", finishedHandler)
       gif.removeListener("progress", progressHandler)
       gif.abort()
+      gif = new GIF(gifOptions)
     }
   }, [editModalIsClosed])
 
@@ -101,30 +132,60 @@ export const GenerateGifModal: React.FC = () => {
       setIsClosed={setEditModalIsClosed}
     >
       <GifModalInternalWrappingDiv>
-        {!editModalIsClosed && (
-          <GifCanvas
-            sketch={generateGifSketch({
-              polygonGroups: polygonContext,
-              windowSize: { height: 250, width: 250 },
-              rgbaBackgroundColour: backgroundState.rgba,
-              rgbBackgroundColour: backgroundState.rgb,
-              shouldRedrawBackground: backgroundState.shouldRedraw,
-              gifClass: gif,
-              recordingLength: 1,
-              scale: 0.2,
-            })}
+        {renderHasStarted &&
+          (!renderFinished ? (
+            <p>Processing : {currentProgress}</p>
+          ) : (
+            <p>Finished</p>
+          ))}
+        {!startGenerating && (
+          <Slider
+            label="Gif Length"
+            min={1}
+            max={10}
+            currentValue={recordingLength}
+            setFunction={setRecordingLength}
+            id={"gif-recording-length-slider"}
           />
         )}
-        <GifModalUpdateButton
-          type="button"
-          disabled={!canUpdate}
-          onClick={() => {
-            // setCanUpdate(false)
-            setEditModalIsClosed(true)
-          }}
-        >
-          Update
-        </GifModalUpdateButton>
+        {!editModalIsClosed && !renderHasStarted && startGenerating && (
+          <>
+            {console.log("crap I rendered")}
+            <p>Recording</p>
+            <GifCanvas
+              sketch={generateGifSketch({
+                polygonGroups: polygonContext,
+                windowSize: { height: 250, width: 250 },
+                rgbaBackgroundColour: backgroundState.rgba,
+                rgbBackgroundColour: backgroundState.rgb,
+                shouldRedrawBackground: backgroundState.shouldRedraw,
+                gifClass: gif,
+                recordingLength: recordingLength,
+                scale: 0.3,
+              })}
+            />
+          </>
+        )}
+        {!startGenerating && (
+          <GifModalUpdateButton
+            type="button"
+            onClick={() => {
+              setStartGenerating(true)
+            }}
+          >
+            Start Generating
+          </GifModalUpdateButton>
+        )}
+        {gifFile && (
+          <GifModalUpdateButton
+            type="button"
+            onClick={() => {
+              download(gifFile)
+            }}
+          >
+            Download Gif
+          </GifModalUpdateButton>
+        )}
       </GifModalInternalWrappingDiv>
     </ModalBox>
   )
