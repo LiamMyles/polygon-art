@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "/playing-with-polygons/static/css/main.fc4e5973.chunk.css",
-    "main.js": "/playing-with-polygons/static/js/main.b621d2ac.chunk.js",
-    "main.js.map": "/playing-with-polygons/static/js/main.b621d2ac.chunk.js.map",
+    "main.js": "/playing-with-polygons/static/js/main.2460db68.chunk.js",
+    "main.js.map": "/playing-with-polygons/static/js/main.2460db68.chunk.js.map",
     "runtime-main.js": "/playing-with-polygons/static/js/runtime-main.835b837a.js",
     "runtime-main.js.map": "/playing-with-polygons/static/js/runtime-main.835b837a.js.map",
-    "static/js/2.7065d302.chunk.js": "/playing-with-polygons/static/js/2.7065d302.chunk.js",
-    "static/js/2.7065d302.chunk.js.map": "/playing-with-polygons/static/js/2.7065d302.chunk.js.map",
+    "static/js/2.a6966e71.chunk.js": "/playing-with-polygons/static/js/2.a6966e71.chunk.js",
+    "static/js/2.a6966e71.chunk.js.map": "/playing-with-polygons/static/js/2.a6966e71.chunk.js.map",
     "index.html": "/playing-with-polygons/index.html",
-    "precache-manifest.e0908d540047733df35233db7a10858a.js": "/playing-with-polygons/precache-manifest.e0908d540047733df35233db7a10858a.js",
+    "precache-manifest.35615c8ac10fb5ca4bcd55d83eac4c9f.js": "/playing-with-polygons/precache-manifest.35615c8ac10fb5ca4bcd55d83eac4c9f.js",
     "service-worker.js": "/playing-with-polygons/service-worker.js",
     "static/css/main.fc4e5973.chunk.css.map": "/playing-with-polygons/static/css/main.fc4e5973.chunk.css.map",
-    "static/js/2.7065d302.chunk.js.LICENSE.txt": "/playing-with-polygons/static/js/2.7065d302.chunk.js.LICENSE.txt",
+    "static/js/2.a6966e71.chunk.js.LICENSE.txt": "/playing-with-polygons/static/js/2.a6966e71.chunk.js.LICENSE.txt",
     "static/media/rotating-ring.svg": "/playing-with-polygons/static/media/rotating-ring.37becaf0.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.835b837a.js",
-    "static/js/2.7065d302.chunk.js",
+    "static/js/2.a6966e71.chunk.js",
     "static/css/main.fc4e5973.chunk.css",
-    "static/js/main.b621d2ac.chunk.js"
+    "static/js/main.2460db68.chunk.js"
   ]
 }
