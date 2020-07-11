@@ -87,6 +87,7 @@ const App: React.FC = () => {
         <>
           <GroupsDisplay />
           <Navigation>
+            <EditBackgroundModal />
             <NavigationButton
               type="button"
               onClick={() => {
