@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8b6cb53bac9c3f6311f2661f561b9bb6",
+    "revision": "c5075e55c740710818d46a2019a49bc5",
     "url": "/playing-with-polygons/index.html"
   },
   {
-    "revision": "b7621ce667d24e41e748",
+    "revision": "5f5d7802197898a9ef74",
     "url": "/playing-with-polygons/static/css/main.fc4e5973.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/playing-with-polygons/static/js/2.a6966e71.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "b7621ce667d24e41e748",
-    "url": "/playing-with-polygons/static/js/main.2460db68.chunk.js"
+    "revision": "5f5d7802197898a9ef74",
+    "url": "/playing-with-polygons/static/js/main.3bab6d78.chunk.js"
   },
   {
     "revision": "f75011ce768951e9c08d",
