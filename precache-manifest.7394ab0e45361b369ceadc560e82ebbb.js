@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "c4108e1005800754540cca0958fb3d19",
+    "revision": "8b6cb53bac9c3f6311f2661f561b9bb6",
     "url": "/playing-with-polygons/index.html"
   },
   {

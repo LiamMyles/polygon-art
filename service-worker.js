@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/playing-with-polygons/precache-manifest.35615c8ac10fb5ca4bcd55d83eac4c9f.js"
+  "/playing-with-polygons/precache-manifest.7394ab0e45361b369ceadc560e82ebbb.js"
 );
 
 self.addEventListener('message', (event) => {
