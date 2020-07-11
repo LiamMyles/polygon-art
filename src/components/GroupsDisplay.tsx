@@ -172,7 +172,8 @@ export function GroupsDisplay() {
                         width: 200,
                       },
                       scale: 0.2,
-                      backgroundColour: backgroundState.rgba,
+                      rgbaBackgroundColour: backgroundState.rgba,
+                      rgbBackgroundColour: backgroundState.rgb,
                       shouldRedrawBackground: backgroundState.shouldRedraw,
                     })}
                   />
@@ -324,7 +325,8 @@ const PolygonRingsDisplay: React.FC<{
                       height: 150,
                     },
                     scale: 0.15,
-                    backgroundColour: backgroundState.rgba,
+                    rgbaBackgroundColour: backgroundState.rgba,
+                    rgbBackgroundColour: backgroundState.rgb,
                     shouldRedrawBackground: backgroundState.shouldRedraw,
                   })}
                 />

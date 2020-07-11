@@ -7,6 +7,8 @@ import {
 // eslint-disable-next-line
 import { PolygonRing, PolygonGroup } from "reducer-contexts/polygon-groups"
 
+const FRAME_RATE = 30
+
 function getSizeConstrainedCords(
   size: { width: number; height: number },
   cords: { x: number; y: number }
@@ -68,22 +70,26 @@ function singlePolygonDraw(
   p5.pop()
 }
 
+interface SketchParams {
+  windowSize: { height: number; width: number }
+  rgbaBackgroundColour: string
+  rgbBackgroundColour: string
+  shouldRedrawBackground: boolean
+  scale?: number
+}
+
 /**
  * Generates everything needed to draw and setup a single polygon ring
  */
-
-interface PolygonRingSketchParams {
+interface PolygonRingSketchParams extends SketchParams {
   polygonRing: Readonly<PolygonRing>
-  windowSize: { height: number; width: number }
-  scale?: number
-  backgroundColour: string
-  shouldRedrawBackground: boolean
 }
 export function generatePolygonRingSketch({
   polygonRing,
   windowSize,
   scale,
-  backgroundColour,
+  rgbaBackgroundColour,
+  rgbBackgroundColour,
   shouldRedrawBackground,
 }: PolygonRingSketchParams) {
   const polygonRingInstance = new PolygonAnimationCalculation(polygonRing)
@@ -91,13 +97,14 @@ export function generatePolygonRingSketch({
   return (p5: P5) => {
     p5.setup = () => {
       p5.createCanvas(windowSize.width, windowSize.height)
-      p5.background(backgroundColour)
+      p5.background(rgbBackgroundColour)
+      p5.frameRate(FRAME_RATE)
     }
     p5.draw = () => {
       polygonRingInstance.getPolygonFrameAndStep()
       p5.angleMode("degrees")
       if (shouldRedrawBackground) {
-        p5.background(backgroundColour)
+        p5.background(rgbaBackgroundColour)
       }
       // Set translation point to the center
       p5.translate(windowSize.width / 2, windowSize.height / 2)
@@ -115,18 +122,15 @@ export function generatePolygonRingSketch({
  * Generates everything needed to draw and setup a group of polygon rings
  */
 
-interface PolygonGroupSketchParams {
+interface PolygonGroupSketchParams extends SketchParams {
   polygonGroup: Readonly<PolygonGroup>
-  windowSize: { height: number; width: number }
-  scale?: number
-  backgroundColour: string
-  shouldRedrawBackground: boolean
 }
 export function generatePolygonGroupSketch({
   polygonGroup,
   windowSize,
   scale,
-  backgroundColour,
+  rgbaBackgroundColour,
+  rgbBackgroundColour,
   shouldRedrawBackground,
 }: PolygonGroupSketchParams) {
   const polygonRingInstances = polygonGroup.rings.map((polygonRing) => {
@@ -136,12 +140,13 @@ export function generatePolygonGroupSketch({
   return (p5: P5) => {
     p5.setup = () => {
       p5.createCanvas(windowSize.width, windowSize.height)
-      p5.background(backgroundColour)
+      p5.background(rgbBackgroundColour)
+      p5.frameRate(FRAME_RATE)
     }
     p5.draw = () => {
       p5.angleMode("degrees")
       if (shouldRedrawBackground) {
-        p5.background(backgroundColour)
+        p5.background(rgbaBackgroundColour)
       }
       // Set translation point to the center
       p5.translate(windowSize.width / 2, windowSize.height / 2)
@@ -165,12 +170,8 @@ export function generatePolygonGroupSketch({
   }
 }
 
-interface AllPolygonRingGroupsSketchParams {
+interface AllPolygonRingGroupsSketchParams extends SketchParams {
   polygonGroups: Readonly<PolygonGroup[]>
-  windowSize: { height: number; width: number }
-  rgbaBackgroundColour: string
-  rgbBackgroundColour: string
-  shouldRedrawBackground: boolean
 }
 export function generateAllPolygonRingGroupsSketch({
   polygonGroups,
@@ -178,6 +179,7 @@ export function generateAllPolygonRingGroupsSketch({
   rgbaBackgroundColour,
   rgbBackgroundColour,
   shouldRedrawBackground,
+  scale,
 }: AllPolygonRingGroupsSketchParams) {
   const polygonGroupInstances = polygonGroups.map(({ rings }) =>
     rings.map((polygonRing) => {
@@ -188,7 +190,7 @@ export function generateAllPolygonRingGroupsSketch({
     p5.setup = () => {
       p5.createCanvas(windowSize.width, windowSize.height)
       p5.background(rgbBackgroundColour)
-      p5.frameRate(30)
+      p5.frameRate(FRAME_RATE)
     }
     p5.draw = () => {
       p5.angleMode("degrees")
@@ -205,6 +207,9 @@ export function generateAllPolygonRingGroupsSketch({
           polygonGroups[index].position
         )
         p5.translate(x, y)
+        if (scale) {
+          p5.scale(scale)
+        }
         for (const polygonRingInstance of polygonGroupRings) {
           singlePolygonDraw(
             polygonRingInstance.getPolygonFrameAndStep(),
@@ -229,64 +234,51 @@ declare class GIF {
   abort(): void
   addFrame(canvas: any, options: any): void
 }
+interface GenerateGifSketch extends AllPolygonRingGroupsSketchParams {
+  gifClass: GIF
+  recordingLength: number
+}
+
 export function generateGifSketch({
   polygonGroups,
   windowSize,
   rgbaBackgroundColour,
   rgbBackgroundColour,
   shouldRedrawBackground,
-}: AllPolygonRingGroupsSketchParams) {
+  gifClass,
+  recordingLength,
+  scale,
+}: GenerateGifSketch) {
   const polygonGroupInstances = polygonGroups.map(({ rings }) =>
     rings.map((polygonRing) => {
       return new PolygonAnimationCalculation(polygonRing)
     })
   )
   return (p5: P5) => {
-    let gif = new GIF({
-      workers: 2,
-      quality: 5,
-      workerScript: "playing-with-polygons/js/gif.worker.js",
-      dither: "FalseFloydSteinberg-serpentine",
-      background: "#ffffff",
-    })
-
-    let shouldDraw = true
+    let isRecording = true
     p5.setup = () => {
       const canvas = p5.createCanvas(windowSize.width, windowSize.height)
-      canvas.id("main-canvas")
-      p5.frameRate(30)
+      canvas.id("gif-canvas")
+      p5.frameRate(FRAME_RATE)
       p5.background(rgbBackgroundColour)
-
-      console.log("started")
-      gif.on("start", () => {
-        console.log("starting")
-      })
-      gif.on("abort", () => {
-        console.log("aborting")
-      })
-      gif.on("finished", function (blob: any) {
-        console.log("finished")
-        console.log(URL.createObjectURL(blob))
-        window.open(URL.createObjectURL(blob))
-      })
-      gif.on("progress", function (blob: any) {
-        console.log(blob)
-      })
     }
     p5.draw = () => {
-      if (p5.frameCount === 180) {
-        gif.render()
-        shouldDraw = false
+      // Triggers a gif render when the right frames have been hit
+      if (p5.frameCount === recordingLength * FRAME_RATE) {
+        gifClass.render()
+        isRecording = false
       }
 
-      if (shouldDraw && document.getElementById("main-canvas")) {
-        gif.addFrame(document.getElementById("main-canvas"), {
+      // Records the frames while "isRecording" else removes the canvas
+      if (isRecording && document.getElementById("gif-canvas")) {
+        gifClass.addFrame(document.getElementById("gif-canvas"), {
           delay: 30,
           copy: true,
         })
       } else {
         p5.remove()
       }
+
       p5.angleMode("degrees")
       if (shouldRedrawBackground) {
         p5.background(rgbaBackgroundColour)
@@ -302,7 +294,9 @@ export function generateGifSketch({
           polygonGroups[index].position
         )
         p5.translate(x, y)
-        p5.scale(0.2)
+        if (scale) {
+          p5.scale(scale)
+        }
         for (const polygonRingInstance of polygonGroupRings) {
           singlePolygonDraw(
             polygonRingInstance.getPolygonFrameAndStep(),
