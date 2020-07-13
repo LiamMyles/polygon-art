@@ -57,7 +57,7 @@ const CheckboxInput = styled.input<CheckboxInputProps>`
           border: solid 2px silver;
           width: 38px;
           height: 38px;
-          transform: translate(35px, -50%) scale(1) ${
+          transform: translate(35px, -50%) ${
             transformFlip ? "rotateX(0deg) rotateY(180deg)" : ""
           };
           ${svgBackground ? svgBackgroundCss : ""}
@@ -70,23 +70,23 @@ const CheckboxInput = styled.input<CheckboxInputProps>`
         &::after {
           content: "${checkedText ? checkedText.checked : ""}";
           ${svgBackground ? svgBackgroundCss : ""}
-          transform: translate(0, -50%) scale(1);
+          transform: translate(0, -50%);
         }
       }
       &:checked:focus,
       &:checked:hover {
         & + label .button::after {
-          transform: translate(0, -50%) scale(0.9);
+          transform: translate(0, -50%);
         }
       }
 
       &:focus,
       &:hover {
         & + label .button::after {
-          border: solid 5px silver;
+          border: solid 3px silver;
           width: 35px;
           height: 35px;
-          transform: translate(35px, -50%) scale(0.9) ${
+          transform: translate(35px, -50%) ${
             transformFlip ? "rotateX(0deg) rotateY(180deg)" : ""
           };
         }
