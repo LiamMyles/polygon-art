@@ -14,8 +14,8 @@ const CoordinatePickerWrappingDiv = styled.div`
   display: grid;
   grid-template-columns: 30px 1fr 1fr;
   grid-template-rows: 1fr 1fr 30px;
-  width: 280px;
-  height: 280px;
+  width: 250px;
+  height: 250px;
   margin: auto;
 `
 const YSliderWrappingDiv = styled.div`

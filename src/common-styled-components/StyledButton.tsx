@@ -7,6 +7,7 @@ export const StyledButton = styled.button`
   background: Gainsboro;
   border: solid 2px silver;
   color: #595959;
+  font-size: 18px;
   cursor: pointer;
 
   &:focus,

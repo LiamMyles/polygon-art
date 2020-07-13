@@ -189,11 +189,10 @@ const SliderWrappingDiv = styled.div`
 
 const SliderValueDiv = styled.div<{ area: string }>`
   font-size: 16px;
-  font-weight: bold;
   grid-area: ${({ area }) => area};
 `
 
-const SliderLabelH3 = styled.h3`
+const SliderLabelP = styled.p`
   grid-area: label;
   justify-self: left;
 `
@@ -208,6 +207,7 @@ const SliderRailDiv = styled.div`
   background-color: lightgrey;
   align-self: center;
   position: relative;
+  border: solid lightgrey 2px;
   &.focus {
     outline: none;
     background: linear-gradient(
@@ -343,7 +343,7 @@ export const MultiSlider: React.FC<MultiSliderProps> = ({
   const sliderRailRef = useRef<HTMLDivElement>(null)
   return (
     <SliderWrappingDiv>
-      <SliderLabelH3>{label}</SliderLabelH3>
+      <SliderLabelP>{label}</SliderLabelP>
       <SliderRailDiv ref={sliderRailRef}>
         <SliderRailThumbDivMin
           sliderDispatch={sliderReducerDispatch}

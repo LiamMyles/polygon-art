@@ -62,7 +62,7 @@ export const ColourPicker: React.FC<ColourPickerProps> = ({
 }) => {
   return (
     <ColourPickerWrapperDiv>
-      <h3 id={`colour-picker-${id}`}>{label}</h3>
+      <p id={`colour-picker-${id}`}>{label}</p>
       <ColourPickerWrapperUl aria-labelledby={`colour-picker-${id}`}>
         {colours.map((colour, index) => {
           return (

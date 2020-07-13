@@ -39,7 +39,7 @@ export const navigationReducer = produce(
 )
 
 export const navigationInitialState: NavigationState = {
-  currentScreen: "MAIN_SCREEN",
+  currentScreen: "POLYGON_SCREEN",
   currentGroup: 0,
   currentPolygon: 0,
 }

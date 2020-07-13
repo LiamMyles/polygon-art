@@ -1,0 +1,14 @@
+* {
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Fondamento', cursive;
+  letter-spacing: 1.5px;
+}
+
+[hidden] {
+  display: none !important;
+}

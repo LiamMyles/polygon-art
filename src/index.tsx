@@ -8,6 +8,7 @@ import { PolygonGroupsContextWrapper } from "reducer-contexts/polygon-groups"
 import { BackgroundContextWrapper } from "reducer-contexts/background"
 
 import "./reset.css"
+import "./utils.css"
 
 ReactDOM.render(
   <React.StrictMode>
