@@ -24,7 +24,7 @@ import { StyledButton } from "common-styled-components/StyledButton"
 const GroupsUl = styled.ul`
   display: grid;
   grid-gap: 10px;
-  background: lightgrey;
+  background: whitesmoke;
   list-style: none;
   overflow-y: scroll;
   height: 100%;
