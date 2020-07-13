@@ -24,29 +24,23 @@ import { MultiSlider, sliderReducer } from "components/MultiSlider"
 import { ColourPicker } from "components/ColourPicker"
 import { CoordinatePicker } from "components/CoordinatePicker"
 
+import { StyledButton } from "common-styled-components/StyledButton"
+
 import rotatingDirection from "../rotating-ring.svg"
 
 const PolygonPageWrappingDiv = styled.div`
   display: grid;
-  grid-template-rows: 200px calc(90vh - 210px);
+  grid-template-rows: 270px calc(90vh - 280px);
   grid-template-columns: 100vw;
-  grid-gap: 10px;
   justify-content: center;
 `
 
 const PolygonCanvasWrappingDiv = styled.div`
   display: grid;
-  grid-template-columns: 200px 100px;
+  grid-template-columns: 200px;
+  grid-template-rows: 200px 50px;
   grid-gap: 10px;
   justify-content: center;
-`
-
-const PolygonCanvasDiv = styled.div``
-
-const PolygonRandomizeButton = styled.button`
-  height: 50px;
-  border-radius: 5px;
-  align-self: center;
 `
 
 const PolygonOptionsOverflowDiv = styled.div`
@@ -76,9 +70,7 @@ export const PolygonDisplay = () => {
   return (
     <PolygonPageWrappingDiv>
       <PolygonCanvasWrappingDiv>
-        <PolygonCanvasDiv
-          aria-label={`Ring ${navigationState.currentPolygon} Canvas`}
-        >
+        <div aria-label={`Ring ${navigationState.currentPolygon} Canvas`}>
           <P5Canvas
             sketch={generatePolygonRingSketch({
               polygonRing: polygonToDisplay,
@@ -92,8 +84,8 @@ export const PolygonDisplay = () => {
               shouldRedrawBackground: backgroundState.shouldRedraw,
             })}
           />
-        </PolygonCanvasDiv>
-        <PolygonRandomizeButton
+        </div>
+        <StyledButton
           type="button"
           onClick={() => {
             polygonGroupsDispatch({
@@ -104,7 +96,7 @@ export const PolygonDisplay = () => {
           }}
         >
           Randomize
-        </PolygonRandomizeButton>
+        </StyledButton>
       </PolygonCanvasWrappingDiv>
       <PolygonOptionsOverflowDiv ref={scrollingElementRef}>
         <PolygonRotationControls
@@ -151,14 +143,6 @@ const PolygonCardButtonContainingDiv = styled.div`
   grid-auto-flow: column;
 `
 
-const PolygonCardButton = styled.button`
-  height: 50px;
-  border-radius: 5px;
-`
-const PolygonCardUpdateButton = styled(PolygonCardButton)``
-
-const PolygonCardRandomizeButton = styled(PolygonCardButton)``
-
 export const PolygonControlsWrapper: React.FC<{
   title: string
   updateDispatch: Function
@@ -170,22 +154,22 @@ export const PolygonControlsWrapper: React.FC<{
       <PolygonCardH2>{title}</PolygonCardH2>
       {children}
       <PolygonCardButtonContainingDiv>
-        <PolygonCardUpdateButton
+        <StyledButton
           disabled={!canUpdate}
           onClick={() => {
             updateDispatch()
           }}
         >
           Update
-        </PolygonCardUpdateButton>
+        </StyledButton>
         {randomizeDispatch && (
-          <PolygonCardRandomizeButton
+          <StyledButton
             onClick={() => {
               randomizeDispatch()
             }}
           >
             Randomize
-          </PolygonCardRandomizeButton>
+          </StyledButton>
         )}
       </PolygonCardButtonContainingDiv>
     </PolygonCardDiv>
@@ -431,6 +415,7 @@ export const PolygonDotsControls: React.FC = () => {
         min={0}
         currentValue={strokeWidth}
         setFunction={setStrokeWidth}
+        valueSuffix="px"
       />
       <ColourPicker
         label="Stroke Colours"
@@ -514,6 +499,7 @@ export const PolygonSidesControls: React.FC = () => {
         min={0}
         currentValue={strokeWidth}
         setFunction={setStrokeWidth}
+        valueSuffix="px"
       />
       <ColourPicker
         label="Colours"

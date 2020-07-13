@@ -7,10 +7,12 @@ interface SliderProps {
   min: number
   max: number
   currentValue: number
+  setFunction: React.Dispatch<React.SetStateAction<number>>
   vertical?: boolean
   simpleThumb?: boolean
-  setFunction: React.Dispatch<React.SetStateAction<number>>
   className?: string
+  valueSuffix?: string
+  hideValue?: boolean
 }
 
 const SliderInputRange = styled.input`
@@ -151,10 +153,15 @@ export const Slider: React.FC<SliderProps> = ({
   simpleThumb,
   setFunction,
   className,
+  valueSuffix,
+  hideValue,
 }) => {
   return (
     <div className={className}>
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={id}>
+        {label}
+        {hideValue ? "" : `: ${currentValue}${valueSuffix ? valueSuffix : ""}`}
+      </label>
       <SliderInputRange
         className={simpleThumb ? "simpleThumb" : ""}
         id={id}

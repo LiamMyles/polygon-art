@@ -7,7 +7,7 @@ import {
 import { ModalBox } from "./ModalBox"
 import { ToggleSwitch } from "./ToggleSwitch"
 import { Slider } from "./Slider"
-import { NavigationButton } from "./App"
+import { StyledButton } from "common-styled-components/StyledButton"
 
 const ModalInternalWrappingDiv = styled.div`
   display: grid;
@@ -15,14 +15,6 @@ const ModalInternalWrappingDiv = styled.div`
   font-size: 20px;
 `
 
-const ModalUpdateButton = styled.button`
-  display: block;
-  width: 80%;
-  height: 50px;
-  margin: 10px auto 0;
-  font-size: 18px;
-  border-radius: 5px;
-`
 const ColourPickerInput = styled.input`
   box-sizing: border-box;
   width: 100%;
@@ -65,7 +57,7 @@ export const EditBackgroundModal: React.FC = () => {
     <ModalBox
       buttonText="Edit Background"
       title="Edit Background"
-      StyledButton={NavigationButton}
+      StyledButton={StyledButton}
       isClosed={editModalIsClosed}
       setIsClosed={setEditModalIsClosed}
     >
@@ -95,8 +87,9 @@ export const EditBackgroundModal: React.FC = () => {
           max={100}
           min={0}
           setFunction={setBackgroundOpacity}
+          valueSuffix={"%"}
         />
-        <ModalUpdateButton
+        <StyledButton
           type="button"
           disabled={!canUpdate}
           onClick={() => {
@@ -111,7 +104,7 @@ export const EditBackgroundModal: React.FC = () => {
           }}
         >
           Update
-        </ModalUpdateButton>
+        </StyledButton>
       </ModalInternalWrappingDiv>
     </ModalBox>
   )

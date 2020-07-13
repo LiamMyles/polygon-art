@@ -19,11 +19,12 @@ import { P5Canvas } from "components/P5Canvas"
 import { ModalBox } from "./ModalBox"
 import { CoordinatePicker } from "./CoordinatePicker"
 import { backgroundStateContext } from "reducer-contexts/background"
+import { StyledButton } from "common-styled-components/StyledButton"
 
 const GroupsUl = styled.ul`
   display: grid;
   grid-gap: 10px;
-  background: lightgrey;
+  background: whitesmoke;
   list-style: none;
   overflow-y: scroll;
   height: 100%;
@@ -39,12 +40,8 @@ const GroupsLi = styled.li`
   margin: 10px;
   padding: 10px 0;
 `
-const AddGroupButton = styled.button`
-  margin: 0 10px;
-  font-size: 18px;
-  border-radius: 10px;
-  height: 50px;
-  margin-bottom: 10px;
+const AddGroupButton = styled(StyledButton)`
+  margin: 0 10px 10px;
   width: calc(100% - 20px);
 `
 
@@ -60,27 +57,16 @@ const CanvasWrappingDiv = styled.div`
   grid-column: 1/4;
   justify-self: center;
 `
-const GroupRandomizeButton = styled.button`
+const GroupDeleteButton = styled(StyledButton)`
+  min-width: 100px;
   justify-self: center;
-  align-self: center;
-  min-height: 50px;
-  border-radius: 5px;
-`
-const GroupDeleteButton = styled.button`
-  justify-self: center;
-  align-self: center;
-  min-height: 50px;
-  border-radius: 5px;
   grid-column: 1/3;
 `
 
-const UpdateCoordinateButton = styled.button`
+const UpdateCoordinateButton = styled(StyledButton)`
   display: block;
   width: 80%;
-  height: 50px;
   margin: 10px auto 0;
-  font-size: 18px;
-  border-radius: 5px;
 `
 
 const GroupCoordinateModal: React.FC<{
@@ -104,7 +90,7 @@ const GroupCoordinateModal: React.FC<{
     <ModalBox
       isClosed={isClosed}
       setIsClosed={setIsClosed}
-      StyledButton={GroupRandomizeButton}
+      StyledButton={StyledButton}
       buttonText="Edit Position"
       title="Edit Position"
     >
@@ -149,7 +135,7 @@ export function GroupsDisplay() {
           <React.Fragment key={key}>
             <GroupsLi aria-label={`Group ${groupIndex} Canvas`}>
               <GroupCanvasGroupDiv>
-                <GroupRandomizeButton
+                <StyledButton
                   onClick={() => {
                     polygonGroupsDispatch({
                       type: "RANDOMIZE_POLYGON_RINGS",
@@ -158,7 +144,7 @@ export function GroupsDisplay() {
                   }}
                 >
                   Randomize
-                </GroupRandomizeButton>
+                </StyledButton>
                 <GroupCoordinateModal
                   polygonGroup={polygonGroup}
                   groupIndex={groupIndex}
@@ -249,27 +235,15 @@ const RingCanvasDiv = styled.div`
   grid-area: CANVAS;
   justify-self: center;
 `
-const RingButton = styled.button`
-  min-height: 50px;
-  border-radius: 5px;
-`
 
-const RingEditButton = styled(RingButton)`
+const RingEditButton = styled(StyledButton)`
   grid-area: EDIT;
 `
-const RingRandomizeButton = styled(RingButton)`
+const RingRandomizeButton = styled(StyledButton)`
   grid-area: RANDOM;
 `
-const RingDeleteButton = styled(RingButton)`
+const RingDeleteButton = styled(StyledButton)`
   grid-area: DELETE;
-`
-
-const AddRingButton = styled.button`
-  height: 50px;
-  justify-self: center;
-  align-self: center;
-  border-radius: 5px;
-  grid-column: 1/3;
 `
 
 const PolygonRingsDisplay: React.FC<{
@@ -347,7 +321,7 @@ const PolygonRingsDisplay: React.FC<{
             </RingsLi>
             {isLastPolygon && (
               <RingsLi>
-                <AddRingButton
+                <StyledButton
                   type="button"
                   onClick={() => {
                     polygonGroupsDispatch({
@@ -357,7 +331,7 @@ const PolygonRingsDisplay: React.FC<{
                   }}
                 >
                   Add Polygon
-                </AddRingButton>
+                </StyledButton>
               </RingsLi>
             )}
           </React.Fragment>

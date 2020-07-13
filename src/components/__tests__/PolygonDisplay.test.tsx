@@ -210,7 +210,7 @@ describe("PolygonDisplay Component", () => {
 
       expect(updateButton).toBeDisabled()
 
-      fireEvent.change(getByLabelText("Speed"), { target: { value: 20 } })
+      fireEvent.change(getByLabelText(/Speed/), { target: { value: 20 } })
 
       expect(updateButton).not.toBeDisabled()
       fireEvent.click(updateButton)
@@ -305,7 +305,7 @@ describe("PolygonDisplay Component", () => {
 
       expect(updateButton).toBeDisabled()
 
-      fireEvent.change(getByLabelText("Speed"), { target: { value: 20 } })
+      fireEvent.change(getByLabelText(/Speed/), { target: { value: 20 } })
 
       expect(updateButton).not.toBeDisabled()
       fireEvent.click(updateButton)
@@ -430,7 +430,7 @@ describe("PolygonDisplay Component", () => {
 
       expect(updateButton).toBeDisabled()
 
-      fireEvent.change(getByLabelText("Size"), { target: { value: 20 } })
+      fireEvent.change(getByLabelText(/Size/), { target: { value: 20 } })
 
       expect(updateButton).not.toBeDisabled()
       fireEvent.click(updateButton)
@@ -449,7 +449,7 @@ describe("PolygonDisplay Component", () => {
 
       expect(updateButton).toBeDisabled()
 
-      fireEvent.change(getByLabelText("Stroke Width"), {
+      fireEvent.change(getByLabelText(/Stroke Width/), {
         target: { value: 20 },
       })
 
@@ -598,7 +598,7 @@ describe("PolygonDisplay Component", () => {
 
       expect(updateButton).toBeDisabled()
 
-      fireEvent.change(getByLabelText("Amount"), { target: { value: 20 } })
+      fireEvent.change(getByLabelText(/Amount/), { target: { value: 20 } })
 
       expect(updateButton).not.toBeDisabled()
       fireEvent.click(updateButton)
@@ -617,7 +617,7 @@ describe("PolygonDisplay Component", () => {
 
       expect(updateButton).toBeDisabled()
 
-      fireEvent.change(getByLabelText("Stroke Width"), {
+      fireEvent.change(getByLabelText(/Stroke Width/), {
         target: { value: 20 },
       })
 

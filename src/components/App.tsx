@@ -11,8 +11,10 @@ import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
 import { GroupsDisplay } from "components/GroupsDisplay"
 import { PolygonDisplay } from "components/PolygonDisplay"
-import { GenerateGifModal } from "./ShareGifModal"
-import { EditBackgroundModal } from "./EditBackgroundModal"
+import { GenerateGifModal } from "components/ShareGifModal"
+import { EditBackgroundModal } from "components/EditBackgroundModal"
+
+import { StyledButton } from "common-styled-components/StyledButton"
 
 const Main = styled.main`
   display: grid;
@@ -38,12 +40,6 @@ const Navigation = styled.nav`
   box-shadow: inset 0px 4px 9px -2px #404040;
 `
 
-export const NavigationButton = styled.button`
-  min-height: 50px;
-  border-radius: 5px;
-  margin: 5px;
-`
-
 const App: React.FC = () => {
   const navigationState = useContext(navigationStateContext)
   const navigationDispatch = useContext(navigationDispatchContext)
@@ -63,7 +59,7 @@ const App: React.FC = () => {
           <Navigation>
             <EditBackgroundModal />
             <GenerateGifModal />
-            <NavigationButton
+            <StyledButton
               type="button"
               onClick={() => {
                 polygonGroupsDispatch({
@@ -73,50 +69,50 @@ const App: React.FC = () => {
               }}
             >
               Randomize
-            </NavigationButton>
-            <NavigationButton
+            </StyledButton>
+            <StyledButton
               type="button"
               onClick={() => {
                 navigationDispatch({ type: "GROUP_SCREEN" })
               }}
             >
               Edit Polygons
-            </NavigationButton>
+            </StyledButton>
           </Navigation>
         </>
         <>
           <GroupsDisplay />
           <Navigation>
             <EditBackgroundModal />
-            <NavigationButton
+            <StyledButton
               type="button"
               onClick={() => {
                 navigationDispatch({ type: "MAIN_SCREEN" })
               }}
             >
               Home
-            </NavigationButton>
+            </StyledButton>
           </Navigation>
         </>
         <>
           <PolygonDisplay />
           <Navigation>
-            <NavigationButton
+            <StyledButton
               type="button"
               onClick={() => {
                 navigationDispatch({ type: "GROUP_SCREEN" })
               }}
             >
               Edit Polygons
-            </NavigationButton>
-            <NavigationButton
+            </StyledButton>
+            <StyledButton
               type="button"
               onClick={() => {
                 navigationDispatch({ type: "MAIN_SCREEN" })
               }}
             >
               Home
-            </NavigationButton>
+            </StyledButton>
           </Navigation>
         </>
       </MainContent>
