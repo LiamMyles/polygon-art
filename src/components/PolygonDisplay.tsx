@@ -220,7 +220,11 @@ export const PolygonControlsWrapper: React.FC<{
   canUpdate: boolean
 }> = ({ children, title, updateDispatch, randomizeDispatch, canUpdate }) => {
   return (
-    <PolygonCardForm>
+    <PolygonCardForm
+      onSubmit={(event) => {
+        event.preventDefault()
+      }}
+    >
       <PolygonCardHeadingWrappingDiv>
         <PolygonCardH2>
           {title}

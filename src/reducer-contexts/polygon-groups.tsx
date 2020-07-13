@@ -584,7 +584,36 @@ const polygonGroupsInitialState: PolygonGroup[] = [
         scale: {
           enabled: true,
           speed: 1,
-          range: { max: 10, min: 0 },
+          range: { max: 10, min: 5 },
+          startingSize: 5,
+        },
+        sides: {
+          enabled: true,
+          strokeWidth: 1,
+          colours: ["black"],
+          amount: 6,
+        },
+      },
+      {
+        active: true,
+        position: { x: 0, y: 0 },
+        dots: {
+          enabled: true,
+          fillColours: ["black"],
+          size: 1,
+          strokeColours: ["black"],
+          strokeWidth: 1,
+        },
+        rotation: {
+          clockwise: true,
+          enabled: true,
+          speed: 1,
+          startingRotation: 1,
+        },
+        scale: {
+          enabled: true,
+          speed: 1,
+          range: { max: 10, min: 5 },
           startingSize: 5,
         },
         sides: {
@@ -602,7 +631,10 @@ function polygonGroupsInit(
   polygonGroupsInitialState: PolygonGroup[]
 ): PolygonGroup[] {
   const newPolygon = [...polygonGroupsInitialState]
-  newPolygon[0].rings = createRandomPolygonRings()
+  //If testing don't randomize the polygons
+  if (!(typeof jest !== "undefined")) {
+    newPolygon[0].rings = createRandomPolygonRings()
+  }
   return newPolygon
 }
 
