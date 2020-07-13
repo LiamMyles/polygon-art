@@ -5,8 +5,8 @@ import { polygonGroupsStateContext } from "reducer-contexts/polygon-groups"
 import { backgroundStateContext } from "reducer-contexts/background"
 import { ModalBox } from "./ModalBox"
 import { generateGifSketch } from "polygon-logic/polygon-p5-draw"
-import { NavigationButton } from "./App"
 import { Slider } from "./Slider"
+import { StyledButton } from "common-styled-components/StyledButton"
 
 import download from "downloadjs"
 
@@ -42,15 +42,6 @@ const GifCanvas = styled(P5Canvas)`
   display: flex;
   justify-content: center;
   align-items: center;
-`
-
-const GifModalUpdateButton = styled.button`
-  display: block;
-  width: 80%;
-  height: 50px;
-  margin: 10px auto 0;
-  font-size: 18px;
-  border-radius: 5px;
 `
 
 const gifOptions = {
@@ -135,7 +126,7 @@ export const GenerateGifModal: React.FC = () => {
     <ModalBox
       buttonText="Share Gif"
       title="Share Gif"
-      StyledButton={NavigationButton}
+      StyledButton={StyledButton}
       isClosed={editModalIsClosed}
       setIsClosed={setEditModalIsClosed}
     >
@@ -174,24 +165,24 @@ export const GenerateGifModal: React.FC = () => {
           </>
         )}
         {!startGenerating && (
-          <GifModalUpdateButton
+          <StyledButton
             type="button"
             onClick={() => {
               setStartGenerating(true)
             }}
           >
             Start Generating
-          </GifModalUpdateButton>
+          </StyledButton>
         )}
         {gifFile && (
-          <GifModalUpdateButton
+          <StyledButton
             type="button"
             onClick={() => {
               download(gifFile)
             }}
           >
             Download Gif
-          </GifModalUpdateButton>
+          </StyledButton>
         )}
       </GifModalInternalWrappingDiv>
     </ModalBox>
