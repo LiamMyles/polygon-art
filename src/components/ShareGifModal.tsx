@@ -145,6 +145,7 @@ export const GenerateGifModal: React.FC = () => {
             currentValue={recordingLength}
             setFunction={setRecordingLength}
             id={"gif-recording-length-slider"}
+            valueSuffix={" seconds"}
           />
         )}
         {!editModalIsClosed && !renderHasStarted && startGenerating && (

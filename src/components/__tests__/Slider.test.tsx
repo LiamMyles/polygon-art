@@ -13,6 +13,7 @@ describe("Slider component", () => {
         min={100}
         currentValue={sliderValue}
         setFunction={setSliderValue}
+        hideValue
       />
     )
   }

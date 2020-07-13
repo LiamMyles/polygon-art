@@ -149,6 +149,7 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
           simpleThumb={true}
           vertical={true}
           setFunction={setYFunction}
+          hideValue
         />
       </YSliderWrappingDiv>
       <CoordinatePositionsDiv>
@@ -222,6 +223,7 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
           id="x"
           simpleThumb={true}
           setFunction={setXFunction}
+          hideValue
         />
       </XSliderWrappingDiv>
     </CoordinatePickerWrappingDiv>

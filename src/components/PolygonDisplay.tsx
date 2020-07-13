@@ -416,6 +416,7 @@ export const PolygonDotsControls: React.FC = () => {
         min={0}
         currentValue={strokeWidth}
         setFunction={setStrokeWidth}
+        valueSuffix="px"
       />
       <ColourPicker
         label="Stroke Colours"
@@ -499,6 +500,7 @@ export const PolygonSidesControls: React.FC = () => {
         min={0}
         currentValue={strokeWidth}
         setFunction={setStrokeWidth}
+        valueSuffix="px"
       />
       <ColourPicker
         label="Colours"

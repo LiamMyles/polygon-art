@@ -87,6 +87,7 @@ export const EditBackgroundModal: React.FC = () => {
           max={100}
           min={0}
           setFunction={setBackgroundOpacity}
+          valueSuffix={"%"}
         />
         <StyledButton
           type="button"
