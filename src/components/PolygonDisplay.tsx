@@ -15,7 +15,10 @@ import {
 import { navigationStateContext } from "reducer-contexts/navigation"
 import { backgroundStateContext } from "reducer-contexts/background"
 
-import { generatePolygonRingSketch } from "polygon-logic/polygon-p5-draw"
+import {
+  generatePolygonRingSketch,
+  generatePolygonGroupSketch,
+} from "polygon-logic/polygon-p5-draw"
 
 import { P5Canvas } from "components/P5Canvas"
 import { ToggleSwitch } from "components/ToggleSwitch"
@@ -62,6 +65,9 @@ const PolygonCanvas = styled(P5Canvas)`
   width: 200px;
   height: 200px;
 `
+const PolygonCanvasButtonDiv = styled.div`
+  display: flex;
+`
 
 export const PolygonDisplay = () => {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
@@ -69,6 +75,8 @@ export const PolygonDisplay = () => {
   const navigationState = useContext(navigationStateContext)
   const backgroundState = useContext(backgroundStateContext)
   const scrollingElementRef = useRef<HTMLDivElement>(null)
+
+  const [showGroup, setShowGroup] = useState(false)
 
   const polygonToDisplay =
     polygonGroupsState[navigationState.currentGroup].rings[
@@ -79,32 +87,69 @@ export const PolygonDisplay = () => {
     <PolygonPageWrappingDiv>
       <PolygonCanvasWrappingDiv>
         <div aria-label={`Ring ${navigationState.currentPolygon} Canvas`}>
-          <PolygonCanvas
-            sketch={generatePolygonRingSketch({
-              polygonRing: polygonToDisplay,
-              windowSize: {
-                width: 200,
-                height: 200,
-              },
-              scale: 0.2,
-              rgbaBackgroundColour: backgroundState.rgba,
-              rgbBackgroundColour: backgroundState.rgb,
-              shouldRedrawBackground: backgroundState.shouldRedraw,
-            })}
-          />
+          {showGroup ? (
+            <PolygonCanvas
+              sketch={generatePolygonGroupSketch({
+                polygonGroup: polygonGroupsState[navigationState.currentGroup],
+                windowSize: {
+                  width: 200,
+                  height: 200,
+                },
+                scale: 0.2,
+                rgbaBackgroundColour: backgroundState.rgba,
+                rgbBackgroundColour: backgroundState.rgb,
+                shouldRedrawBackground: backgroundState.shouldRedraw,
+              })}
+            />
+          ) : (
+            <PolygonCanvas
+              sketch={generatePolygonRingSketch({
+                polygonRing: polygonToDisplay,
+                windowSize: {
+                  width: 200,
+                  height: 200,
+                },
+                scale: 0.2,
+                rgbaBackgroundColour: backgroundState.rgba,
+                rgbBackgroundColour: backgroundState.rgb,
+                shouldRedrawBackground: backgroundState.shouldRedraw,
+              })}
+            />
+          )}
         </div>
-        <StyledButton
-          type="button"
-          onClick={() => {
-            polygonGroupsDispatch({
-              type: "RANDOMIZE_POLYGON",
-              group: navigationState.currentGroup,
-              polygon: navigationState.currentPolygon,
-            })
-          }}
-        >
-          Randomize
-        </StyledButton>
+        <PolygonCanvasButtonDiv>
+          <StyledButton
+            type="button"
+            onClick={() => {
+              polygonGroupsDispatch({
+                type: "RANDOMIZE_POLYGON",
+                group: navigationState.currentGroup,
+                polygon: navigationState.currentPolygon,
+              })
+            }}
+          >
+            Randomize
+          </StyledButton>
+          {showGroup ? (
+            <StyledButton
+              type="button"
+              onClick={() => {
+                setShowGroup(false)
+              }}
+            >
+              Show Polygon
+            </StyledButton>
+          ) : (
+            <StyledButton
+              type="button"
+              onClick={() => {
+                setShowGroup(true)
+              }}
+            >
+              Show Group
+            </StyledButton>
+          )}
+        </PolygonCanvasButtonDiv>
       </PolygonCanvasWrappingDiv>
       <PolygonOptionsOverflowDiv ref={scrollingElementRef}>
         <PolygonRotationControls
@@ -132,7 +177,7 @@ export const PolygonDisplay = () => {
   )
 }
 
-const PolygonCardDiv = styled.div`
+const PolygonCardForm = styled.form`
   border: 1px solid grey;
   border-radius: 5px;
   display: grid;
@@ -175,7 +220,11 @@ export const PolygonControlsWrapper: React.FC<{
   canUpdate: boolean
 }> = ({ children, title, updateDispatch, randomizeDispatch, canUpdate }) => {
   return (
-    <PolygonCardDiv>
+    <PolygonCardForm
+      onSubmit={(event) => {
+        event.preventDefault()
+      }}
+    >
       <PolygonCardHeadingWrappingDiv>
         <PolygonCardH2>
           {title}
@@ -189,6 +238,7 @@ export const PolygonControlsWrapper: React.FC<{
       {children}
       <PolygonCardButtonContainingDiv>
         <StyledButton
+          type="submit"
           disabled={!canUpdate}
           onClick={() => {
             updateDispatch()
@@ -198,6 +248,7 @@ export const PolygonControlsWrapper: React.FC<{
         </StyledButton>
         {randomizeDispatch && (
           <StyledButton
+            type="button"
             onClick={() => {
               randomizeDispatch()
             }}
@@ -206,7 +257,7 @@ export const PolygonControlsWrapper: React.FC<{
           </StyledButton>
         )}
       </PolygonCardButtonContainingDiv>
-    </PolygonCardDiv>
+    </PolygonCardForm>
   )
 }
 
@@ -220,6 +271,9 @@ export const PolygonRotationControls: React.FC = () => {
   ]
 
   const [speed, setRotationSpeed] = useState(rotation.speed)
+  const [startingRotation, setStartingRotation] = useState(
+    rotation.startingRotation
+  )
   const [enabled, setEnabled] = useState(rotation.enabled)
   const [clockwise, setClockwise] = useState(rotation.clockwise)
   const [canUpdate, setCanUpdate] = useState(false)
@@ -227,12 +281,13 @@ export const PolygonRotationControls: React.FC = () => {
   useEffect(() => {
     if (
       rotation.speed !== speed ||
+      rotation.startingRotation !== startingRotation ||
       rotation.enabled !== enabled ||
       rotation.clockwise !== clockwise
     ) {
       setCanUpdate(true)
     }
-  }, [speed, enabled, clockwise, rotation])
+  }, [speed, enabled, clockwise, rotation, startingRotation])
 
   const updateDispatch = () => {
     setCanUpdate(false)
@@ -240,7 +295,7 @@ export const PolygonRotationControls: React.FC = () => {
       type: "UPDATE_POLYGON_ROTATION",
       group: navigationState.currentGroup,
       polygon: navigationState.currentPolygon,
-      rotation: { clockwise, enabled, speed },
+      rotation: { clockwise, enabled, speed, startingRotation },
     })
   }
   const randomizeDispatch = () => {
@@ -264,22 +319,34 @@ export const PolygonRotationControls: React.FC = () => {
         setFunction={setEnabled}
         checkedText={{ checked: "ON", unchecked: "OFF" }}
       />
-      <ToggleSwitch
-        label="Clockwise"
-        id="rotation-clockwise"
-        checked={clockwise}
-        setFunction={setClockwise}
-        svgBackground={rotatingDirection}
-        transformFlip={true}
-      />
       <Slider
-        label="Speed"
-        id="rotation-speed"
-        max={20}
-        min={0}
-        currentValue={speed}
-        setFunction={setRotationSpeed}
+        label="Starting Rotation"
+        id="rotation-starting-rotation"
+        min={1}
+        max={360}
+        currentValue={startingRotation}
+        setFunction={setStartingRotation}
       />
+      {enabled && (
+        <>
+          <ToggleSwitch
+            label="Clockwise"
+            id="rotation-clockwise"
+            checked={clockwise}
+            setFunction={setClockwise}
+            svgBackground={rotatingDirection}
+            transformFlip={true}
+          />
+          <Slider
+            label="Speed"
+            id="rotation-speed"
+            min={0}
+            max={20}
+            currentValue={speed}
+            setFunction={setRotationSpeed}
+          />
+        </>
+      )}
     </PolygonControlsWrapper>
   )
 }
@@ -295,6 +362,7 @@ export const PolygonScaleControls: React.FC = () => {
   const [canUpdate, setCanUpdate] = useState(false)
   const [enabled, setEnabled] = useState(scale.enabled)
   const [speed, setSpeed] = useState(scale.speed)
+  const [startingSize, setStartingSize] = useState(scale.startingSize)
 
   const rangeInitialState = {
     min: 0,
@@ -310,12 +378,13 @@ export const PolygonScaleControls: React.FC = () => {
     if (
       scale.speed !== speed ||
       scale.enabled !== enabled ||
+      scale.startingSize !== startingSize ||
       scale.range.min !== rangeState.currentMin ||
       scale.range.max !== rangeState.currentMax
     ) {
       setCanUpdate(true)
     }
-  }, [speed, enabled, rangeState, scale])
+  }, [speed, enabled, rangeState, scale, startingSize])
 
   const updateDispatch = () => {
     setCanUpdate(false)
@@ -327,6 +396,7 @@ export const PolygonScaleControls: React.FC = () => {
         enabled,
         range: { min: rangeState.currentMin, max: rangeState.currentMax },
         speed,
+        startingSize,
       },
     })
   }
@@ -352,18 +422,30 @@ export const PolygonScaleControls: React.FC = () => {
         checkedText={{ checked: "ON", unchecked: "OFF" }}
       />
       <Slider
-        label="Speed"
-        id="scale-speed"
-        max={20}
+        label="Starting Size"
+        id="scale-starting-size"
         min={0}
-        currentValue={speed}
-        setFunction={setSpeed}
+        max={500}
+        currentValue={startingSize}
+        setFunction={setStartingSize}
       />
-      <MultiSlider
-        label="Size"
-        sliderState={rangeState}
-        sliderReducerDispatch={rangeDispatch}
-      />
+      {enabled && (
+        <>
+          <Slider
+            label="Speed"
+            id="scale-speed"
+            max={20}
+            min={0}
+            currentValue={speed}
+            setFunction={setSpeed}
+          />
+          <MultiSlider
+            label="Size"
+            sliderState={rangeState}
+            sliderReducerDispatch={rangeDispatch}
+          />
+        </>
+      )}
     </PolygonControlsWrapper>
   )
 }
@@ -427,37 +509,41 @@ export const PolygonDotsControls: React.FC = () => {
         setFunction={setEnabled}
         checkedText={{ checked: "ON", unchecked: "OFF" }}
       />
-      <Slider
-        label="Size"
-        id="dots-size"
-        max={20}
-        min={0}
-        currentValue={size}
-        setFunction={setSize}
-      />
-      <ColourPicker
-        label="Fill Colour"
-        id="fill-colour"
-        maxColours={sides.amount}
-        colours={fillColours}
-        setFunction={setFillColours}
-      />
-      <Slider
-        label="Stroke Width"
-        id="dots-stroke-width"
-        max={20}
-        min={0}
-        currentValue={strokeWidth}
-        setFunction={setStrokeWidth}
-        valueSuffix="px"
-      />
-      <ColourPicker
-        label="Stroke Colours"
-        id="stroke-colour"
-        maxColours={sides.amount}
-        colours={strokeColours}
-        setFunction={setStrokeColours}
-      />
+      {enabled && (
+        <>
+          <Slider
+            label="Size"
+            id="dots-size"
+            max={20}
+            min={0}
+            currentValue={size}
+            setFunction={setSize}
+          />
+          <ColourPicker
+            label="Fill Colour"
+            id="fill-colour"
+            maxColours={sides.amount}
+            colours={fillColours}
+            setFunction={setFillColours}
+          />
+          <Slider
+            label="Stroke Width"
+            id="dots-stroke-width"
+            max={20}
+            min={0}
+            currentValue={strokeWidth}
+            setFunction={setStrokeWidth}
+            valueSuffix="px"
+          />
+          <ColourPicker
+            label="Stroke Colours"
+            id="stroke-colour"
+            maxColours={sides.amount}
+            colours={strokeColours}
+            setFunction={setStrokeColours}
+          />
+        </>
+      )}
     </PolygonControlsWrapper>
   )
 }
@@ -526,22 +612,26 @@ export const PolygonSidesControls: React.FC = () => {
         currentValue={amount}
         setFunction={setAmount}
       />
-      <Slider
-        label="Stroke Width"
-        id="sides-stroke-width"
-        max={20}
-        min={0}
-        currentValue={strokeWidth}
-        setFunction={setStrokeWidth}
-        valueSuffix="px"
-      />
-      <ColourPicker
-        label="Colours"
-        id="sides-colours"
-        maxColours={sides.amount}
-        colours={colours}
-        setFunction={setColours}
-      />
+      {enabled && (
+        <>
+          <Slider
+            label="Stroke Width"
+            id="sides-stroke-width"
+            max={20}
+            min={0}
+            currentValue={strokeWidth}
+            setFunction={setStrokeWidth}
+            valueSuffix="px"
+          />
+          <ColourPicker
+            label="Colours"
+            id="sides-colours"
+            maxColours={sides.amount}
+            colours={colours}
+            setFunction={setColours}
+          />
+        </>
+      )}
     </PolygonControlsWrapper>
   )
 }

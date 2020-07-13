@@ -278,16 +278,6 @@ export function generateGifSketch({
         isRecording = false
       }
 
-      // Records the frames while "isRecording" else removes the canvas
-      if (isRecording && document.getElementById("gif-canvas")) {
-        gifClass.addFrame(document.getElementById("gif-canvas"), {
-          delay: 30,
-          copy: true,
-        })
-      } else {
-        p5.remove()
-      }
-
       p5.angleMode("degrees")
       if (shouldRedrawBackground) {
         p5.background(rgbaBackgroundColour)
@@ -315,6 +305,16 @@ export function generateGifSketch({
         }
         p5.pop()
       })
+
+      // Records the frames while "isRecording" else removes the canvas
+      if (isRecording && document.getElementById("gif-canvas")) {
+        gifClass.addFrame(document.getElementById("gif-canvas"), {
+          delay: 30,
+          copy: true,
+        })
+      } else {
+        p5.remove()
+      }
     }
   }
 }

@@ -323,8 +323,8 @@ describe("PolygonDisplay Component", () => {
       const updateButton = getByRole("button", { name: "Update" })
       expect(updateButton).toBeDisabled()
 
-      const minSlider = getAllByRole("slider")[1]
-      const maxSlider = getAllByRole("slider")[2]
+      const minSlider = getAllByRole("slider")[2]
+      const maxSlider = getAllByRole("slider")[3]
 
       fireEvent.keyDown(minSlider, { key: "Home", code: "Home" })
       fireEvent.keyDown(maxSlider, { key: "Home", code: "Home" })
@@ -497,7 +497,9 @@ describe("PolygonDisplay Component", () => {
       expect(updateButton).toBeDisabled()
 
       const colourPicker = getByRole("list", { name: "Stroke Colours" })
-      const colourInput = within(colourPicker).getByLabelText(/Colour\s1$/)
+      const colourInput = within(colourPicker).getAllByLabelText(
+        /Colour\s1$/
+      )[1]
 
       fireEvent.blur(colourInput, {
         target: { value: "#f13399" },
