@@ -26,19 +26,19 @@ import { CoordinatePicker } from "components/CoordinatePicker"
 
 import { StyledButton } from "common-styled-components/StyledButton"
 
-import rotatingDirection from "../rotating-ring.svg"
+import rotatingDirection from "rotating-ring.svg"
 
 const PolygonPageWrappingDiv = styled.div`
   display: grid;
-  grid-template-rows: 270px calc(90vh - 280px);
+  grid-template-rows: 280px calc(90vh - 290px);
   grid-template-columns: 100vw;
   justify-content: center;
+  margin: 10px 0;
 `
 
 const PolygonCanvasWrappingDiv = styled.div`
   display: grid;
-  grid-template-columns: 200px;
-  grid-template-rows: 200px 50px;
+  grid-template-columns: 210px;
   grid-gap: 10px;
   justify-content: center;
 `
@@ -53,6 +53,14 @@ const PolygonOptionsOverflowDiv = styled.div`
   box-shadow: inset 0px 0px 9px -2px #404040;
   margin: 10px;
   padding: 10px;
+`
+
+const PolygonCanvas = styled(P5Canvas)`
+  border: solid 4px gainsboro;
+  border-radius: 3px;
+  padding: 1px;
+  width: 200px;
+  height: 200px;
 `
 
 export const PolygonDisplay = () => {
@@ -71,7 +79,7 @@ export const PolygonDisplay = () => {
     <PolygonPageWrappingDiv>
       <PolygonCanvasWrappingDiv>
         <div aria-label={`Ring ${navigationState.currentPolygon} Canvas`}>
-          <P5Canvas
+          <PolygonCanvas
             sketch={generatePolygonRingSketch({
               polygonRing: polygonToDisplay,
               windowSize: {
@@ -131,6 +139,7 @@ const PolygonCardDiv = styled.div`
   grid-auto-rows: min-content;
   grid-gap: 10px;
   padding: 10px;
+  margin-bottom: 10px;
 `
 
 const PolygonCardHeadingWrappingDiv = styled.div`

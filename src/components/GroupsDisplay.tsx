@@ -49,7 +49,6 @@ const GroupCanvasGroupDiv = styled.div`
   display: grid;
   grid-gap: 10px;
   grid-template-columns: 120px 120px;
-  grid-template-rows: 1fr 200px 1fr;
   justify-self: center;
 `
 
@@ -57,6 +56,15 @@ const CanvasWrappingDiv = styled.div`
   grid-column: 1/4;
   justify-self: center;
 `
+
+const GroupCanvas = styled(P5Canvas)`
+  border: solid 4px gainsboro;
+  border-radius: 3px;
+  padding: 1px;
+  width: 200px;
+  height: 200px;
+`
+
 const GroupDeleteButton = styled(StyledButton)`
   min-width: 100px;
   justify-self: center;
@@ -150,7 +158,7 @@ export function GroupsDisplay() {
                   groupIndex={groupIndex}
                 />
                 <CanvasWrappingDiv>
-                  <P5Canvas
+                  <GroupCanvas
                     sketch={generatePolygonGroupSketch({
                       polygonGroup: polygonGroup,
                       windowSize: {
@@ -215,7 +223,6 @@ const RingsUl = styled.ul`
 const RingsLi = styled.li`
   display: grid;
   grid-auto-columns: 1fr;
-  grid-template-rows: 50px 150px 50px;
   grid-template-areas:
     "RANDOM RANDOM EDIT EDIT"
     "CANVAS CANVAS CANVAS CANVAS"
@@ -234,6 +241,13 @@ const RingsLi = styled.li`
 const RingCanvasDiv = styled.div`
   grid-area: CANVAS;
   justify-self: center;
+`
+const RingCanvas = styled(P5Canvas)`
+  border: solid 2px gainsboro;
+  border-radius: 3px;
+  padding: 1px;
+  width: 150px;
+  height: 150px;
 `
 
 const RingEditButton = styled(StyledButton)`
@@ -291,7 +305,7 @@ const PolygonRingsDisplay: React.FC<{
               </RingEditButton>
 
               <RingCanvasDiv>
-                <P5Canvas
+                <RingCanvas
                   sketch={generatePolygonRingSketch({
                     polygonRing: polygon,
                     windowSize: {
