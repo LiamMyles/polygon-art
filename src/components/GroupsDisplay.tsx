@@ -48,7 +48,7 @@ const AddGroupButton = styled(StyledButton)`
 const GroupCanvasGroupDiv = styled.div`
   display: grid;
   grid-gap: 10px;
-  grid-template-columns: 100px 100px;
+  grid-template-columns: 120px 120px;
   grid-template-rows: 1fr 200px 1fr;
   justify-self: center;
 `

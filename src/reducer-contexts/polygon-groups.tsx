@@ -311,7 +311,7 @@ function getRandomRotation(): PolygonRingRotation {
   }
 }
 function getRandomScale(): PolygonRingScale {
-  const min = getRandomIntInclusive(0, 20)
+  const min = getRandomIntInclusive(0, 150)
   const max = getRandomIntInclusive(200, 500)
 
   return {

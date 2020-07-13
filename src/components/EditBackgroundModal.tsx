@@ -67,7 +67,7 @@ export const EditBackgroundModal: React.FC = () => {
           id="redraw-background-toggle"
           label="Redraw Background?"
           setFunction={setShouldRedrawBackground}
-          checkedText={{ checked: "No", unchecked: "Yes" }}
+          checkedText={{ checked: "Yes", unchecked: "No" }}
         />
         <div>
           <label htmlFor="background-colour-picker">Background Colour</label>

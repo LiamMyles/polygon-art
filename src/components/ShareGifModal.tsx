@@ -32,11 +32,15 @@ declare class GIF {
 }
 
 const GifModalInternalWrappingDiv = styled.div`
+  width: 100%;
+  min-height: 150px;
   display: grid;
   justify-content: center;
   align-content: center;
   grid-gap: 10px;
   font-size: 20px;
+  grid-auto-columns: minmax(280px, 80%);
+  justify-items: center;
 `
 const GifCanvas = styled(P5Canvas)`
   display: flex;
@@ -70,7 +74,6 @@ export const GenerateGifModal: React.FC = () => {
   useEffect(() => {
     if (gif === null) return
     if (editModalIsClosed) {
-      console.log("reset")
       setCurrentProgress(0)
       setRenderHasStarted(false)
       setRenderFinished(false)
@@ -82,21 +85,14 @@ export const GenerateGifModal: React.FC = () => {
   useEffect(() => {
     if (gif === null) return
     const progressHandler = function (progression: any) {
-      console.log("progression", progression)
       const roundedProgression = Math.round(progression * 100)
       setCurrentProgress(roundedProgression)
     }
     const startHandler = (starting: any) => {
-      console.log("starting", starting)
       setRenderHasStarted(true)
     }
-    const abortHandler = (aborting: any) => {
-      console.log("aborting", aborting)
-    }
+    const abortHandler = (aborting: any) => {}
     const finishedHandler = function (finishedBlob: Blob) {
-      const gifUrlObject = URL.createObjectURL(finishedBlob)
-      console.log("finished", finishedBlob)
-      console.log(gifUrlObject)
       setRenderFinished(true)
       setGifFile(finishedBlob)
     }
@@ -107,7 +103,6 @@ export const GenerateGifModal: React.FC = () => {
     gif.on("progress", progressHandler)
 
     if (editModalIsClosed) {
-      console.log("try to abort")
       gif.abort()
       gif = new GIF(gifOptions)
     }
@@ -124,8 +119,8 @@ export const GenerateGifModal: React.FC = () => {
   if (gif === null) return null
   return (
     <ModalBox
-      buttonText="Share Gif"
-      title="Share Gif"
+      buttonText="Make Gif"
+      title="Make Gif"
       StyledButton={StyledButton}
       isClosed={editModalIsClosed}
       setIsClosed={setEditModalIsClosed}

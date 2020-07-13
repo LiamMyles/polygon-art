@@ -5,7 +5,6 @@ import {
   navigationStateContext,
   navigationDispatchContext,
 } from "reducer-contexts/navigation"
-import { polygonGroupsDispatchContext } from "reducer-contexts/polygon-groups"
 
 import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
@@ -43,7 +42,6 @@ const Navigation = styled.nav`
 const App: React.FC = () => {
   const navigationState = useContext(navigationStateContext)
   const navigationDispatch = useContext(navigationDispatchContext)
-  const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
 
   const childMapping = {
     MAIN_SCREEN: 1,
@@ -59,17 +57,6 @@ const App: React.FC = () => {
           <Navigation>
             <EditBackgroundModal />
             <GenerateGifModal />
-            <StyledButton
-              type="button"
-              onClick={() => {
-                polygonGroupsDispatch({
-                  type: "RANDOMIZE_POLYGON_RINGS",
-                  group: 0,
-                })
-              }}
-            >
-              Randomize
-            </StyledButton>
             <StyledButton
               type="button"
               onClick={() => {

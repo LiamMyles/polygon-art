@@ -22,24 +22,6 @@ const CheckboxInput = styled.input<CheckboxInputProps>`
       clip: rect(1px, 1px, 1px, 1px);
       position: absolute !important;
 
-      &:checked + label .button {
-        &::before {
-          background: grey;
-        }
-        &::after {
-        content: "${checkedText ? checkedText.unchecked : ""}";
-          background: lightgrey;
-          ${svgBackground ? svgBackgroundCss : ""}
-          transform: translate(0, -50%) scale(1);
-        }
-      }
-      &:checked:focus,
-      &:checked:hover {
-        & + label .button::after {
-          transform: translate(0, -50%) scale(0.9);
-        }
-      }
-
       & + label{
         display: grid;
         grid-template-rows: 1em 50px;
@@ -64,38 +46,52 @@ const CheckboxInput = styled.input<CheckboxInputProps>`
           height: 50px;
           width: 90px;
           border-radius: 50px;
-          transition: border 100ms ease-in-out, background-color 200ms ease-in-out;
         }
         &::after {
-          content: "${checkedText ? checkedText.checked : ""}";
+          content: "${checkedText ? checkedText.unchecked : ""}";
           display: flex;
           justify-content: center;
           align-items: center;
-          background: grey;
-          transform: translate(100%, -50%) scale(1) ${
+          background: Gainsboro;
+          margin: 0 5px;
+          border: solid 2px silver;
+          width: 38px;
+          height: 38px;
+          transform: translate(35px, -50%) scale(1) ${
             transformFlip ? "rotateX(0deg) rotateY(180deg)" : ""
           };
           ${svgBackground ? svgBackgroundCss : ""}
-          margin: 0 5px;
-          width: 40px;
-          height: 40px;
           border-radius: 25px;
-          transition: transform 200ms ease-in-out, background-color 300ms ease-in-out;
+          transition: transform 200ms ease-in-out;
+        }
+      }
+      
+      &:checked + label .button {
+        &::after {
+          content: "${checkedText ? checkedText.checked : ""}";
+          ${svgBackground ? svgBackgroundCss : ""}
+          transform: translate(0, -50%) scale(1);
+        }
+      }
+      &:checked:focus,
+      &:checked:hover {
+        & + label .button::after {
+          transform: translate(0, -50%) scale(0.9);
         }
       }
 
       &:focus,
       &:hover {
         & + label .button::after {
-          transform: translate(100%, -50%) scale(0.9) ${
+          border: solid 5px silver;
+          width: 35px;
+          height: 35px;
+          transform: translate(35px, -50%) scale(0.9) ${
             transformFlip ? "rotateX(0deg) rotateY(180deg)" : ""
           };
         }
-        & + label::before {
-          border: solid 5px darkgrey;
-          height: 55px;
-          width: 105px;
-          right: -2.5px;
+        & + label .button::before {
+          background: grey;
         }
       }`
   }}
