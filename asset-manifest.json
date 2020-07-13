@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/playing-with-polygons/static/css/main.fc4e5973.chunk.css",
-    "main.js": "/playing-with-polygons/static/js/main.3bab6d78.chunk.js",
-    "main.js.map": "/playing-with-polygons/static/js/main.3bab6d78.chunk.js.map",
+    "main.css": "/playing-with-polygons/static/css/main.a6452b3e.chunk.css",
+    "main.js": "/playing-with-polygons/static/js/main.baf6f2eb.chunk.js",
+    "main.js.map": "/playing-with-polygons/static/js/main.baf6f2eb.chunk.js.map",
     "runtime-main.js": "/playing-with-polygons/static/js/runtime-main.835b837a.js",
     "runtime-main.js.map": "/playing-with-polygons/static/js/runtime-main.835b837a.js.map",
-    "static/js/2.a6966e71.chunk.js": "/playing-with-polygons/static/js/2.a6966e71.chunk.js",
-    "static/js/2.a6966e71.chunk.js.map": "/playing-with-polygons/static/js/2.a6966e71.chunk.js.map",
+    "static/js/2.a8c44a7d.chunk.js": "/playing-with-polygons/static/js/2.a8c44a7d.chunk.js",
+    "static/js/2.a8c44a7d.chunk.js.map": "/playing-with-polygons/static/js/2.a8c44a7d.chunk.js.map",
     "index.html": "/playing-with-polygons/index.html",
-    "precache-manifest.4b7c24bd1baee28198996170708898c8.js": "/playing-with-polygons/precache-manifest.4b7c24bd1baee28198996170708898c8.js",
+    "precache-manifest.b7bf50663c677b0ce726d73e68d133b7.js": "/playing-with-polygons/precache-manifest.b7bf50663c677b0ce726d73e68d133b7.js",
     "service-worker.js": "/playing-with-polygons/service-worker.js",
-    "static/css/main.fc4e5973.chunk.css.map": "/playing-with-polygons/static/css/main.fc4e5973.chunk.css.map",
-    "static/js/2.a6966e71.chunk.js.LICENSE.txt": "/playing-with-polygons/static/js/2.a6966e71.chunk.js.LICENSE.txt",
-    "static/media/rotating-ring.svg": "/playing-with-polygons/static/media/rotating-ring.37becaf0.svg"
+    "static/css/main.a6452b3e.chunk.css.map": "/playing-with-polygons/static/css/main.a6452b3e.chunk.css.map",
+    "static/js/2.a8c44a7d.chunk.js.LICENSE.txt": "/playing-with-polygons/static/js/2.a8c44a7d.chunk.js.LICENSE.txt",
+    "static/media/rotating-ring.svg": "/playing-with-polygons/static/media/rotating-ring.6b2af75b.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.835b837a.js",
-    "static/js/2.a6966e71.chunk.js",
-    "static/css/main.fc4e5973.chunk.css",
-    "static/js/main.3bab6d78.chunk.js"
+    "static/js/2.a8c44a7d.chunk.js",
+    "static/css/main.a6452b3e.chunk.css",
+    "static/js/main.baf6f2eb.chunk.js"
   ]
 }
