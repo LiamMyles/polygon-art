@@ -30,9 +30,8 @@ import rotatingDirection from "../rotating-ring.svg"
 
 const PolygonPageWrappingDiv = styled.div`
   display: grid;
-  grid-template-rows: 250px calc(90vh - 260px);
+  grid-template-rows: 270px calc(90vh - 280px);
   grid-template-columns: 100vw;
-  grid-gap: 10px;
   justify-content: center;
 `
 
