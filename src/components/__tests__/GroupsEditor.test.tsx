@@ -4,7 +4,7 @@ import p5 from "p5"
 
 import { PolygonGroupsContextWrapper } from "reducer-contexts/polygon-groups"
 
-import { GroupsDisplay } from "components/GroupsDisplay"
+import { GroupsEditor } from "components/GroupsEditor"
 
 const mockP5RemoveFunction = jest.fn()
 jest.mock("p5", () => {
@@ -21,12 +21,12 @@ beforeEach(() => {
 
 describe("GroupDisplay Component", () => {
   it("should render component", () => {
-    render(<GroupsDisplay />)
+    render(<GroupsEditor />)
   })
   it("should display a canvas for each group", () => {
     const { getByLabelText } = render(
       <PolygonGroupsContextWrapper>
-        <GroupsDisplay />
+        <GroupsEditor />
       </PolygonGroupsContextWrapper>
     )
 
@@ -35,7 +35,7 @@ describe("GroupDisplay Component", () => {
   it("should display canvas for each ring in group", () => {
     const { getByLabelText } = render(
       <PolygonGroupsContextWrapper>
-        <GroupsDisplay />
+        <GroupsEditor />
       </PolygonGroupsContextWrapper>
     )
     expect(getByLabelText("Group 0, Ring 0 Canvas")).toBeInTheDocument()
@@ -44,7 +44,7 @@ describe("GroupDisplay Component", () => {
   it("should be able to add new groups", () => {
     const { getByLabelText, getByRole, queryByLabelText } = render(
       <PolygonGroupsContextWrapper>
-        <GroupsDisplay />
+        <GroupsEditor />
       </PolygonGroupsContextWrapper>
     )
     expect(getByLabelText("Group 0 Canvas")).toBeInTheDocument()
@@ -58,7 +58,7 @@ describe("GroupDisplay Component", () => {
   it("should be able to re-roll rings of group", () => {
     const { getByLabelText } = render(
       <PolygonGroupsContextWrapper>
-        <GroupsDisplay />
+        <GroupsEditor />
       </PolygonGroupsContextWrapper>
     )
     const group1 = getByLabelText("Group 0 Canvas")
@@ -81,7 +81,7 @@ describe("GroupDisplay Component", () => {
   it("should be able to delete groups", () => {
     const { getByLabelText, getByRole, queryByLabelText } = render(
       <PolygonGroupsContextWrapper>
-        <GroupsDisplay />
+        <GroupsEditor />
       </PolygonGroupsContextWrapper>
     )
     const group1 = getByLabelText("Group 0 Canvas")
@@ -104,7 +104,7 @@ describe("GroupDisplay Component", () => {
   it("should not be able to delete last group", () => {
     const { getByLabelText } = render(
       <PolygonGroupsContextWrapper>
-        <GroupsDisplay />
+        <GroupsEditor />
       </PolygonGroupsContextWrapper>
     )
     const group1 = getByLabelText("Group 0 Canvas")
@@ -118,7 +118,7 @@ describe("GroupDisplay Component", () => {
   it("should be able to add new rings", () => {
     const { getByLabelText } = render(
       <PolygonGroupsContextWrapper>
-        <GroupsDisplay />
+        <GroupsEditor />
       </PolygonGroupsContextWrapper>
     )
     const ring1 = getByLabelText("Group 0, Ring 0 Canvas")
@@ -134,7 +134,7 @@ describe("GroupDisplay Component", () => {
   it("should be able to delete rings", () => {
     const { getByLabelText, getAllByRole } = render(
       <PolygonGroupsContextWrapper>
-        <GroupsDisplay />
+        <GroupsEditor />
       </PolygonGroupsContextWrapper>
     )
     const ring1 = getByLabelText("Group 0, Ring 0 Canvas")
@@ -161,7 +161,7 @@ describe("GroupDisplay Component", () => {
   it("should be able to add new ring to group", () => {
     const { getByRole, getAllByRole } = render(
       <PolygonGroupsContextWrapper>
-        <GroupsDisplay />
+        <GroupsEditor />
       </PolygonGroupsContextWrapper>
     )
 

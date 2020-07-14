@@ -73,7 +73,7 @@ const ShorterSlider = styled(Slider)`
   width: calc(100% - 60px);
 `
 
-export const PolygonDisplay = () => {
+export const PolygonEditor = () => {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
   const navigationState = useContext(navigationStateContext)
