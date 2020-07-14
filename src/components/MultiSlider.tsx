@@ -110,7 +110,7 @@ export const sliderReducer: React.Reducer<SliderState, SliderActions> = produce(
   }
 )
 
-interface handlePointerDragOptions {
+interface HandlePointerDragParams {
   event: React.MouseEvent<HTMLDivElement, PointerEvent>
   max: number
   min: number
@@ -125,7 +125,7 @@ const handlePointerDrag = ({
   sliderRailRef,
   isMinThumb,
   dispatch,
-}: handlePointerDragOptions) => {
+}: HandlePointerDragParams) => {
   function dispatchChange(diffX: number) {
     const offsetWidth = sliderRailRef?.current?.offsetWidth
       ? sliderRailRef.current.offsetWidth
