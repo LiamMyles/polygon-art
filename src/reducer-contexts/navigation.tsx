@@ -2,9 +2,16 @@ import React, { useReducer, createContext } from "react"
 import produce, { Draft } from "immer"
 
 export interface NavigationState {
-  currentScreen: "MAIN_SCREEN" | "GROUP_SCREEN" | "POLYGON_SCREEN"
+  currentScreen:
+    | "MAIN_SCREEN"
+    | "GROUP_SCREEN"
+    | "POLYGON_SCREEN"
+    | "INFO_SCREEN"
   currentGroup: number
   currentPolygon: number
+}
+interface InfoScreen {
+  type: "INFO_SCREEN"
 }
 interface MainScreen {
   type: "MAIN_SCREEN"
@@ -18,11 +25,16 @@ interface PolygonScreen {
   currentPolygon: number
 }
 
-export type NavigationActions = MainScreen | GroupScreen | PolygonScreen
+export type NavigationActions =
+  | MainScreen
+  | GroupScreen
+  | PolygonScreen
+  | InfoScreen
 
 export const navigationReducer = produce(
   (draft: Draft<NavigationState>, action: NavigationActions) => {
     switch (action.type) {
+      case "INFO_SCREEN":
       case "MAIN_SCREEN":
       case "GROUP_SCREEN": {
         draft.currentScreen = action.type
@@ -39,7 +51,7 @@ export const navigationReducer = produce(
 )
 
 export const navigationInitialState: NavigationState = {
-  currentScreen: "MAIN_SCREEN",
+  currentScreen: "INFO_SCREEN",
   currentGroup: 0,
   currentPolygon: 0,
 }
