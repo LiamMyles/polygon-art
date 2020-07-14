@@ -38,9 +38,6 @@ const XSlider = styled(Slider)`
   grid-gap: 10px;
   transform: translateX(-10px);
 `
-const YSlider = styled(Slider)`
-  transform: translateY(-10px);
-`
 
 const CoordinatePositionsDiv = styled.div`
   grid-column: 1/2;
@@ -78,18 +75,132 @@ const CoordinateThumbDiv = styled.div`
   z-index: 1;
   background: grey;
   border-radius: 20px;
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   top: 0%;
   right: 0%;
   transform: translate(50%, -50%);
   &.moving {
     background: darkgrey;
     border: solid 2px grey;
-    width: 18px;
-    height: 18px;
+    width: 28px;
+    height: 28px;
   }
 `
+
+interface UpdateThumbPositionParams {
+  x: number
+  y: number
+  coordinatePanel: React.RefObject<HTMLDivElement>
+  scrollingParentRef?: React.RefObject<HTMLElement>
+  setXFunction: (value: React.SetStateAction<number>) => void
+  setYFunction: (value: React.SetStateAction<number>) => void
+}
+
+function updateThumbPosition({
+  x,
+  y,
+  coordinatePanel,
+  scrollingParentRef,
+  setXFunction,
+  setYFunction,
+}: UpdateThumbPositionParams) {
+  if (coordinatePanel.current === null) return
+  //Get the difference from the panel between the panel edge and the thumb
+  const diffX = x - coordinatePanel.current.offsetLeft
+  let diffY = y - coordinatePanel.current.offsetTop
+  //If we have a scrolling parent, account for its current scroll
+  if (scrollingParentRef?.current?.scrollTop) {
+    diffY = diffY + scrollingParentRef.current.scrollTop
+  }
+
+  //Do some fancy math that I haven't spent the time to understand
+  const newX = Math.round(
+    -100 + ((100 - -100) * diffX) / coordinatePanel.current.offsetWidth
+  )
+  const newY = Math.round(
+    100 + ((-100 - 100) * diffY) / coordinatePanel.current.offsetHeight
+  )
+  //Locks the values to the inside of the panel and set them
+  if (newX >= -100 && newX <= 100) {
+    setXFunction(newX)
+  } else if (newX >= -100) {
+    setXFunction(100)
+  } else if (newX <= 100) {
+    setXFunction(-100)
+  }
+
+  if (newY >= -100 && newY <= 100) {
+    setYFunction(newY)
+  } else if (newY >= -100) {
+    setYFunction(100)
+  } else if (newY <= 100) {
+    setYFunction(-100)
+  }
+}
+
+interface HandleThumbDragParams {
+  event: React.MouseEvent<HTMLDivElement, PointerEvent>
+  coordinatePanel: React.RefObject<HTMLDivElement>
+  scrollingParentRef?: React.RefObject<HTMLElement>
+  setXFunction: (value: React.SetStateAction<number>) => void
+  setYFunction: (value: React.SetStateAction<number>) => void
+}
+
+const handleThumbDrag = ({
+  event,
+  coordinatePanel,
+  scrollingParentRef,
+  setXFunction,
+  setYFunction,
+}: HandleThumbDragParams) => {
+  event.preventDefault()
+  event.stopPropagation()
+
+  const elementClassList = event.currentTarget.classList
+  elementClassList.add("moving")
+
+  function pointerMove(event: PointerEvent) {
+    if (event.pointerType === "touch") return
+    updateThumbPosition({
+      x: event.pageX | event.clientX,
+      y: event.pageY | event.clientY,
+      scrollingParentRef,
+      setXFunction,
+      setYFunction,
+      coordinatePanel,
+    })
+    event.preventDefault()
+    event.stopPropagation()
+  }
+  function handleTouchMove(event: TouchEvent) {
+    updateThumbPosition({
+      x: event.touches[0].pageX,
+      y: event.touches[0].pageY,
+      scrollingParentRef,
+      setXFunction,
+      setYFunction,
+      coordinatePanel,
+    })
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
+  function cleanUpEvents() {
+    elementClassList.remove("moving")
+    if (coordinatePanel?.current) {
+      coordinatePanel.current.removeEventListener("touchmove", handleTouchMove)
+    }
+    document.removeEventListener("pointerup", cleanUpEvents)
+    document.removeEventListener("pointermove", pointerMove)
+  }
+
+  if (coordinatePanel?.current) {
+    coordinatePanel.current.addEventListener("touchmove", handleTouchMove)
+  }
+  document.addEventListener("pointerup", cleanUpEvents)
+  document.addEventListener("pointermove", pointerMove)
+}
 
 interface getNewValueForRangeOptions {
   oldValue: number
@@ -140,77 +251,47 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
   return (
     <CoordinatePickerWrappingDiv>
       <YSliderWrappingDiv>
-        <YSlider
+        <Slider
           max={100}
           min={-100}
           currentValue={currentY}
           label="Y"
           id="y"
-          simpleThumb={true}
           vertical={true}
           setFunction={setYFunction}
           hideValue
+          verticalHeight={125}
         />
       </YSliderWrappingDiv>
       <CoordinatePositionsDiv>
         <p>X:{currentX}</p>
         <p>Y:{currentY}</p>
       </CoordinatePositionsDiv>
-      <CoordinatePanelDiv ref={coordinatePanel}>
+      <CoordinatePanelDiv
+        ref={coordinatePanel}
+        onClick={(event) => {
+          updateThumbPosition({
+            x: event.pageX | event.clientX,
+            y: event.pageY | event.clientY,
+            scrollingParentRef,
+            setXFunction,
+            setYFunction,
+            coordinatePanel,
+          })
+          event.preventDefault()
+          event.stopPropagation()
+        }}
+      >
         <CoordinateThumbDiv
           style={positionStyles}
           onPointerDown={(event) => {
-            event.preventDefault()
-            event.stopPropagation()
-
-            const elementClassList = event.currentTarget.classList
-            elementClassList.add("moving")
-
-            function pointerMove(event: PointerEvent) {
-              if (coordinatePanel.current === null) return
-              const diffX =
-                (event.pageX | event.clientX) -
-                coordinatePanel.current.offsetLeft
-              const newX = Math.round(
-                -100 +
-                  ((100 - -100) * diffX) / coordinatePanel.current.offsetWidth
-              )
-              if (newX >= -100 && newX <= 100) {
-                setXFunction(newX)
-              } else if (newX >= -100) {
-                setXFunction(100)
-              } else if (newX <= 100) {
-                setXFunction(-100)
-              }
-              let diffY =
-                (event.pageY | event.clientY) -
-                coordinatePanel.current.offsetTop
-
-              if (scrollingParentRef?.current?.scrollTop) {
-                diffY = diffY + scrollingParentRef.current.scrollTop
-              }
-
-              const newY = Math.round(
-                100 +
-                  ((-100 - 100) * diffY) / coordinatePanel.current.offsetHeight
-              )
-              if (newY >= -100 && newY <= 100) {
-                setYFunction(newY)
-              } else if (newY >= -100) {
-                setYFunction(100)
-              } else if (newY <= 100) {
-                setYFunction(-100)
-              }
-            }
-
-            function pointerUp() {
-              elementClassList.remove("moving")
-              document.removeEventListener("pointerup", pointerUp)
-              document.removeEventListener("pointermove", pointerMove)
-            }
-
-            document.addEventListener("pointerup", pointerUp)
-            document.addEventListener("pointermove", pointerMove)
+            handleThumbDrag({
+              event,
+              coordinatePanel,
+              scrollingParentRef,
+              setXFunction,
+              setYFunction,
+            })
           }}
         />
       </CoordinatePanelDiv>
@@ -221,7 +302,6 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
           currentValue={currentX}
           label="X"
           id="x"
-          simpleThumb={true}
           setFunction={setXFunction}
           hideValue
         />
