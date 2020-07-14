@@ -1,5 +1,6 @@
 import React from "react"
 import styled from "styled-components"
+import { StyledButton } from "common-styled-components/StyledButton"
 
 const ColourPickerWrapperDiv = styled.div`
   width: 100%;
@@ -35,14 +36,15 @@ const ColourPickerInput = styled.input`
   padding: 5px;
   border-radius: 5px;
 `
-const ColourPickerDeleteButton = styled.button`
-  border-radius: 5px;
-  padding: 5px;
+const ColourPickerDeleteButton = styled(StyledButton)`
+  margin: 0;
+  min-height: initial;
 `
-const ColourPickerAddButton = styled.button`
+const ColourPickerAddButton = styled(StyledButton)`
   grid-row: 2/3;
   width: 100%;
-  border-radius: 5px;
+  margin: 0;
+  min-height: initial;
 `
 
 interface ColourPickerProps {
