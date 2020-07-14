@@ -69,6 +69,10 @@ const PolygonCanvasButtonDiv = styled.div`
   display: flex;
 `
 
+const ShorterSlider = styled(Slider)`
+  width: calc(100% - 60px);
+`
+
 export const PolygonDisplay = () => {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
@@ -319,7 +323,7 @@ export const PolygonRotationControls: React.FC = () => {
         setFunction={setEnabled}
         checkedText={{ checked: "ON", unchecked: "OFF" }}
       />
-      <Slider
+      <ShorterSlider
         label="Starting Rotation"
         id="rotation-starting-rotation"
         min={1}
@@ -337,7 +341,7 @@ export const PolygonRotationControls: React.FC = () => {
             svgBackground={rotatingDirection}
             transformFlip={true}
           />
-          <Slider
+          <ShorterSlider
             label="Speed"
             id="rotation-speed"
             min={0}
@@ -421,7 +425,7 @@ export const PolygonScaleControls: React.FC = () => {
         setFunction={setEnabled}
         checkedText={{ checked: "ON", unchecked: "OFF" }}
       />
-      <Slider
+      <ShorterSlider
         label="Starting Size"
         id="scale-starting-size"
         min={0}
@@ -431,7 +435,7 @@ export const PolygonScaleControls: React.FC = () => {
       />
       {enabled && (
         <>
-          <Slider
+          <ShorterSlider
             label="Speed"
             id="scale-speed"
             max={20}
@@ -511,7 +515,7 @@ export const PolygonDotsControls: React.FC = () => {
       />
       {enabled && (
         <>
-          <Slider
+          <ShorterSlider
             label="Size"
             id="dots-size"
             max={20}
@@ -526,7 +530,7 @@ export const PolygonDotsControls: React.FC = () => {
             colours={fillColours}
             setFunction={setFillColours}
           />
-          <Slider
+          <ShorterSlider
             label="Stroke Width"
             id="dots-stroke-width"
             max={20}
@@ -604,7 +608,7 @@ export const PolygonSidesControls: React.FC = () => {
         setFunction={setEnabled}
         checkedText={{ checked: "ON", unchecked: "OFF" }}
       />
-      <Slider
+      <ShorterSlider
         label="Amount"
         id="sides-amount"
         max={20}
@@ -614,7 +618,7 @@ export const PolygonSidesControls: React.FC = () => {
       />
       {enabled && (
         <>
-          <Slider
+          <ShorterSlider
             label="Stroke Width"
             id="sides-stroke-width"
             max={20}
