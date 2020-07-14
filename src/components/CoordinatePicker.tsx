@@ -140,7 +140,7 @@ function updateThumbPosition({
 }
 
 interface HandleThumbDragParams {
-  event: React.MouseEvent<HTMLDivElement, PointerEvent>
+  pointerDownEvent: React.MouseEvent<HTMLDivElement, PointerEvent>
   coordinatePanel: React.RefObject<HTMLDivElement>
   scrollingParentRef?: React.RefObject<HTMLElement>
   setXFunction: (value: React.SetStateAction<number>) => void
@@ -148,42 +148,42 @@ interface HandleThumbDragParams {
 }
 
 const handleThumbDrag = ({
-  event,
+  pointerDownEvent,
   coordinatePanel,
   scrollingParentRef,
   setXFunction,
   setYFunction,
 }: HandleThumbDragParams) => {
-  event.preventDefault()
-  event.stopPropagation()
+  pointerDownEvent.preventDefault()
+  pointerDownEvent.stopPropagation()
 
-  const elementClassList = event.currentTarget.classList
+  const elementClassList = pointerDownEvent.currentTarget.classList
   elementClassList.add("moving")
 
-  function pointerMove(event: PointerEvent) {
-    if (event.pointerType === "touch") return
+  function pointerMove(pointerMoveEvent: PointerEvent) {
+    if (pointerMoveEvent.pointerType === "touch") return
     updateThumbPosition({
-      x: event.pageX | event.clientX,
-      y: event.pageY | event.clientY,
+      x: pointerMoveEvent.pageX | pointerMoveEvent.clientX,
+      y: pointerMoveEvent.pageY | pointerMoveEvent.clientY,
       scrollingParentRef,
       setXFunction,
       setYFunction,
       coordinatePanel,
     })
-    event.preventDefault()
-    event.stopPropagation()
+    pointerMoveEvent.preventDefault()
+    pointerMoveEvent.stopPropagation()
   }
-  function handleTouchMove(event: TouchEvent) {
+  function handleTouchMove(touchMoveEvent: TouchEvent) {
     updateThumbPosition({
-      x: event.touches[0].pageX,
-      y: event.touches[0].pageY,
+      x: touchMoveEvent.touches[0].pageX,
+      y: touchMoveEvent.touches[0].pageY,
       scrollingParentRef,
       setXFunction,
       setYFunction,
       coordinatePanel,
     })
-    event.preventDefault()
-    event.stopPropagation()
+    touchMoveEvent.preventDefault()
+    touchMoveEvent.stopPropagation()
   }
 
   function cleanUpEvents() {
@@ -286,7 +286,7 @@ export const CoordinatePicker: React.FC<CoordinatePickerProps> = ({
           style={positionStyles}
           onPointerDown={(event) => {
             handleThumbDrag({
-              event,
+              pointerDownEvent: event,
               coordinatePanel,
               scrollingParentRef,
               setXFunction,
