@@ -9,13 +9,13 @@ import {
 import { NavigationContextWrapper } from "reducer-contexts/navigation"
 
 import {
-  PolygonDisplay,
+  PolygonEditor,
   PolygonRotationControls,
   PolygonScaleControls,
   PolygonDotsControls,
   PolygonSidesControls,
   PolygonPositionControls,
-} from "components/PolygonDisplay"
+} from "components/PolygonEditor"
 
 const mockP5RemoveFunction = jest.fn()
 jest.mock("p5", () => {
@@ -46,7 +46,7 @@ describe("PolygonDisplay Component", () => {
     render(
       <PolygonGroupsContextWrapper>
         <NavigationContextWrapper>
-          <PolygonDisplay />
+          <PolygonEditor />
         </NavigationContextWrapper>
       </PolygonGroupsContextWrapper>
     )
@@ -55,7 +55,7 @@ describe("PolygonDisplay Component", () => {
     const { getByLabelText } = render(
       <PolygonGroupsContextWrapper>
         <NavigationContextWrapper>
-          <PolygonDisplay />
+          <PolygonEditor />
         </NavigationContextWrapper>
       </PolygonGroupsContextWrapper>
     )
@@ -72,7 +72,7 @@ describe("PolygonDisplay Component", () => {
         <div key={`${startingRotation}-${amount}`}>
           <label htmlFor="testing">Test</label>
           <input id="testing" defaultValue={`${startingRotation}-${amount}`} />
-          <PolygonDisplay />
+          <PolygonEditor />
         </div>
       )
     }

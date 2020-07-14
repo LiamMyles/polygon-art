@@ -127,7 +127,7 @@ const GroupCoordinateModal: React.FC<{
   )
 }
 
-export function GroupsDisplay() {
+export function GroupsEditor() {
   const polygonGroupsState = useContext(polygonGroupsStateContext)
   const polygonGroupsDispatch = useContext(polygonGroupsDispatchContext)
   const backgroundState = useContext(backgroundStateContext)

@@ -8,8 +8,8 @@ import {
 
 import Screens from "components/Screens"
 import { MainCanvas } from "components/MainCanvas"
-import { GroupsDisplay } from "components/GroupsDisplay"
-import { PolygonDisplay } from "components/PolygonDisplay"
+import { GroupsEditor } from "components/GroupsEditor"
+import { PolygonEditor } from "components/PolygonEditor"
 import { GenerateGifModal } from "components/ShareGifModal"
 import { EditBackgroundModal } from "components/EditBackgroundModal"
 
@@ -68,7 +68,7 @@ const App: React.FC = () => {
           </Navigation>
         </>
         <>
-          <GroupsDisplay />
+          <GroupsEditor />
           <Navigation>
             <EditBackgroundModal />
             <StyledButton
@@ -82,7 +82,7 @@ const App: React.FC = () => {
           </Navigation>
         </>
         <>
-          <PolygonDisplay />
+          <PolygonEditor />
           <Navigation>
             <StyledButton
               type="button"
