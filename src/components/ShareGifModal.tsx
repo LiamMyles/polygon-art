@@ -81,7 +81,6 @@ export const GenerateGifModal: React.FC = () => {
 
   const [recordingLength, setRecordingLength] = useState(5)
   const [currentProgress, setCurrentProgress] = useState(0)
-  const [saveFileName, setSaveFileName] = useState("polygon")
 
   type componentModes = "initial" | "recording" | "processing" | "saving"
   const [gifGenerationMode, setGifGenerationMode] = useState<componentModes>(
@@ -224,32 +223,7 @@ export const GenerateGifModal: React.FC = () => {
                 <>
                   <p>Finished</p>
                   {imgSrc && <img alt="preview gif" src={imgSrc} />}
-                  <div>
-                    <label htmlFor="save-file-name">Save file name:</label>
-                    <GifNameInput
-                      id="save-file-name"
-                      minLength={1}
-                      value={saveFileName}
-                      onChange={({ currentTarget: { value } }) => {
-                        setSaveFileName(value)
-                      }}
-                    />
-                  </div>
-                  <StyledButton
-                    type="submit"
-                    onClick={() => {
-                      download(
-                        gifFile as Blob,
-                        saveFileName
-                          .trim()
-                          .replace(/[^\w\s]/gi, "")
-                          .toLocaleLowerCase()
-                          .replace(/\s+/gi, "-")
-                      )
-                    }}
-                  >
-                    Download Gif
-                  </StyledButton>
+                  <GifSaveOptions gifFile={gifFile as Blob} />
                 </>
               )
             }
@@ -257,5 +231,39 @@ export const GenerateGifModal: React.FC = () => {
         })()}
       </GifModalInternalWrappingDiv>
     </ModalBox>
+  )
+}
+
+const GifSaveOptions: React.FC<{ gifFile: Blob }> = ({ gifFile }) => {
+  const [saveFileName, setSaveFileName] = useState("polygon")
+  return (
+    <>
+      <div>
+        <label htmlFor="save-file-name">Save file name:</label>
+        <GifNameInput
+          id="save-file-name"
+          minLength={1}
+          value={saveFileName}
+          onChange={({ currentTarget: { value } }) => {
+            setSaveFileName(value)
+          }}
+        />
+      </div>
+      <StyledButton
+        type="submit"
+        onClick={() => {
+          download(
+            gifFile,
+            saveFileName
+              .trim()
+              .replace(/[^\w\s]/gi, "")
+              .toLocaleLowerCase()
+              .replace(/\s+/gi, "-")
+          )
+        }}
+      >
+        Download Gif
+      </StyledButton>
+    </>
   )
 }
