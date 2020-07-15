@@ -6,7 +6,7 @@ interface ScreensProps {
   className?: string
 }
 
-const Screens: React.FC<ScreensProps> = ({
+export const Screens: React.FC<ScreensProps> = ({
   children,
   currentChild,
   className,
@@ -38,5 +38,3 @@ const Screens: React.FC<ScreensProps> = ({
     </>
   )
 }
-
-export default Screens
