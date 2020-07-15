@@ -46,6 +46,10 @@ const ContentDiv = styled.div`
   strong {
     font-weight: bold;
   }
+  /* TODO: Link Style */
+  em {
+    font-style: italic;
+  }
   h1,
   h2,
   h3 {
@@ -95,59 +99,65 @@ export const IntroScreen = () => {
         </p>
         <h3>Background</h3>
         <p>
-          By default the background will redraw with an opacity, so you will see
+          By default the background will redraw with an opacity, this will cause
           a trailing image when the polygons move. Adjusting the opacity will
-          change how much <em>blur</em> you will see.
+          change how much <em>trail/blur</em> is left behind.
         </p>
         <img alt="polygon with fading background" src={fadedBackgroundLogo} />
         <p>
-          The <em>redraw background</em> background option will cause the
-          polygon to paint. Which can create really interesting patterns if you
-          let them run.
+          The <em>redraw background</em> <strong>Edit Background</strong> option
+          will cause the polygon to paint. This creates the most interesting
+          patterns when its left to run for a while.
         </p>
         <img alt="polygon with drawing background" src={redrawBackgroundLogo} />
         <h3>Polygon Animation</h3>
-        <p>Polygons can move in 2 main ways. Rotation, and scaling</p>
         <p>
-          Rotation can be either clockwise or anti-clockwise. But you will find
-          the most interesting changes when you adjust its speed.{" "}
+          Polygons move in two main ways. <strong>Rotation</strong> and{" "}
+          <strong>Scaling</strong>
+        </p>
+        <p>
+          <strong>Rotation</strong> can be either clockwise or anti-clockwise.
+          But you will find the most interesting changes when you adjust its
+          speed.
         </p>
         <img alt="Rotating Polygon" src={rotatingPolygon} />
         <p>
-          Scaling is not the best word to describe it, but what basically
-          happens is that the polygon will scale between a maximum and a minimum
-          size.
+          <strong>Scaling</strong> like the rotation is an endless cycle. And
+          causes the polygon to scale between a maximum and a minimum size.
         </p>
         <img alt="Scaling Polygon" src={scalingPolygon} />
         <p>
-          You will get the most diverse results if you combine scaling and
-          rotation together.
+          For the most interesting results you can combine scaling and rotation
+          together.
         </p>
         <img
           alt="Rotating and Scaling Polygon"
           src={rotatingAndScalingPolygon}
         />
-        <h3>Making GIF's and Jif's</h3>
+        <h3>Making GIF's or Jif's</h3>
         <p>
-          You can make a gif by pressing the make gif button, which you can then
-          download!
+          You can make and download a gif by pressing the{" "}
+          <strong>Make Gif</strong> button. Just be aware that the longer the
+          gif is, the longer it will take to make.
         </p>
         <p>
-          The longer your gif the longer it will take to process, and if your
-          device isn't powerful it can take a while to generate the gif.
+          If you're on a phone I would recommend creating short gifs. But you
+          can make them 10 seconds long if you don't mind the wait.
         </p>
         <p>
-          However, if you do actually make any gif's I would love to see them,
-          so be sure to tweet them @PlayingPolygons
+          If you do make anything you want to share on twitter, be sure to
+          include <em>@PlayingPolygons</em> to share with the{" "}
+          <a href="#">Playing With Polygons Twitter</a>
         </p>
         <h2>Playing with Polygons Across the Web</h2>
         <p>
-          You find find playing with polygons on github! Check it out if you
-          like code
+          If you want to see the code powering this app, or you want to raise an
+          issue. Check out the <a href="#">Playing with Polygons Github page</a>
         </p>
         <p>
-          You can also find playing with polygons on twitter! Check it out if
-          you like gif's of polygons
+          If twitter is more of your thing, why not check out the{" "}
+          <a href="#">Playing with Polygons Twitter account</a>. Hopefully there
+          will be gifs on their to help inspire you.
         </p>
         <h2>About Me</h2>
         <p>
@@ -159,20 +169,19 @@ export const IntroScreen = () => {
           a tiny bit of joy.
         </p>
         <p>
-          I'm yet another bearded white cis-male tech person, but I love the
-          web, and I want as many people to enjoy what I create as possible.
+          I'm just another bearded, white, cis-male, tech person. But I love the
+          web, and how accessible it is to so many people.
         </p>
         <p>
-          I have tried to make this app as accessible as possible, so if you're
-          someone who benefits from an accessible web, and you see anything I
-          can improve please do reach out!
+          If you want to know more about me, you can check{" "}
+          <a href="#">my Twitter account</a> and see what I'm up to.
         </p>
         <p>
-          If you have any questions about the code, or want to raise any issues,
-          reach out! Github issues will be the best place, but twitter is fine
-          as well.
+          Also, while I have done my best to make this app as accessible as
+          possible, if you have anything you notice I can improve please do
+          reach out!
         </p>
-        <h2>Create the polygons!</h2>
+        <h2>The Next Step</h2>
         <img alt="Animated Playing with Polygons Logo" src={animatedLogo} />
         <BigCenteredButton
           type="button"
