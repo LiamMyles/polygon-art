@@ -68,7 +68,7 @@ const gifOptions = {
   workers: 2,
   quality: 5,
   workerScript: "/playing-with-polygons/js/gif.worker.js",
-  dither: "FalseFloydSteinberg-serpentine",
+  dither: "FalseFloydSteinberg",
 }
 
 // IF the included script isn't on the page, just don't do anything
@@ -215,10 +215,15 @@ export const GenerateGifModal: React.FC = () => {
               )
             case "processing":
               return <p>Processing : {currentProgress}%</p>
-            case "saving":
+            case "saving": {
+              const imgSrc =
+                URL?.createObjectURL && gifFile
+                  ? URL.createObjectURL(gifFile)
+                  : null
               return (
                 <>
                   <p>Finished</p>
+                  {imgSrc && <img alt="preview gif" src={imgSrc} />}
                   <div>
                     <label htmlFor="save-file-name">Save file name:</label>
                     <GifNameInput
@@ -247,6 +252,7 @@ export const GenerateGifModal: React.FC = () => {
                   </StyledButton>
                 </>
               )
+            }
           }
         })()}
       </GifModalInternalWrappingDiv>
