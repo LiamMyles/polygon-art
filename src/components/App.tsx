@@ -45,7 +45,7 @@ const App: React.FC = () => {
 
   const childMapping = {
     INFO_SCREEN: 1,
-    MAIN_SCREEN: 2,
+    WATCH_SCREEN: 2,
     GROUP_SCREEN: 3,
     POLYGON_SCREEN: 4,
   }
@@ -64,7 +64,7 @@ const App: React.FC = () => {
           <StyledButton
             type="button"
             onClick={() => {
-              navigationDispatch({ type: "MAIN_SCREEN" })
+              navigationDispatch({ type: "WATCH_SCREEN" })
             }}
           >
             START!
@@ -145,7 +145,7 @@ const App: React.FC = () => {
           <StyledButton
             type="button"
             onClick={() => {
-              navigationDispatch({ type: "MAIN_SCREEN" })
+              navigationDispatch({ type: "WATCH_SCREEN" })
             }}
           >
             MAKE POLYGON ART!
@@ -173,10 +173,10 @@ const App: React.FC = () => {
             <StyledButton
               type="button"
               onClick={() => {
-                navigationDispatch({ type: "MAIN_SCREEN" })
+                navigationDispatch({ type: "WATCH_SCREEN" })
               }}
             >
-              Home
+              Watch Animation
             </StyledButton>
           </Navigation>
         </>
@@ -194,10 +194,10 @@ const App: React.FC = () => {
             <StyledButton
               type="button"
               onClick={() => {
-                navigationDispatch({ type: "MAIN_SCREEN" })
+                navigationDispatch({ type: "WATCH_SCREEN" })
               }}
             >
-              Home
+              Watch Animation
             </StyledButton>
           </Navigation>
         </>

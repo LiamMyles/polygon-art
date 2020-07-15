@@ -10,16 +10,16 @@ import {
 } from "reducer-contexts/navigation"
 
 describe("Navigation Reducer", () => {
-  describe("MAIN_SCREEN action", () => {
+  describe("WATCH_SCREEN action", () => {
     it("should fire action", () => {
-      const action: NavigationActions = { type: "MAIN_SCREEN" }
+      const action: NavigationActions = { type: "WATCH_SCREEN" }
       const initialState: NavigationState = {
         currentScreen: "GROUP_SCREEN",
         currentGroup: 0,
         currentPolygon: 0,
       }
       const expectedState: NavigationState = {
-        currentScreen: "MAIN_SCREEN",
+        currentScreen: "WATCH_SCREEN",
         currentGroup: 0,
         currentPolygon: 0,
       }
@@ -32,7 +32,7 @@ describe("Navigation Reducer", () => {
     it("should fire action", () => {
       const action: NavigationActions = { type: "GROUP_SCREEN" }
       const initialState: NavigationState = {
-        currentScreen: "MAIN_SCREEN",
+        currentScreen: "WATCH_SCREEN",
         currentGroup: 0,
         currentPolygon: 0,
       }
@@ -54,7 +54,7 @@ describe("Navigation Reducer", () => {
         currentPolygon: 1,
       }
       const initialState: NavigationState = {
-        currentScreen: "MAIN_SCREEN",
+        currentScreen: "WATCH_SCREEN",
         currentGroup: 0,
         currentPolygon: 0,
       }
@@ -79,7 +79,7 @@ describe("Navigation Context", () => {
         <p>Screen: {state.currentScreen}</p>
         <button
           onClick={() => {
-            dispatch({ type: "MAIN_SCREEN" })
+            dispatch({ type: "WATCH_SCREEN" })
           }}
         >
           Main Screen
@@ -113,7 +113,7 @@ describe("Navigation Context", () => {
     )
 
     fireEvent.click(getByText("Main Screen"))
-    expect(getByText("Screen: MAIN_SCREEN")).toBeInTheDocument()
+    expect(getByText("Screen: WATCH_SCREEN")).toBeInTheDocument()
 
     fireEvent.click(getByText("Group Screen"))
     expect(getByText("Screen: GROUP_SCREEN")).toBeInTheDocument()

@@ -3,7 +3,7 @@ import produce, { Draft } from "immer"
 
 export interface NavigationState {
   currentScreen:
-    | "MAIN_SCREEN"
+    | "WATCH_SCREEN"
     | "GROUP_SCREEN"
     | "POLYGON_SCREEN"
     | "INFO_SCREEN"
@@ -14,7 +14,7 @@ interface InfoScreen {
   type: "INFO_SCREEN"
 }
 interface MainScreen {
-  type: "MAIN_SCREEN"
+  type: "WATCH_SCREEN"
 }
 interface GroupScreen {
   type: "GROUP_SCREEN"
@@ -35,7 +35,7 @@ export const navigationReducer = produce(
   (draft: Draft<NavigationState>, action: NavigationActions) => {
     switch (action.type) {
       case "INFO_SCREEN":
-      case "MAIN_SCREEN":
+      case "WATCH_SCREEN":
       case "GROUP_SCREEN": {
         draft.currentScreen = action.type
         break
