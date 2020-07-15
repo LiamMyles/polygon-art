@@ -55,6 +55,13 @@ const GifNameInput = styled.input`
   border: solid 2px lightgrey;
   border-radius: 4px;
   padding: 3px;
+  &:focus,
+  &:hover {
+    outline: none;
+    border-color: grey;
+    background: dimgrey;
+    color: snow;
+  }
 `
 
 const gifOptions = {
