@@ -326,8 +326,8 @@ export const PolygonRotationControls: React.FC = () => {
       <ShorterSlider
         label="Starting Rotation"
         id="rotation-starting-rotation"
-        min={1}
-        max={360}
+        min={0}
+        max={359}
         currentValue={startingRotation}
         setFunction={setStartingRotation}
       />

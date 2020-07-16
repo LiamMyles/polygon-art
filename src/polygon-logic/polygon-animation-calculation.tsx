@@ -153,15 +153,16 @@ export class PolygonAnimationCalculation {
     if (isRotating) {
       if (isRotatingClockwise) {
         newRotation = currentRotation + rotationSpeed
+        if (newRotation > 359) {
+          const amountOver = newRotation - 359
+          newRotation = amountOver
+        }
       } else {
         newRotation = currentRotation - rotationSpeed
-      }
-      if (newRotation >= 360) {
-        const amountOver = currentRotation - 360
-        newRotation = 0 + amountOver
-      } else if (newRotation <= -360) {
-        const amountOver = currentRotation - 360
-        newRotation = 0 - amountOver
+        if (newRotation < -359) {
+          const amountOver = newRotation + 359
+          newRotation = amountOver
+        }
       }
 
       this.animationState.currentRotation = newRotation

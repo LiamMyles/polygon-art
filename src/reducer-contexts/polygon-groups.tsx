@@ -307,7 +307,7 @@ function getRandomRotation(): PolygonRingRotation {
     enabled: true,
     clockwise: getRandomBoolean(),
     speed: getRandomIntInclusive(2, 7),
-    startingRotation: getRandomIntInclusive(1, 360),
+    startingRotation: getRandomIntInclusive(0, 359),
   }
 }
 function getRandomScale(): PolygonRingScale {
