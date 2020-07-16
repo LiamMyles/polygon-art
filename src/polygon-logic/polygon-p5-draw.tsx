@@ -101,7 +101,6 @@ export function generatePolygonRingSketch({
       p5.frameRate(FRAME_RATE)
     }
     p5.draw = () => {
-      polygonRingInstance.getPolygonFrameAndStep()
       p5.angleMode("degrees")
       if (shouldRedrawBackground) {
         p5.background(rgbaBackgroundColour)
