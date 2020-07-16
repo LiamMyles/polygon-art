@@ -1,50 +1,33 @@
-# Polygon Art
+# Playing with Polygons
 
-This project has been years in the making, and I'm finally bringing everything together to the final application I have always wanted to make.
+Welcome to Playing with Polygons! An idea that has its roots in 2014 with a bug in a university project.
 
----
+Between University and now I have become a Web Developer. Then in 2020 - during the Covid-19 lockdown - I finally created a little app that takes that bug to its logical extreme.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## About this Project
 
-## Available Scripts
+This project is in the simplest terms an app that lets you create polygon themed art. As well as allowing you to generate gif's of said art.
 
-In the project directory, you can run:
+Here are some examples of what I have made with it so far:
 
-### `yarn start`
+![alt](./src/images/little-star.gif)
+![alt](./src/images/playing-with-polygons-animated-logo.gif)
+![alt](./src/images/too-many-polygons.gif)
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## How to Play with Polygons
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Check out the website that is currently set up as a github pages website. You can access it [here](here.com)
 
-### `yarn test`
+## Tech Used
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Starting the Project for yourself
 
-### `yarn build`
+### Setup
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Development
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### Testing
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Other Homes on the Web
 
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Check out twitter
