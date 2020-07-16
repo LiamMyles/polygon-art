@@ -31,7 +31,7 @@ declare class GIF {
   addFrame(canvas: any, options: any): void
 }
 
-const GifModalInternalWrappingDiv = styled.form`
+const GifModalInternalWrappingForm = styled.form`
   width: 100%;
   min-height: 150px;
   display: grid;
@@ -165,7 +165,7 @@ export const GenerateGifModal: React.FC = () => {
       isClosed={editModalIsClosed}
       setIsClosed={setEditModalIsClosed}
     >
-      <GifModalInternalWrappingDiv
+      <GifModalInternalWrappingForm
         onSubmit={(event) => {
           event.preventDefault()
         }}
@@ -229,7 +229,7 @@ export const GenerateGifModal: React.FC = () => {
             }
           }
         })()}
-      </GifModalInternalWrappingDiv>
+      </GifModalInternalWrappingForm>
     </ModalBox>
   )
 }
