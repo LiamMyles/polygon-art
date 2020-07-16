@@ -21,7 +21,6 @@ const BigCenteredButton = styled(StyledButton)`
 `
 
 const WrappingDiv = styled.div`
-  grid: 1/1;
   overflow-y: scroll;
   background: whitesmoke;
 `
