@@ -39,14 +39,22 @@ const ContentDiv = styled.div`
     display: block;
     margin: 0 auto;
   }
-
   p {
     margin: 10px;
   }
   strong {
     font-weight: bold;
   }
-  /* TODO: Link Style */
+  a {
+    color: rebeccapurple;
+
+    &:focus,
+    &:hover {
+      font-style: italic;
+      text-decoration-style: double;
+      outline: none;
+    }
+  }
   em {
     font-style: italic;
   }
@@ -79,8 +87,8 @@ export const IntroScreen = () => {
         <img alt="Playing with Polygons Logo" src={logo} />
         <p>Welcome to my little polygon art project!</p>
         <p>
-          Scroll to Learn a bit about about the app. Or to get straight into the
-          action just press <strong>START!</strong>
+          Scroll to Learn a bit about about the app, or just drive straight in
+          by pressing <strong>START!</strong>
         </p>
         <BigCenteredButton
           type="button"
@@ -92,10 +100,7 @@ export const IntroScreen = () => {
         </BigCenteredButton>
         <h2>Tips and Tricks</h2>
         <p>
-          Here are some basic tips that I hope will help you make something cool{" "}
-          <span role="img" aria-label="smiley face">
-            😁
-          </span>
+          Here are some basic tips that I hope will help you make something!
         </p>
         <h3>Background</h3>
         <p>
@@ -105,9 +110,9 @@ export const IntroScreen = () => {
         </p>
         <img alt="polygon with fading background" src={fadedBackgroundLogo} />
         <p>
-          The <em>redraw background</em> <strong>Edit Background</strong> option
-          will cause the polygon to paint. This creates the most interesting
-          patterns when its left to run for a while.
+          The <em>Redraw Background</em> option in{" "}
+          <strong>Edit Background</strong> will cause the polygon to paint. This
+          creates the most interesting patterns when its left to run.
         </p>
         <img alt="polygon with drawing background" src={redrawBackgroundLogo} />
         <h3>Polygon Animation</h3>
@@ -147,17 +152,24 @@ export const IntroScreen = () => {
         <p>
           If you do make anything you want to share on twitter, be sure to
           include <em>@PlayingPolygons</em> to share with the{" "}
-          <a href="#">Playing With Polygons Twitter</a>
+          <a href="https://twitter.com/PlayingPolygons">
+            Playing With Polygons Twitter
+          </a>
         </p>
         <h2>Playing with Polygons Across the Web</h2>
         <p>
-          If you want to see the code powering this app, or you want to raise an
-          issue. Check out the <a href="#">Playing with Polygons Github page</a>
+          If you want to see the code behind this app, or you want to raise an
+          issue. Check out the{" "}
+          <a href="https://github.com/LiamMyles/playing-with-polygons">
+            Playing with Polygons Github page
+          </a>
         </p>
         <p>
           If twitter is more of your thing, why not check out the{" "}
-          <a href="#">Playing with Polygons Twitter account</a>. Hopefully there
-          will be gifs on their to help inspire you.
+          <a href="https://twitter.com/PlayingPolygons">
+            Playing with Polygons Twitter account
+          </a>
+          . Hopefully there will be gifs on their to help inspire you.
         </p>
         <h2>About Me</h2>
         <p>
@@ -165,8 +177,8 @@ export const IntroScreen = () => {
           <span role="img" aria-label="Waving Hand">
             👋
           </span>
-          , thanks for actually checking out my little app! I hope it brings you
-          a tiny bit of joy.
+          , thanks for checking out my little app! I hope it brings you a tiny
+          bit of joy.
         </p>
         <p>
           I'm just another bearded, white, cis-male, tech person. But I love the
@@ -174,7 +186,8 @@ export const IntroScreen = () => {
         </p>
         <p>
           If you want to know more about me, you can check{" "}
-          <a href="#">my Twitter account</a> and see what I'm up to.
+          <a href="https://twitter.com/LiamMyles92">my Twitter account</a> to
+          see what I'm up to.
         </p>
         <p>
           Also, while I have done my best to make this app as accessible as
