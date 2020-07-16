@@ -9,7 +9,7 @@ import { ToggleSwitch } from "./ToggleSwitch"
 import { Slider } from "./Slider"
 import { StyledButton } from "common-styled-components/StyledButton"
 
-const ModalInternalWrappingDiv = styled.div`
+const ModalInternalWrappingForm = styled.form`
   display: grid;
   grid-gap: 10px;
   font-size: 20px;
@@ -61,7 +61,11 @@ export const EditBackgroundModal: React.FC = () => {
       isClosed={editModalIsClosed}
       setIsClosed={setEditModalIsClosed}
     >
-      <ModalInternalWrappingDiv>
+      <ModalInternalWrappingForm
+        onSubmit={({ preventDefault }) => {
+          preventDefault()
+        }}
+      >
         <ToggleSwitch
           checked={shouldRedrawBackground}
           id="redraw-background-toggle"
@@ -90,7 +94,7 @@ export const EditBackgroundModal: React.FC = () => {
           valueSuffix={"%"}
         />
         <StyledButton
-          type="button"
+          type="submit"
           disabled={!canUpdate}
           onClick={() => {
             backgroundDispatch({
@@ -105,7 +109,7 @@ export const EditBackgroundModal: React.FC = () => {
         >
           Update
         </StyledButton>
-      </ModalInternalWrappingDiv>
+      </ModalInternalWrappingForm>
     </ModalBox>
   )
 }
