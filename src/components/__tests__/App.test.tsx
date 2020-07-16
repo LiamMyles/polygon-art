@@ -47,13 +47,13 @@ describe("App Component", () => {
           </NavigationContextWrapper>
         </PolygonGroupsContextWrapper>
       )
-      expect(getByLabelText("Test Navigation")).toHaveValue("MAIN_SCREEN")
+      expect(getByLabelText("Test Navigation")).toHaveValue("WATCH_SCREEN")
 
       fireEvent.click(getByRole("button", { name: "Edit Polygons" }))
       expect(getByLabelText("Test Navigation")).toHaveValue("GROUP_SCREEN")
 
       fireEvent.click(getByRole("button", { name: "Home" }))
-      expect(getByLabelText("Test Navigation")).toHaveValue("MAIN_SCREEN")
+      expect(getByLabelText("Test Navigation")).toHaveValue("WATCH_SCREEN")
     })
 
     it("should go to edit polygons and home", async () => {
@@ -74,7 +74,7 @@ describe("App Component", () => {
       expect(getByLabelText("Test Navigation")).toHaveValue("POLYGON_SCREEN")
 
       fireEvent.click(getAllByRole("button", { name: "Home" })[0])
-      expect(getByLabelText("Test Navigation")).toHaveValue("MAIN_SCREEN")
+      expect(getByLabelText("Test Navigation")).toHaveValue("WATCH_SCREEN")
     })
   })
 })

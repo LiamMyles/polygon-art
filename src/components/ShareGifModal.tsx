@@ -31,7 +31,7 @@ declare class GIF {
   addFrame(canvas: any, options: any): void
 }
 
-const GifModalInternalWrappingDiv = styled.div`
+const GifModalInternalWrappingForm = styled.form`
   width: 100%;
   min-height: 150px;
   display: grid;
@@ -48,13 +48,30 @@ const GifCanvas = styled(P5Canvas)`
   align-items: center;
 `
 
+const GifNameInput = styled.input`
+  height: 20px;
+  font-size: 16px;
+  margin: 0 10px;
+  border: solid 2px lightgrey;
+  border-radius: 4px;
+  padding: 3px;
+  &:focus,
+  &:hover {
+    outline: none;
+    border-color: grey;
+    background: dimgrey;
+    color: snow;
+  }
+`
+
 const gifOptions = {
   workers: 2,
   quality: 5,
   workerScript: "/playing-with-polygons/js/gif.worker.js",
-  dither: "FalseFloydSteinberg-serpentine",
+  dither: "FalseFloydSteinberg",
 }
 
+// IF the included script isn't on the page, just don't do anything
 let gif = typeof GIF !== "undefined" ? new GIF(gifOptions) : null
 
 export const GenerateGifModal: React.FC = () => {
@@ -63,12 +80,17 @@ export const GenerateGifModal: React.FC = () => {
   const backgroundState = useContext(backgroundStateContext)
 
   const [recordingLength, setRecordingLength] = useState(5)
-  const [startGenerating, setStartGenerating] = useState(false)
-  const [gifFile, setGifFile] = useState<Blob | null>(null)
-
   const [currentProgress, setCurrentProgress] = useState(0)
+
+  type componentModes = "initial" | "recording" | "processing" | "saving"
+  const [gifGenerationMode, setGifGenerationMode] = useState<componentModes>(
+    "initial"
+  )
+  const [startGenerating, setStartGenerating] = useState(false)
   const [renderHasStarted, setRenderHasStarted] = useState(false)
   const [renderFinished, setRenderFinished] = useState(false)
+
+  const [gifFile, setGifFile] = useState<Blob | null>(null)
 
   // Reset on close
   useEffect(() => {
@@ -82,6 +104,7 @@ export const GenerateGifModal: React.FC = () => {
     }
   }, [editModalIsClosed])
 
+  //setup gif generation handlers
   useEffect(() => {
     if (gif === null) return
     const progressHandler = function (progression: any) {
@@ -116,6 +139,23 @@ export const GenerateGifModal: React.FC = () => {
       gif = new GIF(gifOptions)
     }
   }, [editModalIsClosed])
+
+  // Contain the logic for what mode the gif generation is in
+  useEffect(() => {
+    if (startGenerating) {
+      if (renderHasStarted) {
+        if (renderFinished && gifFile) {
+          setGifGenerationMode("saving")
+        } else {
+          setGifGenerationMode("processing")
+        }
+      } else {
+        setGifGenerationMode("recording")
+      }
+    } else {
+      setGifGenerationMode("initial")
+    }
+  }, [renderHasStarted, renderFinished, startGenerating, gifFile])
   if (gif === null) return null
   return (
     <ModalBox
@@ -125,62 +165,113 @@ export const GenerateGifModal: React.FC = () => {
       isClosed={editModalIsClosed}
       setIsClosed={setEditModalIsClosed}
     >
-      <GifModalInternalWrappingDiv>
-        {renderHasStarted &&
-          (!renderFinished ? (
-            <p>Processing : {currentProgress}%</p>
-          ) : (
-            <p>Finished</p>
-          ))}
-        {!startGenerating && (
-          <Slider
-            label="Gif Length"
-            min={1}
-            max={10}
-            currentValue={recordingLength}
-            setFunction={setRecordingLength}
-            id={"gif-recording-length-slider"}
-            valueSuffix={" seconds"}
-          />
-        )}
-        {!editModalIsClosed && !renderHasStarted && startGenerating && (
-          <>
-            <p>Recording</p>
-            <GifCanvas
-              sketch={generateGifSketch({
-                polygonGroups: polygonContext,
-                windowSize: { height: 250, width: 250 },
-                rgbaBackgroundColour: backgroundState.rgba,
-                rgbBackgroundColour: backgroundState.rgb,
-                shouldRedrawBackground: backgroundState.shouldRedraw,
-                gifClass: gif,
-                recordingLength: recordingLength,
-                scale: 0.3,
-              })}
-            />
-          </>
-        )}
-        {!startGenerating && (
-          <StyledButton
-            type="button"
-            onClick={() => {
-              setStartGenerating(true)
-            }}
-          >
-            Start Generating
-          </StyledButton>
-        )}
-        {gifFile && (
-          <StyledButton
-            type="button"
-            onClick={() => {
-              download(gifFile)
-            }}
-          >
-            Download Gif
-          </StyledButton>
-        )}
-      </GifModalInternalWrappingDiv>
+      <GifModalInternalWrappingForm
+        onSubmit={(event) => {
+          event.preventDefault()
+        }}
+      >
+        {(() => {
+          switch (gifGenerationMode) {
+            case "initial":
+              return (
+                <>
+                  <Slider
+                    label="Gif Length"
+                    min={1}
+                    max={10}
+                    currentValue={recordingLength}
+                    setFunction={setRecordingLength}
+                    id={"gif-recording-length-slider"}
+                    valueSuffix={" seconds"}
+                  />
+                  <StyledButton
+                    type="submit"
+                    onClick={() => {
+                      setStartGenerating(true)
+                    }}
+                  >
+                    Start Generating
+                  </StyledButton>
+                </>
+              )
+            case "recording":
+              return (
+                <>
+                  <p>Recording</p>
+                  <GifCanvas
+                    sketch={generateGifSketch({
+                      polygonGroups: polygonContext,
+                      windowSize: { height: 250, width: 250 },
+                      rgbaBackgroundColour: backgroundState.rgba,
+                      rgbBackgroundColour: backgroundState.rgb,
+                      shouldRedrawBackground: backgroundState.shouldRedraw,
+                      gifClass: gif,
+                      recordingLength: recordingLength,
+                      scale: 0.3,
+                    })}
+                  />
+                </>
+              )
+            case "processing":
+              return <p>Processing : {currentProgress}%</p>
+            case "saving": {
+              const imgSrc =
+                URL?.createObjectURL && gifFile
+                  ? URL.createObjectURL(gifFile)
+                  : null
+              return (
+                <>
+                  <p>Finished</p>
+                  {imgSrc && <img alt="preview gif" src={imgSrc} />}
+                  <GifSaveOptions gifFile={gifFile as Blob} />
+                </>
+              )
+            }
+          }
+        })()}
+      </GifModalInternalWrappingForm>
     </ModalBox>
+  )
+}
+
+const GifSaveOptions: React.FC<{ gifFile: Blob }> = ({ gifFile }) => {
+  const [saveFileName, setSaveFileName] = useState("polygon")
+  return (
+    <>
+      <div>
+        <label htmlFor="save-file-name">Save file name:</label>
+        <GifNameInput
+          id="save-file-name"
+          minLength={1}
+          value={saveFileName}
+          onChange={({ currentTarget: { value } }) => {
+            setSaveFileName(value)
+          }}
+        />
+      </div>
+      <StyledButton
+        type="submit"
+        onClick={() => {
+          download(
+            gifFile,
+            saveFileName
+              .trim()
+              .replace(/[^\w\s]/gi, "")
+              .toLocaleLowerCase()
+              .replace(/\s+/gi, "-")
+          )
+        }}
+      >
+        Download Gif
+      </StyledButton>
+      <a
+        href="https://twitter.com/intent/tweet?screen_name=PlayingPolygons"
+        data-related="@PlayingPolygons"
+        data-dnt="true"
+        data-show-count="false"
+      >
+        Tweet to @PlayingPolygons
+      </a>
+    </>
   )
 }
