@@ -9,6 +9,17 @@ h3 {
   letter-spacing: 1.5px;
 }
 
+a {
+  color: rebeccapurple;
+}
+
+a:focus,
+a:hover {
+  font-style: italic;
+  text-decoration-style: double;
+  outline: none;
+}
+
 [hidden] {
   display: none !important;
 }

@@ -264,6 +264,14 @@ const GifSaveOptions: React.FC<{ gifFile: Blob }> = ({ gifFile }) => {
       >
         Download Gif
       </StyledButton>
+      <a
+        href="https://twitter.com/intent/tweet?screen_name=PlayingPolygons"
+        data-related="@PlayingPolygons"
+        data-dnt="true"
+        data-show-count="false"
+      >
+        Tweet to @PlayingPolygons
+      </a>
     </>
   )
 }

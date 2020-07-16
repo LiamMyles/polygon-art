@@ -45,16 +45,6 @@ const ContentDiv = styled.div`
   strong {
     font-weight: bold;
   }
-  a {
-    color: rebeccapurple;
-
-    &:focus,
-    &:hover {
-      font-style: italic;
-      text-decoration-style: double;
-      outline: none;
-    }
-  }
   em {
     font-style: italic;
   }
@@ -139,14 +129,14 @@ export const IntroScreen = () => {
           alt="Rotating and Scaling Polygon"
           src={rotatingAndScalingPolygon}
         />
-        <h3>Making GIF's or Jif's</h3>
+        <h3>Making GIF's or JIF's</h3>
         <p>
           You can make and download a gif by pressing the{" "}
           <strong>Make Gif</strong> button. Just be aware that the longer the
           gif is, the longer it will take to make.
         </p>
         <p>
-          If you're on a phone I would recommend creating short gifs. But you
+          If you're on a phone I would recommend creating short gif's. But you
           can make them 10 seconds long if you don't mind the wait.
         </p>
         <p>
@@ -169,7 +159,7 @@ export const IntroScreen = () => {
           <a href="https://twitter.com/PlayingPolygons">
             Playing with Polygons Twitter account
           </a>
-          . Hopefully there will be gifs on their to help inspire you.
+          . Hopefully there will be gif's on their to help inspire you.
         </p>
         <h2>About Me</h2>
         <p>
