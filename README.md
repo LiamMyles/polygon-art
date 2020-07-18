@@ -1,6 +1,6 @@
 # Playing with Polygons
 
-<img style="display: block; margin: auto;"alt="Playing with polygons logo" src="./src/images/playing-with-polygons-logo.gif"/>
+<img style="display: block; margin: auto;"alt="Playing with polygons logo" src="/LiamMyles/playing-with-polygons/raw/master/src/images/playing-with-polygons-logo.gif"/>
 
 Welcome to Playing with Polygons! An idea that has its roots in 2014 with a bug in a university project.
 
