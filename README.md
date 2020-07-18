@@ -1,50 +1,51 @@
-# Polygon Art
+# Playing with Polygons
 
-This project has been years in the making, and I'm finally bringing everything together to the final application I have always wanted to make.
+<div align="center">
+  <img width="250" alt="Playing with polygons logo" src="https://github.com/LiamMyles/playing-with-polygons/blob/master/src/images/playing-with-polygons-logo.gif"/>
+</div>
 
----
+Welcome to Playing with Polygons! An idea that has its roots in 2014 with a bug in a university project.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Between University and now I have become a Web Developer. Then in 2020 - during the Covid-19 lockdown - I finally created a little app that takes that bug to its logical extreme.
 
-## Available Scripts
+## About this Project
 
-In the project directory, you can run:
+This project is in the simplest terms is an app that lets you create polygon themed art. As well as allowing you to generate gif's of said art.
 
-### `yarn start`
+Here are some examples of what I have made with it so far:
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+![painting example](./src/images/little-star.gif)
+![simple example](./src/images/playing-with-polygons-animated-logo.gif)
+![complex example](./src/images/too-many-polygons.gif)
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## How to Play with Polygons
 
-### `yarn test`
+The app is hosted on [this repos Git hub pages page](https://liammyles.github.io/playing-with-polygons/). just visit the link and away you go.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Tech Used
 
-### `yarn build`
+So the core of the project is React written in typescript. With jest & react-testing-library being used for the testing.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Context and Reducers are used heavily to deal with the state of the app.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+And p5 is the canvas library that is used to draw the polygons.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Starting the Project for yourself
 
-### `yarn eject`
+If you want to fork, or clone this project here is some basic things you need to do to get things up and running.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Setup
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Setup is super basic, just run `yarn` to install the packages. 
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Development
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+You can run the development environment with `yarn dev` which will start up the create react app development environment. 
 
-## Learn More
+### Testing
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+To test the project just run `yarn test` which will start the jest test suite.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Other Homes on the Web
+
+Check out the [Playing with Polygons twitter](https://twitter.com/PlayingPolygons) to see and share polygon gifs!
