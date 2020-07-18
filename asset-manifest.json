@@ -1,23 +1,30 @@
 {
   "files": {
-    "main.css": "/playing-with-polygons/static/css/main.a6452b3e.chunk.css",
-    "main.js": "/playing-with-polygons/static/js/main.baf6f2eb.chunk.js",
-    "main.js.map": "/playing-with-polygons/static/js/main.baf6f2eb.chunk.js.map",
+    "main.css": "/playing-with-polygons/static/css/main.141df344.chunk.css",
+    "main.js": "/playing-with-polygons/static/js/main.38d1b9ec.chunk.js",
+    "main.js.map": "/playing-with-polygons/static/js/main.38d1b9ec.chunk.js.map",
     "runtime-main.js": "/playing-with-polygons/static/js/runtime-main.835b837a.js",
     "runtime-main.js.map": "/playing-with-polygons/static/js/runtime-main.835b837a.js.map",
-    "static/js/2.a8c44a7d.chunk.js": "/playing-with-polygons/static/js/2.a8c44a7d.chunk.js",
-    "static/js/2.a8c44a7d.chunk.js.map": "/playing-with-polygons/static/js/2.a8c44a7d.chunk.js.map",
+    "static/js/2.3e057cb3.chunk.js": "/playing-with-polygons/static/js/2.3e057cb3.chunk.js",
+    "static/js/2.3e057cb3.chunk.js.map": "/playing-with-polygons/static/js/2.3e057cb3.chunk.js.map",
     "index.html": "/playing-with-polygons/index.html",
-    "precache-manifest.b7bf50663c677b0ce726d73e68d133b7.js": "/playing-with-polygons/precache-manifest.b7bf50663c677b0ce726d73e68d133b7.js",
+    "precache-manifest.4e8a1b68ebe92f66b5a33ed61ca4bc98.js": "/playing-with-polygons/precache-manifest.4e8a1b68ebe92f66b5a33ed61ca4bc98.js",
     "service-worker.js": "/playing-with-polygons/service-worker.js",
-    "static/css/main.a6452b3e.chunk.css.map": "/playing-with-polygons/static/css/main.a6452b3e.chunk.css.map",
-    "static/js/2.a8c44a7d.chunk.js.LICENSE.txt": "/playing-with-polygons/static/js/2.a8c44a7d.chunk.js.LICENSE.txt",
+    "static/css/main.141df344.chunk.css.map": "/playing-with-polygons/static/css/main.141df344.chunk.css.map",
+    "static/js/2.3e057cb3.chunk.js.LICENSE.txt": "/playing-with-polygons/static/js/2.3e057cb3.chunk.js.LICENSE.txt",
+    "static/media/playing-with-polygons-animated-logo-faded-background.gif": "/playing-with-polygons/static/media/playing-with-polygons-animated-logo-faded-background.8d4fab3b.gif",
+    "static/media/playing-with-polygons-animated-logo-redraw-background.gif": "/playing-with-polygons/static/media/playing-with-polygons-animated-logo-redraw-background.89089f99.gif",
+    "static/media/playing-with-polygons-animated-logo.gif": "/playing-with-polygons/static/media/playing-with-polygons-animated-logo.de8fbc4a.gif",
+    "static/media/playing-with-polygons-logo.gif": "/playing-with-polygons/static/media/playing-with-polygons-logo.0b998246.gif",
+    "static/media/polygon-rotating-and-scaling.gif": "/playing-with-polygons/static/media/polygon-rotating-and-scaling.934716d6.gif",
+    "static/media/polygon-rotating.gif": "/playing-with-polygons/static/media/polygon-rotating.b47dc058.gif",
+    "static/media/polygon-scaling.gif": "/playing-with-polygons/static/media/polygon-scaling.df17a577.gif",
     "static/media/rotating-ring.svg": "/playing-with-polygons/static/media/rotating-ring.6b2af75b.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.835b837a.js",
-    "static/js/2.a8c44a7d.chunk.js",
-    "static/css/main.a6452b3e.chunk.css",
-    "static/js/main.baf6f2eb.chunk.js"
+    "static/js/2.3e057cb3.chunk.js",
+    "static/css/main.141df344.chunk.css",
+    "static/js/main.38d1b9ec.chunk.js"
   ]
 }
