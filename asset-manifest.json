@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/playing-with-polygons/static/css/main.141df344.chunk.css",
-    "main.js": "/playing-with-polygons/static/js/main.38d1b9ec.chunk.js",
-    "main.js.map": "/playing-with-polygons/static/js/main.38d1b9ec.chunk.js.map",
+    "main.js": "/playing-with-polygons/static/js/main.cfb4f783.chunk.js",
+    "main.js.map": "/playing-with-polygons/static/js/main.cfb4f783.chunk.js.map",
     "runtime-main.js": "/playing-with-polygons/static/js/runtime-main.835b837a.js",
     "runtime-main.js.map": "/playing-with-polygons/static/js/runtime-main.835b837a.js.map",
     "static/js/2.3e057cb3.chunk.js": "/playing-with-polygons/static/js/2.3e057cb3.chunk.js",
     "static/js/2.3e057cb3.chunk.js.map": "/playing-with-polygons/static/js/2.3e057cb3.chunk.js.map",
     "index.html": "/playing-with-polygons/index.html",
-    "precache-manifest.4e8a1b68ebe92f66b5a33ed61ca4bc98.js": "/playing-with-polygons/precache-manifest.4e8a1b68ebe92f66b5a33ed61ca4bc98.js",
+    "precache-manifest.3c9714c1e75159d593084d55f37f9729.js": "/playing-with-polygons/precache-manifest.3c9714c1e75159d593084d55f37f9729.js",
     "service-worker.js": "/playing-with-polygons/service-worker.js",
     "static/css/main.141df344.chunk.css.map": "/playing-with-polygons/static/css/main.141df344.chunk.css.map",
     "static/js/2.3e057cb3.chunk.js.LICENSE.txt": "/playing-with-polygons/static/js/2.3e057cb3.chunk.js.LICENSE.txt",
@@ -25,6 +25,6 @@
     "static/js/runtime-main.835b837a.js",
     "static/js/2.3e057cb3.chunk.js",
     "static/css/main.141df344.chunk.css",
-    "static/js/main.38d1b9ec.chunk.js"
+    "static/js/main.cfb4f783.chunk.js"
   ]
 }
