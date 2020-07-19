@@ -47,12 +47,15 @@ describe("App Component", () => {
           </NavigationContextWrapper>
         </PolygonGroupsContextWrapper>
       )
+      expect(getByLabelText("Test Navigation")).toHaveValue("INFO_SCREEN")
+      fireEvent.click(getByRole("button", { name: "Start!" }))
+
       expect(getByLabelText("Test Navigation")).toHaveValue("WATCH_SCREEN")
 
       fireEvent.click(getByRole("button", { name: "Edit Polygons" }))
       expect(getByLabelText("Test Navigation")).toHaveValue("GROUP_SCREEN")
 
-      fireEvent.click(getByRole("button", { name: "Home" }))
+      fireEvent.click(getByRole("button", { name: "Watch Animation" }))
       expect(getByLabelText("Test Navigation")).toHaveValue("WATCH_SCREEN")
     })
 
@@ -66,6 +69,10 @@ describe("App Component", () => {
           </NavigationContextWrapper>
         </PolygonGroupsContextWrapper>
       )
+      expect(getByLabelText("Test Navigation")).toHaveValue("INFO_SCREEN")
+      fireEvent.click(getByRole("button", { name: "Start!" }))
+
+      expect(getByLabelText("Test Navigation")).toHaveValue("WATCH_SCREEN")
 
       fireEvent.click(getByRole("button", { name: "Edit Polygons" }))
       expect(getByLabelText("Test Navigation")).toHaveValue("GROUP_SCREEN")
@@ -73,7 +80,7 @@ describe("App Component", () => {
       fireEvent.click(getAllByRole("button", { name: "Edit" })[0])
       expect(getByLabelText("Test Navigation")).toHaveValue("POLYGON_SCREEN")
 
-      fireEvent.click(getAllByRole("button", { name: "Home" })[0])
+      fireEvent.click(getAllByRole("button", { name: "Watch Animation" })[0])
       expect(getByLabelText("Test Navigation")).toHaveValue("WATCH_SCREEN")
     })
   })

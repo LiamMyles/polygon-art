@@ -76,8 +76,8 @@ export const IntroScreen = () => {
         <img alt="Playing with Polygons Logo" src={logo} />
         <p>Welcome to my little polygon art project!</p>
         <p>
-          Scroll to Learn a bit about about the app, or just drive straight in
-          by pressing <strong>START!</strong>
+          Scroll to Learn a bit about the app, or just drive straight in by
+          pressing <strong>Start!</strong>
         </p>
         <BigCenteredButton
           type="button"
@@ -85,7 +85,7 @@ export const IntroScreen = () => {
             navigationDispatch({ type: "WATCH_SCREEN" })
           }}
         >
-          START!
+          Start!
         </BigCenteredButton>
         <h2>Tips and Tricks</h2>
         <p>
@@ -117,7 +117,7 @@ export const IntroScreen = () => {
         <img alt="Rotating Polygon" src={rotatingPolygon} />
         <p>
           <strong>Scaling</strong> like the rotation is an endless cycle. And
-          causes the polygon to scale between a maximum and a minimum size.
+          causes the polygon to scale between a minimum and a maximum size.
         </p>
         <img alt="Scaling Polygon" src={scalingPolygon} />
         <p>

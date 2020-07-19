@@ -16,8 +16,6 @@ export const ViewScreen = () => {
     <MainContent>
       <MainCanvas />
       <Navigation>
-        <EditBackgroundModal />
-        <GenerateGifModal />
         <StyledButton
           type="button"
           onClick={() => {
@@ -26,6 +24,8 @@ export const ViewScreen = () => {
         >
           Edit Polygons
         </StyledButton>
+        <EditBackgroundModal />
+        <GenerateGifModal />
       </Navigation>
     </MainContent>
   )

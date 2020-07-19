@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { render, fireEvent, wait as waitFor } from "@testing-library/react"
-import Screens from "components/Screens"
+import { Screens } from "components/Screens"
 
 describe("Screens Component", () => {
   let TestComponent1: React.FC,

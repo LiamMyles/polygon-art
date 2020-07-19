@@ -2,7 +2,7 @@
 
 <div align="center">
   <img width="250" alt="Playing with polygons logo" src="https://github.com/LiamMyles/playing-with-polygons/blob/master/src/images/playing-with-polygons-logo.gif"/>
-</div>
+</div>g
 
 Welcome to Playing with Polygons! An idea that has its roots in 2014 with a bug in a university project.
 
@@ -10,7 +10,7 @@ Between University and now I have become a Web Developer. Then in 2020 - during 
 
 ## About this Project
 
-This project is in the simplest terms is an app that lets you create polygon themed art. As well as allowing you to generate gif's of said art.
+This project in essence terms is an app that lets you create polygon art. As well as allowing you to generate gif's once you make it.
 
 Here are some examples of what I have made with it so far:
 
@@ -34,17 +34,19 @@ And p5 is the canvas library that is used to draw the polygons.
 
 If you want to fork, or clone this project here is some basic things you need to do to get things up and running.
 
-### Setup
+If you have ever used create react app, its just that.
 
-Setup is super basic, just run `yarn` to install the packages. 
+### First time Setup
+
+Once cloned, you can use `yarn` or `npm install` to install the packages.
 
 ### Development
 
-You can run the development environment with `yarn dev` which will start up the create react app development environment. 
+The development environment has hot reloading. To start it use `yarn start` or `npm run start` which will start up the create react app development environment.
 
 ### Testing
 
-To test the project just run `yarn test` which will start the jest test suite.
+To test the project use `yarn test` or `npm run test` which will start the jest test suite.
 
 ## Other Homes on the Web
 
