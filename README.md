@@ -8,6 +8,8 @@ Welcome to Playing with Polygons! An idea that has its roots in 2014 with a bug 
 
 Between University and now I have become a Web Developer. Then in 2020 - during the Covid-19 lockdown - I finally created a little app that takes that bug to its logical extreme.
 
+If you want to lear about the sotry, check out my [blog post: Playing With Polygons - The Iceberg Story](https://dev.to/liammyles/my-covid-lockdown-project-the-iceberg-story-5bo2)
+
 ## About this Project
 
 This project in essence terms is an app that lets you create polygon art. As well as allowing you to generate gif's once you make it.
