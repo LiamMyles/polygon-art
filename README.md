@@ -2,7 +2,7 @@
 
 <div align="center">
   <img width="250" alt="Playing with polygons logo" src="https://github.com/LiamMyles/playing-with-polygons/blob/master/src/images/playing-with-polygons-logo.gif"/>
-</div>g
+</div>
 
 Welcome to Playing with Polygons! An idea that has its roots in 2014 with a bug in a university project.
 
